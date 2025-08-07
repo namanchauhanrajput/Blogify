@@ -38,7 +38,7 @@ exports.createBlog = async (req, res) => {
 exports.getAllBlogs = async (req, res) => {
   try {
     const blogs = await Blog.find()
-      .populate("author", "name email")
+      .populate("author", "name username")
       .sort({ createdAt: -1 });
     res.json(blogs);
   } catch (err) {
@@ -50,8 +50,8 @@ exports.getAllBlogs = async (req, res) => {
 exports.getBlogById = async (req, res) => {
   try {
     const blog = await Blog.findById(req.params.id)
-      .populate("author", "name email")
-      .populate("comments.user", "name email");
+      .populate("author", "name username")
+      .populate("comments.user", "name username");
 
     if (!blog) return res.status(404).json({ error: "Blog not found" });
 
@@ -173,7 +173,7 @@ exports.addComment = async (req, res) => {
 // Get comments for a blog
 exports.getComments = async (req, res) => {
   try {
-    const blog = await Blog.findById(req.params.id).populate("comments.user", "name email");
+    const blog = await Blog.findById(req.params.id).populate("comments.user", "name username");
 
     if (!blog) return res.status(404).json({ message: "Blog not found" });
 
