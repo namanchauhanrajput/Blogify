@@ -1,23 +1,21 @@
 const User = require("../models/user-model");
 const bcrypt = require("bcryptjs");
+const nodemailer = require("nodemailer");
+require("dotenv").config(); // make sure this is here
 
 // ========================= REGISTER =========================
-
 const register = async (req, res) => {
   try {
     console.log(req.body);
     const { username, name, email, phone, password } = req.body;
 
-    // ✅ Check by username instead of email
     const userExist = await User.findOne({ username });
     if (userExist) {
       return res.status(400).json({ message: "Username is not avilable" });
     }
 
-    // ✅ Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // ✅ Create new user
     const newUser = await User.create({
       username,
       name,
@@ -38,26 +36,22 @@ const register = async (req, res) => {
 };
 
 // ========================= LOGIN =========================
-
 const login = async (req, res) => {
   try {
     const { username, password } = req.body;
 
-    // ✅ Find user by username instead of email
     const userExist = await User.findOne({ username });
 
     if (!userExist) {
       return res.status(400).json({ message: "Invalid Username or Password" });
     }
 
-    // ✅ Compare password
     const isMatch = await bcrypt.compare(password, userExist.password);
 
     if (!isMatch) {
       return res.status(401).json({ message: "Invalid Username or Password" });
     }
 
-    // ✅ Generate token
     const token = userExist.generateToken();
 
     return res.status(200).json({
@@ -72,9 +66,7 @@ const login = async (req, res) => {
   }
 };
 
-
 // ========================= USER INFO =========================
-
 const user = async (req, res) => {
   try {
     const userData = req.user;
@@ -85,4 +77,70 @@ const user = async (req, res) => {
   }
 };
 
-module.exports = { register, login, user };
+// ==================== EMAIL TRANSPORTER ====================
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: process.env.EMAIL_USER, // Gmail address
+    pass: process.env.EMAIL_PASS, // Gmail App Password
+  },
+});
+
+// ========================= FORGET PASSWORD =========================
+const forgetPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(400).json({ message: "User not found" });
+    }
+
+    // 6-digit OTP generate
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    user.otp = otp;
+    user.otpExpiry = Date.now() + 15 * 60 * 1000; // 15 min expiry
+    await user.save();
+
+    // Email se bhejna
+    await transporter.sendMail({
+      to: user.email,
+      subject: "Password Reset OTP",
+      text: `Your OTP is ${otp}. It is valid for 15 minutes.`
+    });
+
+    res.json({ message: "OTP sent to your email" });
+  } catch (err) {
+    console.error("Forget password error:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+
+// ========================= RESET PASSWORD =========================
+const resetPassword = async (req, res) => {
+  try {
+    const { email, otp, newPassword } = req.body;
+
+    const user = await User.findOne({
+      email,
+      otp,
+      otpExpiry: { $gt: Date.now() }
+    });
+
+    if (!user) {
+      return res.status(400).json({ message: "Invalid or expired OTP" });
+    }
+
+    user.password = await bcrypt.hash(newPassword, 10);
+    user.otp = undefined;
+    user.otpExpiry = undefined;
+    await user.save();
+
+    res.json({ message: "Password reset successful" });
+  } catch (err) {
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+module.exports = { register, login, user, forgetPassword, resetPassword };
