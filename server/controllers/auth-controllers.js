@@ -11,7 +11,7 @@ const register = async (req, res) => {
 
     const userExist = await User.findOne({ username });
     if (userExist) {
-      return res.status(400).json({ message: "Username is not avilable" });
+      return res.status(400).json({ message: "Username is not available" });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -99,14 +99,14 @@ const forgetPassword = async (req, res) => {
     // 6-digit OTP generate
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
     user.otp = otp;
-    user.otpExpiry = Date.now() + 15 * 60 * 1000; // 15 min expiry
+    user.otpExpiry = Date.now() + 10 * 60 * 1000; // 10 min expiry
     await user.save();
 
     // Email se bhejna
     await transporter.sendMail({
       to: user.email,
       subject: "Password Reset OTP",
-      text: `Your OTP is ${otp}. It is valid for 15 minutes.`
+      text: `Your OTP is ${otp}. It is valid for 10 minutes.`
     });
 
     res.json({ message: "OTP sent to your email" });
@@ -115,7 +115,6 @@ const forgetPassword = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
-
 
 // ========================= RESET PASSWORD =========================
 const resetPassword = async (req, res) => {
