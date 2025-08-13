@@ -16,34 +16,55 @@ export const Register = () => {
 
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
     setSuccess("");
+    setLoading(true);
 
     try {
-      const res = await fetch("https://bloging-platform.onrender.com/api/auth/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
+      const res = await fetch(
+        "https://bloging-platform.onrender.com/api/auth/register",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(formData),
+        }
+      );
 
       const data = await res.json();
 
-      if (res.ok) {
-        storeTokenInLS(data.token);
-        setSuccess("Registration successful! Redirecting...");
-        setTimeout(() => navigate("/"), 1500);
-      } else {
+      if (!res.ok) {
         setError(data.message || "Registration failed");
+        setLoading(false);
+        return;
+      }
+
+      if (data?.token) {
+        // 1️⃣ Token localStorage me store karo
+        storeTokenInLS(data.token);
+
+        // 2️⃣ Success message show karo
+        setSuccess("Registration successful! Redirecting...");
+
+        // 3️⃣ Small delay for token to persist, then navigate
+        setTimeout(() => {
+          navigate("/");
+        }, 500);
+      } else {
+        setError("Token not received. Please try again.");
       }
     } catch (err) {
+      console.error(err);
       setError("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -103,15 +124,18 @@ export const Register = () => {
             required
             className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
           />
+
           <button
             type="submit"
-            className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-lg transition-colors"
+            disabled={loading}
+            className={`w-full text-white py-2 rounded-lg transition-colors ${
+              loading ? "bg-blue-300" : "bg-blue-500 hover:bg-blue-600"
+            }`}
           >
-            Register
+            {loading ? "Registering..." : "Register"}
           </button>
         </form>
 
-        {/* Login Link */}
         <p className="text-center text-sm text-gray-600 mt-4">
           Already have an account?{" "}
           <Link to="/login" className="text-blue-500 hover:underline">
