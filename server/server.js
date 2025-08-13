@@ -9,7 +9,10 @@ require("dotenv").config();
 
 // CORS Options
 const corsOptions = {
-  origin: "http://localhost:3000",
+    origin: [
+      "http://localhost:3000", // Local development
+      "https://bloging-platform-nine.vercel.app" // Deployed frontend
+    ],
   methods: "GET, POST, DELETE, PUT, PATCH, HEAD",
   credentials: true,
 };
