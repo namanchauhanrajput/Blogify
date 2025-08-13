@@ -1,4 +1,4 @@
-const BASE_URL = "http://localhost:5000";
+const BASE_URL = "https://bloging-platform.onrender.com";
 
 export const endpoints = {
   blogs: `${BASE_URL}/api/blog`,

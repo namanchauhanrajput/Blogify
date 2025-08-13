@@ -45,7 +45,7 @@ export const CreateBlog = () => {
       fd.append("image", image);
 
       // ✅ Full backend URL
-      const res = await fetch("http://localhost:5000/api/blog/create", {
+      const res = await fetch("https://bloging-platform.onrender.com/api/blog/create", {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`, // token lagao
