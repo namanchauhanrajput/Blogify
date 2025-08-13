@@ -1,10 +1,9 @@
 import React, { useState } from "react";
 import { useAuth } from "../context/AuthContext";
-import { useNavigate, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 export const Register = () => {
   const { storeTokenInLS } = useAuth();
-  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     username: "",
@@ -14,14 +13,17 @@ export const Register = () => {
     password: "",
   });
 
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-  const [loading, setLoading] = useState(false);
 
+  // Input change handler
   const handleChange = (e) => {
-    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  // Form submit handler
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
@@ -40,28 +42,16 @@ export const Register = () => {
 
       const data = await res.json();
 
-      if (!res.ok) {
-        setError(data.message || "Registration failed");
-        setLoading(false);
-        return;
-      }
-
-      if (data?.token) {
-        // 1️⃣ Token localStorage me store karo
+      if (res.ok) {
         storeTokenInLS(data.token);
-
-        // 2️⃣ Success message show karo
         setSuccess("Registration successful! Redirecting...");
-
-        // 3️⃣ Small delay for token to persist, then navigate
         setTimeout(() => {
-          navigate("/");
-        }, 500);
+          window.location.href = "/"; // Full reload for reliability
+        }, 1000);
       } else {
-        setError("Token not received. Please try again.");
+        setError(data.message || "Registration failed");
       }
     } catch (err) {
-      console.error(err);
       setError("Something went wrong. Please try again.");
     } finally {
       setLoading(false);
@@ -75,8 +65,12 @@ export const Register = () => {
           Create Your Account
         </h2>
 
-        {error && <p className="text-red-500 text-center mb-3">{error}</p>}
-        {success && <p className="text-green-500 text-center mb-3">{success}</p>}
+        {error && (
+          <p className="text-red-500 text-center mb-3 text-sm">{error}</p>
+        )}
+        {success && (
+          <p className="text-green-500 text-center mb-3 text-sm">{success}</p>
+        )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <input
@@ -128,14 +122,15 @@ export const Register = () => {
           <button
             type="submit"
             disabled={loading}
-            className={`w-full text-white py-2 rounded-lg transition-colors ${
+            className={`w-full ${
               loading ? "bg-blue-300" : "bg-blue-500 hover:bg-blue-600"
-            }`}
+            } text-white py-2 rounded-lg transition-colors`}
           >
             {loading ? "Registering..." : "Register"}
           </button>
         </form>
 
+        {/* Login Link */}
         <p className="text-center text-sm text-gray-600 mt-4">
           Already have an account?{" "}
           <Link to="/login" className="text-blue-500 hover:underline">
