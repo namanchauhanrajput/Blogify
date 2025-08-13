@@ -3,7 +3,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [token, setToken] = useState(""); // Default empty
+  const [token, setToken] = useState(null);
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -20,11 +20,11 @@ export const AuthProvider = ({ children }) => {
   // Logout
   const logoutUser = () => {
     localStorage.removeItem("token");
-    setToken("");
+    setToken(null);
     setUser(null);
   };
 
-  // On first load, only set token if it is valid
+  // On first load, check token
   useEffect(() => {
     const existingToken = localStorage.getItem("token");
     if (existingToken) {
@@ -37,21 +37,24 @@ export const AuthProvider = ({ children }) => {
   // Fetch user if token exists
   useEffect(() => {
     const getUser = async () => {
+      if (!token) return;
       setIsLoading(true);
       try {
-        const response = await fetch("http://localhost:5000/api/auth/user", {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await fetch(
+          "https://bloging-platform.onrender.com/api/auth/user",
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
 
         if (response.ok) {
           const data = await response.json();
           setUser(data.userData);
         } else {
-          console.error("User fetch failed");
-          logoutUser(); // Token remove if invalid
+          logoutUser();
         }
       } catch (error) {
         console.error("Error fetching user:", error);
@@ -61,9 +64,7 @@ export const AuthProvider = ({ children }) => {
       }
     };
 
-    if (token) {
-      getUser();
-    }
+    getUser();
   }, [token]);
 
   return (
@@ -75,7 +76,7 @@ export const AuthProvider = ({ children }) => {
         token,
         user,
         isLoading,
-        authorizationToken: `Bearer ${token}`,
+        authorizationToken: token ? `Bearer ${token}` : "",
       }}
     >
       {children}
