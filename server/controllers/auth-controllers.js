@@ -119,21 +119,26 @@ const forgetPassword = async (req, res) => {
 // ========================= RESET PASSWORD =========================
 const resetPassword = async (req, res) => {
   try {
-    const { email, otp, newPassword } = req.body;
+    const { otp, newPassword, confirmPassword } = req.body;
+
+    // Check if newPassword and confirmPassword match
+    if (newPassword !== confirmPassword) {
+      return res.status(400).json({ message: "Passwords do not match" });
+    }
 
     const user = await User.findOne({
-      email,
       otp,
-      otpExpiry: { $gt: Date.now() }
+      otpExpiry: { $gt: Date.now() } // ensures OTP is not expired
     });
 
     if (!user) {
       return res.status(400).json({ message: "Invalid or expired OTP" });
     }
 
+    // Hash and set the new password
     user.password = await bcrypt.hash(newPassword, 10);
-    user.otp = undefined;
-    user.otpExpiry = undefined;
+    user.otp = undefined; // clear OTP
+    user.otpExpiry = undefined; // clear expiry
     await user.save();
 
     res.json({ message: "Password reset successful" });
@@ -141,5 +146,6 @@ const resetPassword = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
 
 module.exports = { register, login, user, forgetPassword, resetPassword };

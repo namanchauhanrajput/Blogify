@@ -1,16 +1,16 @@
-// src/Pages/Logout.jsx ❌ Delete this
-import { useEffect } from "react";
-import { Navigate } from "react-router-dom";
-import { useAuth } from "../store/auth";
+// // src/Pages/Logout.jsx ❌ Delete this
+// import { useEffect } from "react";
+// import { Navigate } from "react-router-dom";
+// import { useAuth } from "../context/AuthContext";
 
-const Logout = () => {
-  const { logoutUser } = useAuth();
+// const Logout = () => {
+//   const { logoutUser } = useAuth();
 
-  useEffect(() => {
-    logoutUser();
-  }, [logoutUser]);
+//   useEffect(() => {
+//     logoutUser();
+//   }, [logoutUser]);
 
-  return <Navigate to="/login" />;
-};
+//   return <Navigate to="/login" />;
+// };
 
-export default Logout;
+// export default Logout;
