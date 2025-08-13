@@ -20,7 +20,7 @@ export const ForgotPassword = () => {
     setLoading(true);
 
     try {
-      const res = await fetch("http://localhost:5000/api/auth/forget-password", {
+      const res = await fetch("https://bloging-platform.onrender.com/api/auth/forget-password", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),
@@ -48,7 +48,7 @@ export const ForgotPassword = () => {
     setLoading(true);
 
     try {
-      const res = await fetch("http://localhost:5000/api/auth/reset-password", {
+      const res = await fetch("https://bloging-platform.onrender.com/api/auth/reset-password", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ otp, newPassword, confirmPassword }),
