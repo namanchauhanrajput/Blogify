@@ -9,7 +9,7 @@ export const AuthProvider = ({ children }) => {
 
   const isLoggedIn = !!token;
 
-  // Store token in localStorage
+  // Save token
   const storeTokenInLS = (serverToken) => {
     if (serverToken) {
       localStorage.setItem("token", serverToken);
@@ -24,17 +24,16 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
   };
 
-  // On first load, check token
+  // Load token on app start
   useEffect(() => {
     const existingToken = localStorage.getItem("token");
     if (existingToken) {
       setToken(existingToken);
-    } else {
-      setIsLoading(false);
     }
+    setIsLoading(false); // Always stop loading after checking
   }, []);
 
-  // Fetch user if token exists
+  // Fetch user whenever token changes
   useEffect(() => {
     const getUser = async () => {
       if (!token) return;
