@@ -1,10 +1,9 @@
-// src/Pages/CreateBlog.jsx
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 export const CreateBlog = () => {
-  const { token } = useAuth();
+  const { authorizationToken } = useAuth(); // ✅ use your token from context
   const navigate = useNavigate();
 
   const [form, setForm] = useState({ title: "", content: "", category: "" });
@@ -13,19 +12,19 @@ export const CreateBlog = () => {
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
-  // Form text change
+  // Text change handler
   const onChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  // Image change
+  // Image change handler
   const onImage = (e) => {
     const f = e.target.files?.[0];
     setImage(f || null);
     setPreview(f ? URL.createObjectURL(f) : "");
   };
 
-  // Submit form
+  // Form submit
   const submit = async (e) => {
     e.preventDefault();
     setError("");
@@ -44,14 +43,13 @@ export const CreateBlog = () => {
       if (form.category) fd.append("category", form.category);
       fd.append("image", image);
 
-      // ✅ Full backend URL
       const res = await fetch("https://bloging-platform.onrender.com/api/blog/create", {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${token}`, // token lagao
-          // Content-Type mat lagao, fetch + FormData apne aap set karega
+          Authorization: authorizationToken, // ✅ directly using context token
         },
         body: fd,
+        credentials: "include", // ✅ added as you asked
       });
 
       if (!res.ok) {
@@ -61,8 +59,8 @@ export const CreateBlog = () => {
 
       const created = await res.json();
       navigate(`/blog/${created._id}`);
-    } catch (e) {
-      setError(e.message);
+    } catch (err) {
+      setError(err.message);
     } finally {
       setSubmitting(false);
     }

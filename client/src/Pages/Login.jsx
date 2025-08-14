@@ -21,13 +21,14 @@ export const Login = () => {
 
     try {
       const res = await fetch(
-        "https://bloging-platform.onrender.com/api/auth/login",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(formData),
-        }
-      );
+  "https://bloging-platform.onrender.com/api/auth/register",
+  {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(formData),
+    credentials: "include", // IMPORTANT for cookies/session
+  }
+);
 
       const data = await res.json();
       if (res.ok) {

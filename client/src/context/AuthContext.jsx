@@ -1,3 +1,4 @@
+// src/context/AuthContext.jsx
 import { createContext, useContext, useEffect, useState } from "react";
 
 export const AuthContext = createContext();
@@ -30,7 +31,7 @@ export const AuthProvider = ({ children }) => {
     if (existingToken) {
       setToken(existingToken);
     }
-    setIsLoading(false); // Always stop loading after checking
+    setIsLoading(false);
   }, []);
 
   // Fetch user whenever token changes
@@ -46,6 +47,7 @@ export const AuthProvider = ({ children }) => {
             headers: {
               Authorization: `Bearer ${token}`,
             },
+            credentials: "include",
           }
         );
 
