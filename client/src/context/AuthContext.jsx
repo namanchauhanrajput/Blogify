@@ -1,4 +1,3 @@
-// src/context/AuthContext.jsx
 import { createContext, useContext, useEffect, useState } from "react";
 
 export const AuthContext = createContext();
@@ -10,7 +9,7 @@ export const AuthProvider = ({ children }) => {
 
   const isLoggedIn = !!token;
 
-  // Save token
+  // Store token in localStorage
   const storeTokenInLS = (serverToken) => {
     if (serverToken) {
       localStorage.setItem("token", serverToken);
@@ -25,16 +24,17 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
   };
 
-  // Load token on app start
+  // On first load, check token
   useEffect(() => {
     const existingToken = localStorage.getItem("token");
     if (existingToken) {
       setToken(existingToken);
+    } else {
+      setIsLoading(false);
     }
-    setIsLoading(false);
   }, []);
 
-  // Fetch user whenever token changes
+  // Fetch user if token exists
   useEffect(() => {
     const getUser = async () => {
       if (!token) return;
@@ -47,7 +47,6 @@ export const AuthProvider = ({ children }) => {
             headers: {
               Authorization: `Bearer ${token}`,
             },
-            credentials: "include",
           }
         );
 
