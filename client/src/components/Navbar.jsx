@@ -46,7 +46,7 @@ export default function Navbar() {
               onClick={handleLogout}
               className="px-3 py-1.5 rounded-lg bg-gray-200 hover:bg-gray-300"
             >
-              Logout {user?.name ? `(${user.name})` : ""}
+              Logout {user?.username ? `(${user.username})` : ""}
             </button>
           )}
         </nav>

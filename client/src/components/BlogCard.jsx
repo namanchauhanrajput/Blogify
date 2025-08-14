@@ -1,4 +1,4 @@
-// src/components/BlogCard.jsx
+
 import { Link } from "react-router-dom";
 
 export default function BlogCard({ blog }) {
@@ -15,7 +15,7 @@ export default function BlogCard({ blog }) {
       <p className="text-gray-600 line-clamp-3">{blog.content}</p>
 
       <div className="flex items-center justify-between mt-3 text-sm text-gray-500">
-        <span>By {blog.author?.name || blog.author?.username || "Unknown"}</span>
+        <span>By { blog.author?.username || "Unknown"}</span>
         <span>{new Date(blog.createdAt).toLocaleDateString()}</span>
       </div>
 
