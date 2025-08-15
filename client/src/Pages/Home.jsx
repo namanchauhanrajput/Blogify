@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import BlogCard from "../components/BlogCard";
-import { endpoints } from "../api";
+// import { endpoints } from "../api";
 
 export const Home = () => {
   const [blogs, setBlogs] = useState([]);
