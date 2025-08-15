@@ -1,8 +1,7 @@
-
 const Blog = require("../models/blog-model");
 const cloudinary = require("../config/cloudinary");
 
-// Create a blog
+// CREATE BLOG
 exports.createBlog = async (req, res) => {
   try {
     if (!req.file) {
@@ -24,8 +23,9 @@ exports.createBlog = async (req, res) => {
       title: req.body.title,
       content: req.body.content,
       image: result.secure_url,
+      imagePublicId: result.public_id,
       category: req.body.category || "",
-      author: req.user._id,
+      author: req.user._id, // logged-in user ID
     });
 
     const savedBlog = await newBlog.save();
@@ -35,19 +35,34 @@ exports.createBlog = async (req, res) => {
   }
 };
 
-// Get all blogs
+// GET ALL BLOGS
 exports.getAllBlogs = async (req, res) => {
   try {
-    const blogs = await Blog.find()
+    const { search, category } = req.query;
+    let filter = {};
+
+    if (search) {
+      filter.$or = [
+        { title: { $regex: search, $options: "i" } },
+        { content: { $regex: search, $options: "i" } }
+      ];
+    }
+
+    if (category) {
+      filter.category = category;
+    }
+
+    const blogs = await Blog.find(filter)
       .populate("author", "name username")
       .sort({ createdAt: -1 });
+
     res.json(blogs);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
 
-// Get blog by ID
+// GET SINGLE BLOG BY ID
 exports.getBlogById = async (req, res) => {
   try {
     const blog = await Blog.findById(req.params.id)
@@ -69,16 +84,21 @@ exports.getBlogById = async (req, res) => {
   }
 };
 
-// Update blog
+// UPDATE BLOG
 exports.updateBlog = async (req, res) => {
   try {
-    const updatedData = {
-      title: req.body.title,
-      content: req.body.content,
-      category: req.body.category,
-    };
+    const blog = await Blog.findById(req.params.id);
+    if (!blog) return res.status(404).json({ message: "Blog not found" });
+
+    blog.title = req.body.title || blog.title;
+    blog.content = req.body.content || blog.content;
+    blog.category = req.body.category || blog.category;
 
     if (req.file && req.file.buffer) {
+      if (blog.imagePublicId) {
+        await cloudinary.uploader.destroy(blog.imagePublicId);
+      }
+
       const result = await new Promise((resolve, reject) => {
         const stream = cloudinary.uploader.upload_stream(
           { resource_type: "image" },
@@ -90,38 +110,37 @@ exports.updateBlog = async (req, res) => {
         stream.end(req.file.buffer);
       });
 
-      updatedData.image = result.secure_url;
+      blog.image = result.secure_url;
+      blog.imagePublicId = result.public_id;
     }
 
-    const updatedBlog = await Blog.findByIdAndUpdate(req.params.id, updatedData, {
-      new: true,
-    });
-
-    if (!updatedBlog) {
-      return res.status(404).json({ message: "Blog not found" });
-    }
-
+    const updatedBlog = await blog.save();
     res.json(updatedBlog);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
 
-// Delete blog
+// DELETE BLOG
 exports.deleteBlog = async (req, res) => {
   try {
-    const deletedBlog = await Blog.findByIdAndDelete(req.params.id);
-    if (!deletedBlog) {
+    const blog = await Blog.findById(req.params.id);
+    if (!blog) {
       return res.status(404).json({ message: "Blog not found" });
     }
 
-    res.json({ message: "Blog deleted successfully" });
+    if (blog.imagePublicId) {
+      await cloudinary.uploader.destroy(blog.imagePublicId);
+    }
+
+    await blog.deleteOne();
+    res.json({ message: "Blog and its image deleted successfully" });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
 
-// Toggle like blog
+// TOGGLE LIKE
 exports.toggleLikeBlog = async (req, res) => {
   try {
     const blog = await Blog.findById(req.params.id);
@@ -144,12 +163,11 @@ exports.toggleLikeBlog = async (req, res) => {
       likesCount: blog.likes.length,
     });
   } catch (error) {
-    console.error("Like toggle error:", error);
     res.status(500).json({ message: "Something went wrong" });
   }
 };
 
-// Add comment
+// ADD COMMENT
 exports.addComment = async (req, res) => {
   try {
     const blog = await Blog.findById(req.params.id);
@@ -166,21 +184,28 @@ exports.addComment = async (req, res) => {
 
     res.status(200).json({ message: "Comment added", comment });
   } catch (error) {
-    console.error("Add comment error:", error);
     res.status(500).json({ message: "Something went wrong" });
   }
 };
 
-// Get comments for a blog
+// GET COMMENTS
 exports.getComments = async (req, res) => {
   try {
     const blog = await Blog.findById(req.params.id).populate("comments.user", "name username");
-
     if (!blog) return res.status(404).json({ message: "Blog not found" });
 
     res.status(200).json({ comments: blog.comments });
   } catch (error) {
-    console.error("Get comments error:", error);
+    res.status(500).json({ message: "Something went wrong" });
+  }
+};
+
+// GET UNIQUE CATEGORIES
+exports.getCategories = async (req, res) => {
+  try {
+    const categories = await Blog.distinct("category");
+    res.status(200).json(categories);
+  } catch (error) {
     res.status(500).json({ message: "Something went wrong" });
   }
 };

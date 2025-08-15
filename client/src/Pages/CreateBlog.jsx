@@ -1,56 +1,46 @@
-// src/Pages/CreateBlog.jsx
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import Navbar from "../components/Navbar";
 
 export const CreateBlog = () => {
   const { token } = useAuth();
   const navigate = useNavigate();
 
-  const [form, setForm] = useState({ title: "", content: "", category: "" });
+  const [form, setForm] = useState({
+    title: "",
+    content: "",
+    category: "",
+  });
   const [image, setImage] = useState(null);
-  const [preview, setPreview] = useState("");
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
-  // Form text change
-  const onChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
+  const categories = ["Travel", "Technology", "Lifestyle", "Food", "Health", "Education"];
 
-  // Image change
-  const onImage = (e) => {
-    const f = e.target.files?.[0];
-    setImage(f || null);
-    setPreview(f ? URL.createObjectURL(f) : "");
-  };
+  const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
+  const handleImageChange = (e) => setImage(e.target.files[0]);
 
-  // Submit form
-  const submit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
 
-    if (!image) {
-      setError("Image is required");
+    if (!form.title || !form.content || !form.category || !image) {
+      setError("Please fill all required fields and upload an image.");
       return;
     }
 
     try {
       setSubmitting(true);
-
       const fd = new FormData();
       fd.append("title", form.title);
       fd.append("content", form.content);
-      if (form.category) fd.append("category", form.category);
+      fd.append("category", form.category);
       fd.append("image", image);
 
-      // ✅ Full backend URL
       const res = await fetch("https://bloging-platform.onrender.com/api/blog/create", {
         method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`, // token lagao
-          // Content-Type mat lagao, fetch + FormData apne aap set karega
-        },
+        headers: { Authorization: `Bearer ${token}` },
         body: fd,
       });
 
@@ -69,50 +59,76 @@ export const CreateBlog = () => {
   };
 
   return (
-    <div className="max-w-3xl mx-auto px-4 py-6">
-      <h1 className="text-2xl font-bold mb-4">Create New Blog</h1>
+    <div className="min-h-screen bg-gray-100">
+      <Navbar />
+      <div className="max-w-3xl mx-auto mt-12 bg-white p-8 rounded shadow-md">
+        <h1 className="text-2xl font-bold mb-6 text-gray-800">Create New Blog</h1>
 
-      {error && <p className="bg-red-100 text-red-700 p-2 rounded mb-3">{error}</p>}
+        {error && <p className="text-red-500 mb-4">{error}</p>}
 
-      <form onSubmit={submit} className="space-y-4 bg-white p-5 rounded-2xl shadow">
-        <input
-          name="title"
-          placeholder="Blog title"
-          value={form.title}
-          onChange={onChange}
-          required
-          className="w-full border rounded-lg px-4 py-2"
-        />
-        <textarea
-          name="content"
-          placeholder="Write your content..."
-          rows={8}
-          value={form.content}
-          onChange={onChange}
-          required
-          className="w-full border rounded-lg px-4 py-2"
-        />
-
-        <div>
-          <label className="block mb-2 text-sm text-gray-600">Cover Image*</label>
-          <input type="file" accept="image/*" onChange={onImage} />
-          {preview && (
-            <img
-              src={preview}
-              alt="preview"
-              className="mt-3 w-full h-64 object-cover rounded-xl"
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="block text-gray-700 mb-1">Title *</label>
+            <input
+              type="text"
+              name="title"
+              value={form.title}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Enter blog title"
+              required
             />
-          )}
-        </div>
+          </div>
 
-        <button
-          type="submit"
-          disabled={submitting}
-          className="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700"
-        >
-          {submitting ? "Publishing..." : "Publish Blog"}
-        </button>
-      </form>
+          <div>
+            <label className="block text-gray-700 mb-1">Content *</label>
+            <textarea
+              name="content"
+              value={form.content}
+              onChange={handleChange}
+              rows={6}
+              className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Write your blog content here"
+              required
+            ></textarea>
+          </div>
+
+          <div>
+            <label className="block text-gray-700 mb-1">Category *</label>
+            <select
+              name="category"
+              value={form.category}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            >
+              <option value="" disabled>Select a category</option>
+              {categories.map((cat) => (
+                <option key={cat} value={cat}>{cat}</option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-gray-700 mb-1">Image *</label>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleImageChange}
+              className="w-full"
+              required
+            />
+          </div>
+
+          <button
+            type="submit"
+            disabled={submitting}
+            className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition-colors disabled:opacity-50"
+          >
+            {submitting ? "Submitting..." : "Create Blog"}
+          </button>
+        </form>
+      </div>
     </div>
   );
 };

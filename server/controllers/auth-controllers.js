@@ -1,12 +1,11 @@
 const User = require("../models/user-model");
 const bcrypt = require("bcryptjs");
 const nodemailer = require("nodemailer");
-require("dotenv").config(); // make sure this is here
+require("dotenv").config();
 
 // ========================= REGISTER =========================
 const register = async (req, res) => {
   try {
-    console.log(req.body);
     const { username, name, email, phone, password } = req.body;
 
     const userExist = await User.findOne({ username });
@@ -70,7 +69,6 @@ const login = async (req, res) => {
 const user = async (req, res) => {
   try {
     const userData = req.user;
-    console.log(userData);
     res.status(200).json({ userData });
   } catch (error) {
     res.status(500).json({ message: "Server error from user route" });
@@ -81,8 +79,8 @@ const user = async (req, res) => {
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: process.env.EMAIL_USER, // Gmail address
-    pass: process.env.EMAIL_PASS, // Gmail App Password
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
   },
 });
 
@@ -96,13 +94,11 @@ const forgetPassword = async (req, res) => {
       return res.status(400).json({ message: "User not found" });
     }
 
-    // 6-digit OTP generate
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
     user.otp = otp;
-    user.otpExpiry = Date.now() + 10 * 60 * 1000; // 10 min expiry
+    user.otpExpiry = Date.now() + 10 * 60 * 1000;
     await user.save();
 
-    // Email se bhejna
     await transporter.sendMail({
       to: user.email,
       subject: "Password Reset OTP",
@@ -121,24 +117,22 @@ const resetPassword = async (req, res) => {
   try {
     const { otp, newPassword, confirmPassword } = req.body;
 
-    // Check if newPassword and confirmPassword match
     if (newPassword !== confirmPassword) {
       return res.status(400).json({ message: "Passwords do not match" });
     }
 
     const user = await User.findOne({
       otp,
-      otpExpiry: { $gt: Date.now() } // ensures OTP is not expired
+      otpExpiry: { $gt: Date.now() }
     });
 
     if (!user) {
       return res.status(400).json({ message: "Invalid or expired OTP" });
     }
 
-    // Hash and set the new password
     user.password = await bcrypt.hash(newPassword, 10);
-    user.otp = undefined; // clear OTP
-    user.otpExpiry = undefined; // clear expiry
+    user.otp = undefined;
+    user.otpExpiry = undefined;
     await user.save();
 
     res.json({ message: "Password reset successful" });
@@ -148,4 +142,11 @@ const resetPassword = async (req, res) => {
 };
 
 
-module.exports = { register, login, user, forgetPassword, resetPassword };
+module.exports = {
+  register,
+  login,
+  user,
+  forgetPassword,
+  resetPassword,
+
+};

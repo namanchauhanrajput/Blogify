@@ -10,14 +10,8 @@ const userSchema = new mongoose.Schema({
   isAdmin: { type: Boolean, default: false },
   otp: { type: String },
   otpExpiry: { type: Date }
-
 });
 
-userSchema.methods.comparePassword = async function (password) {
-  return password === this.password;
-};
-
-// ✅ JWT token generation
 userSchema.methods.generateToken = function () {
   try {
     return jwt.sign(
@@ -27,14 +21,12 @@ userSchema.methods.generateToken = function () {
         isAdmin: this.isAdmin,
       },
       process.env.JWT_KEY,
-      {
-        expiresIn: "30d",
-      }
+      { expiresIn: "30d" }
     );
   } catch (error) {
     console.error("Token error:", error);
   }
 };
 
-const User = new mongoose.model("User", userSchema);
+const User = mongoose.model("User", userSchema);
 module.exports = User;
