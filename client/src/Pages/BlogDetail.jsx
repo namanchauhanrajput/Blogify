@@ -98,7 +98,7 @@ export const BlogDetail = () => {
     }
   };
 
-  if (loading) return <div className="max-w-4xl mx-auto p-6">Loading...</div>;
+  if (loading) return <div className="max-w-4xl mx-auto p-6">Ruko jaraaa savar krooo</div>;
   if (!blog) return <div className="max-w-4xl mx-auto p-6">Not found</div>;
 
   return (
@@ -107,7 +107,7 @@ export const BlogDetail = () => {
         <img
           src={blog.image}
           alt={blog.title}
-          className="w-full h-96 object-cover rounded-2xl mb-4"
+          className="w-full h-full sm:w-auto sm:h-80 lg:h-[500px] object-cover mb-4"
         />
       )}
       <h1 className="text-3xl font-bold mb-2">{blog.title}</h1>
