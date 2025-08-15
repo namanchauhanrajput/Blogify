@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import BlogCard from "../components/BlogCard";
-// import { endpoints } from "../api";
 
 export const Home = () => {
   const [blogs, setBlogs] = useState([]);
@@ -14,7 +13,7 @@ export const Home = () => {
       const res = await fetch("https://bloging-platform.onrender.com/api/blog/categories/list");
       const data = await res.json();
       if (Array.isArray(data)) {
-        setCategories(["All", ...data.filter(c => c)]); // remove empty categories
+        setCategories(["All", ...data.filter((c) => c)]);
       }
     } catch (err) {
       console.error("Error fetching categories:", err);
@@ -46,33 +45,41 @@ export const Home = () => {
       : blogs.filter((b) => b.category === selectedCategory);
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-6">
-      <h1 className="text-2xl font-bold mb-4">Latest Blogs</h1>
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      {/* Title */}
+      <h1 className="text-3xl font-extrabold mb-6 text-gray-900 text-center sm:text-left">
+        Latest Blogs
+      </h1>
 
       {/* Category Filter */}
-      <div className="mb-6">
-        <label className="mr-2 font-medium text-gray-700">Filter by Category:</label>
+      <div className="mb-8 flex flex-col sm:flex-row sm:items-center gap-3">
+        <label className="font-medium text-gray-700">
+          Filter by Category:
+        </label>
         <select
           value={selectedCategory}
           onChange={(e) => setSelectedCategory(e.target.value)}
-          className="px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm w-full sm:w-auto"
         >
           {categories.map((cat) => (
-            <option key={cat} value={cat}>{cat}</option>
+            <option key={cat} value={cat}>
+              {cat}
+            </option>
           ))}
         </select>
       </div>
 
+      {/* Blog List */}
       {loading ? (
-        <p className="text-gray-600">Loading...</p>
+        <p className="text-gray-600 text-center sm:text-left">Loading...</p>
       ) : filteredBlogs.length === 0 ? (
-        <p className="text-gray-600">
+        <p className="text-gray-600 text-center sm:text-left">
           {selectedCategory === "All"
             ? "No blogs yet. Be the first to create!"
             : `No blogs in "${selectedCategory}" category.`}
         </p>
       ) : (
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {filteredBlogs.map((b) => (
             <BlogCard key={b._id} blog={b} />
           ))}

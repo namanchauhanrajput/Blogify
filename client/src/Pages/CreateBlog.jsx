@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import Navbar from "../components/Navbar";
 
 export const CreateBlog = () => {
   const { token } = useAuth();
@@ -18,7 +17,9 @@ export const CreateBlog = () => {
 
   const categories = ["Travel", "Technology", "Lifestyle", "Food", "Health", "Education"];
 
-  const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
+  const handleChange = (e) =>
+    setForm({ ...form, [e.target.name]: e.target.value });
+
   const handleImageChange = (e) => setImage(e.target.files[0]);
 
   const handleSubmit = async (e) => {
@@ -38,11 +39,14 @@ export const CreateBlog = () => {
       fd.append("category", form.category);
       fd.append("image", image);
 
-      const res = await fetch("https://bloging-platform.onrender.com/api/blog/create", {
-        method: "POST",
-        headers: { Authorization: `Bearer ${token}` },
-        body: fd,
-      });
+      const res = await fetch(
+        "https://bloging-platform.onrender.com/api/blog/create",
+        {
+          method: "POST",
+          headers: { Authorization: `Bearer ${token}` },
+          body: fd,
+        }
+      );
 
       if (!res.ok) {
         const err = await res.json().catch(() => ({}));
@@ -60,9 +64,10 @@ export const CreateBlog = () => {
 
   return (
     <div className="min-h-screen bg-gray-100">
-      <Navbar />
       <div className="max-w-3xl mx-auto mt-12 bg-white p-8 rounded shadow-md">
-        <h1 className="text-2xl font-bold mb-6 text-gray-800">Create New Blog</h1>
+        <h1 className="text-2xl font-bold mb-6 text-gray-800">
+          Create New Blog
+        </h1>
 
         {error && <p className="text-red-500 mb-4">{error}</p>}
 
@@ -102,9 +107,13 @@ export const CreateBlog = () => {
               className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             >
-              <option value="" disabled>Select a category</option>
+              <option value="" disabled>
+                Select a category
+              </option>
               {categories.map((cat) => (
-                <option key={cat} value={cat}>{cat}</option>
+                <option key={cat} value={cat}>
+                  {cat}
+                </option>
               ))}
             </select>
           </div>
