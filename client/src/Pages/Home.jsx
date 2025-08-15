@@ -7,7 +7,7 @@ export const Home = () => {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [loading, setLoading] = useState(true);
 
-  // Fetch categories from backend
+  // Fetch categories
   const fetchCategories = async () => {
     try {
       const res = await fetch("https://bloging-platform.onrender.com/api/blog/categories/list");
@@ -53,9 +53,7 @@ export const Home = () => {
 
       {/* Category Filter */}
       <div className="mb-8 flex flex-col sm:flex-row sm:items-center gap-3">
-        <label className="font-medium text-gray-700">
-          Filter by Category:
-        </label>
+        <label className="font-medium text-gray-700">Filter by Category:</label>
         <select
           value={selectedCategory}
           onChange={(e) => setSelectedCategory(e.target.value)}
