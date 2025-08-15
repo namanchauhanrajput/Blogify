@@ -1,49 +1,45 @@
-// src/App.js
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "./context/AuthContext";
-import Navbar from "./components/Navbar";
-
-import { Home } from "./Pages/Home";
 import { Register } from "./Pages/Register";
 import { Login } from "./Pages/Login";
-import { ForgotPassword } from "./Pages/ForgotPassword";
 import { CreateBlog } from "./Pages/CreateBlog";
-import { BlogDetail } from "./Pages/BlogDetail";
-import { EditBlog } from "./Pages/EditBlog";
+import { ForgotPassword } from "./Pages/ForgotPassword";
+import { Home } from "./Pages/Home";
+import Navbar from "./components/Navbar"; // Navbar import kiya
 
-const RequireAuth = ({ children }) => {
-  const { token, isLoading } = useAuth();
-  if (isLoading) return <div className="p-6">Loading...</div>;
-  return token ? children : <Navigate to="/register" replace />;
+// Wrapper for protected routes
+const ProtectedRoute = ({ element }) => {
+  const { token } = useAuth();
+  return token ? element : <Navigate to="/register" replace />;
 };
 
-const PublicOnly = ({ children }) => {
-  const { token, isLoading } = useAuth();
-  if (isLoading) return <div className="p-6">Loading...</div>;
-  return token ? <Navigate to="/" replace /> : children;
+// Wrapper for public routes
+const PublicRoute = ({ element }) => {
+  const { token } = useAuth();
+  return token ? <Navigate to="/" replace /> : element;
 };
 
-export default function App() {
+const App = () => {
   return (
     <AuthProvider>
       <BrowserRouter>
-        <Navbar />
+      <Navbar/>
         <Routes>
-          {/* Public */}
-          <Route path="/register" element={<PublicOnly><Register /></PublicOnly>} />
-          <Route path="/login" element={<PublicOnly><Login /></PublicOnly>} />
-          <Route path="/forgot-password" element={<PublicOnly><ForgotPassword /></PublicOnly>} />
+          {/* Public Routes */}
+          <Route path="/register" element={<PublicRoute element={<Register />} />} />
+          <Route path="/login" element={<PublicRoute element={<Login />} />} />
+          <Route path="/forgot-password" element={<PublicRoute element={<ForgotPassword />} />} />
+          <Route path="/create-blog" element={<CreateBlog />} />
 
-          {/* Protected */}
-          <Route path="/" element={<RequireAuth><Home /></RequireAuth>} />
-          <Route path="/create" element={<RequireAuth><CreateBlog /></RequireAuth>} />
-          <Route path="/blog/:id" element={<RequireAuth><BlogDetail /></RequireAuth>} />
-          <Route path="/edit/:id" element={<RequireAuth><EditBlog /></RequireAuth>} />
+          {/* Protected Routes */}
+          <Route path="/" element={<ProtectedRoute element={<Home />} />} />
 
-          {/* Fallback */}
+          {/* Catch-all */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>
   );
-}
+};
+
+export default App;
