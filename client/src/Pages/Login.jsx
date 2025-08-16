@@ -1,118 +1,96 @@
 import React, { useState } from "react";
-import { useAuth } from "../context/AuthContext";
 import { useNavigate, Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 export const Login = () => {
-    const { storeTokenInLS } = useAuth();
-    const navigate = useNavigate();
+  const { storeTokenInLS } = useAuth();
+  const navigate = useNavigate();
 
-    const [formData, setFormData] = useState({
-        username: "",
-        password: "",
-    });
+  const [formData, setFormData] = useState({
+    username: "",
+    password: "",
+  });
 
-    const [error, setError] = useState("");
-    const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-    const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
-    };
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setError("");
-        setLoading(true);
-
-        try {
-            const res = await fetch("https://bloging-platform.onrender.com/api/auth/login", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(formData),
-            });
-
-            const data = await res.json();
-            if (res.ok) {
-                storeTokenInLS(data.token);
-                navigate("/");
-            } else {
-                setError(data.message || "Login failed");
-            }
-        } catch (err) {
-            setError("Something went wrong. Please try again.");
-        } finally {
-            setLoading(false);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
+    try {
+      const response = await fetch(
+        "https://bloging-platform.onrender.com/api/auth/login",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(formData),
         }
-    };
+      );
 
-    return (
-        <div className="flex justify-center items-center min-h-screen bg-gray-100 px-4">
-            <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-md">
-                <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">
-                    Login
-                </h2>
+      const data = await response.json();
+      if (response.ok) {
+        storeTokenInLS(data.token);
+        navigate("/");
+      } else {
+        setError(data.message || "Login failed");
+      }
+    } catch (err) {
+      setError("Something went wrong. Try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-                {error && (
-                    <p className="bg-red-100 text-red-600 p-2 rounded mb-4 text-sm">
-                        {error}
-                    </p>
-                )}
+  return (
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-200 via-purple-100 to-pink-200">
+      <div className="bg-white shadow-2xl rounded-2xl p-8 w-full max-w-md">
+        <h2 className="text-2xl font-bold text-center mb-6">Welcome Back</h2>
+        {error && (
+          <div className="bg-red-100 text-red-700 p-2 rounded mb-4 text-center">
+            {error}
+          </div>
+        )}
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <input
+            type="text"
+            name="username"
+            placeholder="Username"
+            value={formData.username}
+            onChange={handleChange}
+            required
+            className="w-full border px-3 py-2 rounded-lg focus:ring-2 focus:ring-indigo-400"
+          />
+          <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            value={formData.password}
+            onChange={handleChange}
+            required
+            className="w-full border px-3 py-2 rounded-lg focus:ring-2 focus:ring-indigo-400"
+          />
 
-                <form onSubmit={handleSubmit} className="space-y-4">
-                    <div>
-                        <label className="block text-gray-600 text-sm font-medium mb-1">
-                            Username
-                        </label>
-                        <input
-                            type="text"
-                            name="username"
-                            placeholder="Enter your username"
-                            value={formData.username}
-                            onChange={handleChange}
-                            required
-                            className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400 outline-none text-gray-700"
-                        />
-                    </div>
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-lg transition"
+          >
+            {loading ? "Logging in..." : "Login"}
+          </button>
+        </form>
 
-                    <div>
-                        <label className="block text-gray-600 text-sm font-medium mb-1">
-                            Password
-                        </label>
-                        <input
-                            type="password"
-                            name="password"
-                            placeholder="Enter your password"
-                            value={formData.password}
-                            onChange={handleChange}
-                            required
-                            className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400 outline-none text-gray-700"
-                        />
-                    </div>
-
-                    <button
-                        type="submit"
-                        disabled={loading}
-                        className="w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-lg transition"
-                    >
-                        {loading ? "Logging in..." : "Login"}
-                    </button>
-                </form>
-
-                <div className="mt-4 text-center text-sm text-gray-600">
-                    <Link
-                        to="/forgot-password"
-                        className="text-blue-500 hover:underline"
-                    >
-                        Forgot Password?
-                    </Link>
-                </div>
-
-                <p className="mt-2 text-center text-sm text-gray-600">
-                    Don’t have an account?{" "}
-                    <Link to="/register" className="text-blue-500 hover:underline">
-                        Register
-                    </Link>
-                </p>
-            </div>
-        </div>
-    );
+        <p className="text-center text-sm mt-4">
+          Don’t have an account?{" "}
+          <Link to="/register" className="text-indigo-600 font-semibold">
+            Register
+          </Link>
+        </p>
+      </div>
+    </div>
+  );
 };
