@@ -23,5 +23,8 @@ router.get('/categories/list', blogController.getCategories);
 // New route: Get all blogs authored by a specific user
 router.get('/user/:userId', auth, userProfileController.getUserBlogs);
 
+// ✅ Update profile route
+router.put('/user/update/profile', auth, userProfileController.updateUserProfile);
+
 
 module.exports = router;

@@ -40,6 +40,11 @@ export default function Navbar() {
               New Post
             </Link>
           )}
+          {isLoggedIn && (
+            <Link to="/my-profile" className={secondaryBtnClasses}>
+              Profile
+            </Link>
+          )}
           {!isLoggedIn ? (
             <>
               <Link to="/login" className={navLinkClasses}>
@@ -64,7 +69,7 @@ export default function Navbar() {
         </Link>
 
         {isLoggedIn && (
-          <Link to="/create-blog" className="flex flex-col items-center text-xs">
+          <Link to="/create" className="flex flex-col items-center text-xs">
             New Post
           </Link>
         )}

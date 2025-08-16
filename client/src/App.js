@@ -5,7 +5,8 @@ import { Login } from "./Pages/Login";
 import { CreateBlog } from "./Pages/CreateBlog";
 import { ForgotPassword } from "./Pages/ForgotPassword";
 import { Home } from "./Pages/Home";
-import Navbar from "./components/Navbar"; // Navbar import kiya
+import Navbar from "./components/Navbar"; 
+import MyProfile from "./Pages/MyProfile";  // ✅ MyProfile import kiya
 
 // Wrapper for protected routes
 const ProtectedRoute = ({ element }) => {
@@ -23,7 +24,7 @@ const App = () => {
   return (
     <AuthProvider>
       <BrowserRouter>
-      <Navbar/>
+        <Navbar />
         <Routes>
           {/* Public Routes */}
           <Route path="/register" element={<PublicRoute element={<Register />} />} />
@@ -33,6 +34,7 @@ const App = () => {
 
           {/* Protected Routes */}
           <Route path="/" element={<ProtectedRoute element={<Home />} />} />
+          <Route path="/my-profile" element={<ProtectedRoute element={<MyProfile />} />} /> {/* ✅ MyProfile Route added */}
 
           {/* Catch-all */}
           <Route path="*" element={<Navigate to="/" replace />} />
