@@ -8,13 +8,16 @@ const register = async (req, res) => {
   try {
     const { username, name, email, phone, password } = req.body;
 
+    // check if username already exists
     const userExist = await User.findOne({ username });
     if (userExist) {
       return res.status(400).json({ message: "Username is not available" });
     }
 
+    // hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    // create new user
     const newUser = await User.create({
       username,
       name,
@@ -58,7 +61,6 @@ const login = async (req, res) => {
       token,
       userId: userExist._id.toString(),
     });
-
   } catch (error) {
     console.error("Login error:", error);
     return res.status(500).json({ message: "Server error" });
@@ -94,15 +96,17 @@ const forgetPassword = async (req, res) => {
       return res.status(400).json({ message: "User not found" });
     }
 
+    // generate OTP
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
     user.otp = otp;
-    user.otpExpiry = Date.now() + 10 * 60 * 1000;
+    user.otpExpiry = Date.now() + 10 * 60 * 1000; // 10 minutes
     await user.save();
 
+    // send OTP via email
     await transporter.sendMail({
       to: user.email,
       subject: "Password Reset OTP",
-      text: `Your OTP is ${otp}. It is valid for 10 minutes.`
+      text: `Your OTP is ${otp}. It is valid for 10 minutes.`,
     });
 
     res.json({ message: "OTP sent to your email" });
@@ -123,7 +127,7 @@ const resetPassword = async (req, res) => {
 
     const user = await User.findOne({
       otp,
-      otpExpiry: { $gt: Date.now() }
+      otpExpiry: { $gt: Date.now() },
     });
 
     if (!user) {
@@ -137,10 +141,10 @@ const resetPassword = async (req, res) => {
 
     res.json({ message: "Password reset successful" });
   } catch (err) {
+    console.error("Reset password error:", err);
     res.status(500).json({ message: "Server error" });
   }
 };
-
 
 module.exports = {
   register,
@@ -148,5 +152,4 @@ module.exports = {
   user,
   forgetPassword,
   resetPassword,
-
 };

@@ -9,7 +9,7 @@ const userSchema = new mongoose.Schema({
   password: { type: String, required: true },
   isAdmin: { type: Boolean, default: false },
   otp: { type: String },
-  otpExpiry: { type: Date }
+  otpExpiry: { type: Date },
 });
 
 userSchema.methods.generateToken = function () {

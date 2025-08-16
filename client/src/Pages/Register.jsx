@@ -17,14 +17,17 @@ export const Register = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
+  // Input change handler
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  // Submit handler
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
     setLoading(true);
+
     try {
       const response = await fetch(
         "https://bloging-platform.onrender.com/api/auth/register",
@@ -36,16 +39,25 @@ export const Register = () => {
       );
 
       const data = await response.json();
+
+      // Debugging purpose (see in console)
+      console.log("Register API response:", data);
+
       if (response.ok) {
-        storeTokenInLS(data.token);
-        navigate("/"); // Home ya dashboard pe bhej do
+        if (data.token) {
+          storeTokenInLS(data.token);
+          navigate("/"); // home/dashboard
+        } else {
+          setError("Registration successful but token missing!");
+        }
       } else {
         setError(data.message || "Registration failed");
       }
     } catch (err) {
+      console.error("Register error:", err);
       setError("Something went wrong. Try again.");
     } finally {
-      setLoading(false);
+      setLoading(false); // stop loading
     }
   };
 
@@ -53,11 +65,14 @@ export const Register = () => {
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-purple-200 via-pink-100 to-blue-200">
       <div className="bg-white shadow-2xl rounded-2xl p-8 w-full max-w-md">
         <h2 className="text-2xl font-bold text-center mb-6">Create Account</h2>
+
+        {/* Error Message */}
         {error && (
           <div className="bg-red-100 text-red-700 p-2 rounded mb-4 text-center">
             {error}
           </div>
         )}
+
         <form onSubmit={handleSubmit} className="space-y-4">
           <input
             type="text"
