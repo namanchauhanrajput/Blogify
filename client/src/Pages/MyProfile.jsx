@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 const API_URL = "https://bloging-platform.onrender.com";
 
@@ -24,6 +25,7 @@ const MyProfile = () => {
     },
   });
 
+  // Fetch profile + blogs
   useEffect(() => {
     if (!user?._id) return;
     const fetchProfile = async () => {
@@ -58,6 +60,7 @@ const MyProfile = () => {
     fetchProfile();
   }, [user, token]);
 
+  // Handle input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     if (["twitter", "linkedin", "instagram", "github", "website"].includes(name)) {
@@ -70,13 +73,33 @@ const MyProfile = () => {
     }
   };
 
+  // Update profile
   const handleUpdate = async () => {
     try {
+      const formData = new FormData();
+      formData.append("name", form.name);
+      formData.append("username", form.username);
+      formData.append("bio", form.bio);
+
+      if (form.profilePhoto && typeof form.profilePhoto !== "string") {
+        formData.append("profilePhoto", form.profilePhoto);
+      }
+
+      for (const key in form.socialLinks) {
+        formData.append(`socialLinks[${key}]`, form.socialLinks[key]);
+      }
+
       const res = await axios.put(
         `${API_URL}/blog/user/update/profile`,
-        form,
-        { headers: { Authorization: `Bearer ${token}` } }
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
       );
+
       setProfile(res.data.user);
       setEditMode(false);
       alert("Profile updated successfully ✅");
@@ -93,10 +116,13 @@ const MyProfile = () => {
     <div className="max-w-5xl mx-auto p-4 sm:p-6 md:p-10 space-y-10">
       {/* Profile Info */}
       <section className="bg-white rounded-xl shadow-sm p-4 sm:p-6 space-y-6">
-        {/* Header */}
         <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4">
           <img
-            src={profile.profilePhoto}
+            src={
+              typeof form.profilePhoto === "string"
+                ? form.profilePhoto
+                : URL.createObjectURL(form.profilePhoto)
+            }
             alt="Profile"
             className="w-24 h-24 rounded-full object-cover border-2"
           />
@@ -106,35 +132,53 @@ const MyProfile = () => {
           </div>
         </div>
 
-        {/* Bio */}
         <div>
           <p className="text-gray-700 text-sm sm:text-base">
             {profile.bio || "No bio added yet."}
           </p>
         </div>
 
-        {/* Social Links */}
         <div>
           <ul className="flex flex-wrap gap-4 text-sm text-blue-600">
             {profile.socialLinks.twitter && (
-              <li><a href={profile.socialLinks.twitter} target="_blank" rel="noreferrer">Twitter</a></li>
+              <li>
+                <a href={profile.socialLinks.twitter} target="_blank" rel="noreferrer">
+                  Twitter
+                </a>
+              </li>
             )}
             {profile.socialLinks.linkedin && (
-              <li><a href={profile.socialLinks.linkedin} target="_blank" rel="noreferrer">LinkedIn</a></li>
+              <li>
+                <a href={profile.socialLinks.linkedin} target="_blank" rel="noreferrer">
+                  LinkedIn
+                </a>
+              </li>
             )}
             {profile.socialLinks.instagram && (
-              <li><a href={profile.socialLinks.instagram} target="_blank" rel="noreferrer">Instagram</a></li>
+              <li>
+                <a href={profile.socialLinks.instagram} target="_blank" rel="noreferrer">
+                  Instagram
+                </a>
+              </li>
             )}
             {profile.socialLinks.github && (
-              <li><a href={profile.socialLinks.github} target="_blank" rel="noreferrer">GitHub</a></li>
+              <li>
+                <a href={profile.socialLinks.github} target="_blank" rel="noreferrer">
+                  GitHub
+                </a>
+              </li>
             )}
             {profile.socialLinks.website && (
-              <li><a href={profile.socialLinks.website} target="_blank" rel="noreferrer">Website</a></li>
+              <li>
+                <a href={profile.socialLinks.website} target="_blank" rel="noreferrer">
+                  Website
+                </a>
+              </li>
             )}
           </ul>
         </div>
 
-        {/* Edit Button & Form */}
+        {/* Edit Section */}
         <div>
           {!editMode ? (
             <button
@@ -145,21 +189,105 @@ const MyProfile = () => {
             </button>
           ) : (
             <div className="space-y-3">
-              {/* Form Fields */}
-              <input type="text" name="name" placeholder="Full Name" value={form.name} onChange={handleChange} className="w-full border p-2 rounded" />
-              <input type="text" name="username" placeholder="Username" value={form.username} onChange={handleChange} className="w-full border p-2 rounded" />
-              <textarea name="bio" placeholder="Bio" value={form.bio} onChange={handleChange} className="w-full border p-2 rounded" />
-              <input type="text" name="profilePhoto" placeholder="Profile Photo URL" value={form.profilePhoto} onChange={handleChange} className="w-full border p-2 rounded" />
-              <input type="text" name="twitter" placeholder="Twitter" value={form.socialLinks.twitter} onChange={handleChange} className="w-full border p-2 rounded" />
-              <input type="text" name="linkedin" placeholder="LinkedIn" value={form.socialLinks.linkedin} onChange={handleChange} className="w-full border p-2 rounded" />
-              <input type="text" name="instagram" placeholder="Instagram" value={form.socialLinks.instagram} onChange={handleChange} className="w-full border p-2 rounded" />
-              <input type="text" name="github" placeholder="GitHub" value={form.socialLinks.github} onChange={handleChange} className="w-full border p-2 rounded" />
-              <input type="text" name="website" placeholder="Website" value={form.socialLinks.website} onChange={handleChange} className="w-full border p-2 rounded" />
+              <input
+                type="text"
+                name="name"
+                placeholder="Full Name"
+                value={form.name}
+                onChange={handleChange}
+                className="w-full border p-2 rounded"
+              />
+              <input
+                type="text"
+                name="username"
+                placeholder="Username"
+                value={form.username}
+                onChange={handleChange}
+                className="w-full border p-2 rounded"
+              />
+              <textarea
+                name="bio"
+                placeholder="Bio"
+                value={form.bio}
+                onChange={handleChange}
+                className="w-full border p-2 rounded"
+              />
 
-              {/* Buttons */}
+              {/* File Upload */}
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => {
+                  const file = e.target.files[0];
+                  if (file) {
+                    setForm((prev) => ({ ...prev, profilePhoto: file }));
+                  }
+                }}
+                className="w-full border p-2 rounded"
+              />
+              {form.profilePhoto && typeof form.profilePhoto !== "string" && (
+                <img
+                  src={URL.createObjectURL(form.profilePhoto)}
+                  alt="Preview"
+                  className="w-24 h-24 object-cover rounded-full mt-2"
+                />
+              )}
+
+              {/* Social Links */}
+              <input
+                type="text"
+                name="twitter"
+                placeholder="Twitter"
+                value={form.socialLinks.twitter}
+                onChange={handleChange}
+                className="w-full border p-2 rounded"
+              />
+              <input
+                type="text"
+                name="linkedin"
+                placeholder="LinkedIn"
+                value={form.socialLinks.linkedin}
+                onChange={handleChange}
+                className="w-full border p-2 rounded"
+              />
+              <input
+                type="text"
+                name="instagram"
+                placeholder="Instagram"
+                value={form.socialLinks.instagram}
+                onChange={handleChange}
+                className="w-full border p-2 rounded"
+              />
+              <input
+                type="text"
+                name="github"
+                placeholder="GitHub"
+                value={form.socialLinks.github}
+                onChange={handleChange}
+                className="w-full border p-2 rounded"
+              />
+              <input
+                type="text"
+                name="website"
+                placeholder="Website"
+                value={form.socialLinks.website}
+                onChange={handleChange}
+                className="w-full border p-2 rounded"
+              />
+
               <div className="flex gap-3">
-                <button onClick={handleUpdate} className="bg-green-600 text-white px-4 py-2 rounded-lg">Save</button>
-                <button onClick={() => setEditMode(false)} className="bg-gray-500 text-white px-4 py-2 rounded-lg">Cancel</button>
+                <button
+                  onClick={handleUpdate}
+                  className="bg-green-600 text-white px-4 py-2 rounded-lg"
+                >
+                  Save
+                </button>
+                <button
+                  onClick={() => setEditMode(false)}
+                  className="bg-gray-500 text-white px-4 py-2 rounded-lg"
+                >
+                  Cancel
+                </button>
               </div>
             </div>
           )}
@@ -167,26 +295,25 @@ const MyProfile = () => {
       </section>
 
       {/* Blogs Section */}
-      <section className="space-y-6">
-        <h3 className="text-xl font-bold">My Blogs</h3>
-        {blogs.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            {blogs.map((blog) => (
-              <div key={blog._id} className="border rounded-lg p-4 space-y-2">
-                <h4 className="font-semibold text-lg">{blog.title}</h4>
-                {blog.image && (
-                  <img
-                    src={blog.image}
-                    alt={blog.title}
-                    className="w-full max-h-60 object-cover rounded"
-                  />
-                )}
-                <p className="text-gray-700 text-sm sm:text-base">{blog.content}</p>
-              </div>
-            ))}
-          </div>
+      <section className="bg-white rounded-xl shadow-sm p-4 sm:p-6 space-y-6">
+        <h3 className="text-xl font-semibold">My Blogs</h3>
+        {blogs.length === 0 ? (
+          <p className="text-gray-600">No blogs yet.</p>
         ) : (
-          <p className="text-gray-600">No blogs found.</p>
+          <ul className="space-y-4">
+            {blogs.map((blog) => (
+              <li key={blog._id} className="border-b pb-2">
+                <Link to={`/blog/${blog._id}`}>
+                  <h4 className="text-lg font-bold text-blue-600 hover:underline">
+                    {blog.title}
+                  </h4>
+                </Link>
+                <p className="text-gray-700 text-sm">
+                  {blog.content.slice(0, 120)}...
+                </p>
+              </li>
+            ))}
+          </ul>
         )}
       </section>
     </div>
