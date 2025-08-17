@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import BlogCard from "../components/BlogCard";
 
-const API_URL = "http://localhost:5000/api";
+const API_URL = "https://bloging-platform.onrender.com/api";
 
 const UserProfile = () => {
   const { userId } = useParams();
