@@ -6,21 +6,20 @@ exports.getUserBlogs = async (req, res) => {
   try {
     const { userId } = req.params;
 
-    // 1. User profile fetch
+    // 1. Find user
     const user = await User.findById(userId).select("-password -otp -otpExpiry");
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // 2. उस user के blogs निकालो
+    // 2. Get blogs of that user
     const blogs = await Blog.find({ author: userId })
       .sort({ createdAt: -1 })
-      .populate("author", "username name profilePhoto"); 
-      // populate ताकि blog में भी author details दिखें
+      .populate("author", "username name profilePhoto");
 
     res.status(200).json({
       userProfile: user,
-      blogs: blogs,
+      blogs,
     });
   } catch (error) {
     console.error("Get user blogs error:", error);
@@ -28,13 +27,13 @@ exports.getUserBlogs = async (req, res) => {
   }
 };
 
-// ✅ Update user profile (bio, photo, social links, username, name)
+// ✅ Update user profile
 exports.updateUserProfile = async (req, res) => {
   try {
-    const userId = req.userID; 
+    const userId = req.userID;
     const { bio, profilePhoto, socialLinks, name, username } = req.body;
 
-    // Username पहले से exist तो नहीं?
+    // Username unique check
     if (username) {
       const existingUser = await User.findOne({ username, _id: { $ne: userId } });
       if (existingUser) {
@@ -42,7 +41,7 @@ exports.updateUserProfile = async (req, res) => {
       }
     }
 
-    // Update user
+    // Update fields
     const updatedUser = await User.findByIdAndUpdate(
       userId,
       {

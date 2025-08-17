@@ -3,10 +3,16 @@ import { Link } from "react-router-dom";
 export default function BlogCard({ blog }) {
   return (
     <article className="bg-white rounded-2xl transition duration-300 overflow-hidden flex flex-col  h-full">
-       <div className="flex items-center justify-between mt-3 text-xs sm:text-sm text-gray-500">
-          <span>By {blog.author?.username || "Unknown"}</span>
-          {/* <span>{new Date(blog.createdAt).toLocaleDateString()}</span> */}
-        </div>
+      {/* ✅ Username Clickable */}
+      <div className="flex items-center justify-between mt-3 text-xs sm:text-sm text-gray-500">
+        <Link 
+          to={`/profile/${blog.author?._id}`} 
+          className="hover:underline text-blue-600"
+        >
+          By {blog.author?.username || "Unknown"}
+        </Link>
+      </div>
+
       {blog.image && (
         <div className="w-full">
           <img
@@ -28,9 +34,8 @@ export default function BlogCard({ blog }) {
           {blog.content}
         </p>
 
-        {/* Author & Date */}
+        {/* Date */}
         <div className="flex items-center justify-between mt-3 text-xs sm:text-sm text-gray-500">
-          {/* <span>By {blog.author?.username || "Unknown"}</span> */}
           <span>{new Date(blog.createdAt).toLocaleDateString()}</span>
         </div>
 

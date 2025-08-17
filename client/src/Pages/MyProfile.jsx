@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext"; 
 import axios from "axios";
 
-const API_URL = "http://localhost:5000/api"; 
+const API_URL = "https://bloging-platform.onrender.com"; 
 
 const MyProfile = () => {
   const { token, user } = useAuth(); 
@@ -30,7 +30,7 @@ const MyProfile = () => {
     const fetchProfile = async () => {
       try {
         setLoading(true);
-        const res = await axios.get(`${API_URL}/blog/user/${user._id}`, {
+        const res = await axios.get(`${API_URL}/api/blog/user/${user._id}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         
