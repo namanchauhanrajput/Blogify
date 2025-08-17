@@ -10,7 +10,7 @@ const userSchema = new mongoose.Schema(
     password: { type: String, required: true },
 
     // User profile fields
-    bio: { type: String, default: null },   // ✅ default null
+    bio: { type: String, default: null },
     profilePhoto: {
       type: String,
       default: "https://cdn-icons-png.flaticon.com/512/149/149071.png",
@@ -18,6 +18,7 @@ const userSchema = new mongoose.Schema(
     socialLinks: {
       twitter: { type: String, default: "" },
       linkedin: { type: String, default: "" },
+      instagram: { type: String, default: "" }, // ✅ Instagram added
       github: { type: String, default: "" },
       website: { type: String, default: "" },
     },

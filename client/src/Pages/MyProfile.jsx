@@ -10,11 +10,13 @@ const MyProfile = () => {
   const [blogs, setBlogs] = useState([]);
   const [editMode, setEditMode] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [file, setFile] = useState(null); // ✅ for file upload
+
   const [form, setForm] = useState({
     name: "",
     username: "",
     bio: "",
-    profilePhoto: "",
+    profilePhoto: "", // for URL
     socialLinks: {
       twitter: "",
       linkedin: "",
@@ -24,6 +26,7 @@ const MyProfile = () => {
     },
   });
 
+  // ✅ Fetch profile on load
   useEffect(() => {
     if (!user?._id) return;
     const fetchProfile = async () => {
@@ -58,6 +61,7 @@ const MyProfile = () => {
     fetchProfile();
   }, [user, token]);
 
+  // ✅ Handle input change
   const handleChange = (e) => {
     const { name, value } = e.target;
     if (["twitter", "linkedin", "instagram", "github", "website"].includes(name)) {
@@ -70,13 +74,45 @@ const MyProfile = () => {
     }
   };
 
+  // ✅ File change
+  const handleFileChange = (e) => {
+    setFile(e.target.files[0]);
+  };
+
+  // ✅ Update profile API
   const handleUpdate = async () => {
     try {
+      const formData = new FormData();
+
+      formData.append("name", form.name);
+      formData.append("username", form.username);
+      formData.append("bio", form.bio);
+
+      // ✅ Agar file choose ki gayi hai to file bhejo, warna URL
+      if (file) {
+        formData.append("profilePhoto", file);
+      } else if (form.profilePhoto) {
+        formData.append("profilePhoto", form.profilePhoto);
+      }
+
+      // ✅ Social links ko append karo
+      Object.keys(form.socialLinks).forEach((key) => {
+        if (form.socialLinks[key]) {
+          formData.append(`socialLinks[${key}]`, form.socialLinks[key]);
+        }
+      });
+
       const res = await axios.put(
         `${API_URL}/api/blog/user/update/profile`,
-        form,
-        { headers: { Authorization: `Bearer ${token}` } }
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
       );
+
       setProfile(res.data.user);
       setEditMode(false);
       alert("Profile updated successfully ✅");
@@ -149,7 +185,12 @@ const MyProfile = () => {
               <input type="text" name="name" placeholder="Full Name" value={form.name} onChange={handleChange} className="w-full border p-2 rounded" />
               <input type="text" name="username" placeholder="Username" value={form.username} onChange={handleChange} className="w-full border p-2 rounded" />
               <textarea name="bio" placeholder="Bio" value={form.bio} onChange={handleChange} className="w-full border p-2 rounded" />
+
+              {/* ✅ File upload + URL both */}
+              <input type="file" accept="image/*" onChange={handleFileChange} className="w-full border p-2 rounded" />
               <input type="text" name="profilePhoto" placeholder="Profile Photo URL" value={form.profilePhoto} onChange={handleChange} className="w-full border p-2 rounded" />
+
+              {/* Social Links */}
               <input type="text" name="twitter" placeholder="Twitter" value={form.socialLinks.twitter} onChange={handleChange} className="w-full border p-2 rounded" />
               <input type="text" name="linkedin" placeholder="LinkedIn" value={form.socialLinks.linkedin} onChange={handleChange} className="w-full border p-2 rounded" />
               <input type="text" name="instagram" placeholder="Instagram" value={form.socialLinks.instagram} onChange={handleChange} className="w-full border p-2 rounded" />
