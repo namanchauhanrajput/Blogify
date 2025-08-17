@@ -1,141 +1,49 @@
-import React, { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import { useAuth } from "../context/AuthContext";
 
 export const Register = () => {
-  const { storeTokenInLS } = useAuth();
   const navigate = useNavigate();
-
-  const [formData, setFormData] = useState({
-    username: "",
-    name: "",
-    email: "",
-    phone: "",
-    password: "",
-  });
-
+  const { storeTokenInLS } = useAuth();
+  const [form, setForm] = useState({ username: "", name: "", email: "", phone: "", password: "", confirmPassword: "" });
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
 
-  // Input change handler
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+  const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
-  // Submit handler
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-    setLoading(true);
-
+    if (form.password !== form.confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
     try {
-      const response = await fetch(
-        "https://bloging-platform.onrender.com/api/auth/register",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(formData),
-        }
-      );
-
-      const data = await response.json();
-
-      // Debugging purpose (see in console)
-      console.log("Register API response:", data);
-
-      if (response.ok) {
-        if (data.token) {
-          storeTokenInLS(data.token);
-          navigate("/"); // home/dashboard
-        } else {
-          setError("Registration successful but token missing!");
-        }
-      } else {
-        setError(data.message || "Registration failed");
-      }
+      const res = await axios.post("http://localhost:5000/api/auth/register", {
+        username: form.username,
+        name: form.name,
+        email: form.email,
+        phone: form.phone,
+        password: form.password,
+      });
+      storeTokenInLS(res.data.token); // ✅ Correctly store token
+      navigate("/dashboard");
     } catch (err) {
-      console.error("Register error:", err);
-      setError("Something went wrong. Try again.");
-    } finally {
-      setLoading(false); // stop loading
+      setError(err.response?.data?.message || "Registration failed");
     }
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-purple-200 via-pink-100 to-blue-200">
-      <div className="bg-white shadow-2xl rounded-2xl p-8 w-full max-w-md">
-        <h2 className="text-2xl font-bold text-center mb-6">Create Account</h2>
-
-        {/* Error Message */}
-        {error && (
-          <div className="bg-red-100 text-red-700 p-2 rounded mb-4 text-center">
-            {error}
-          </div>
-        )}
-
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <input
-            type="text"
-            name="username"
-            placeholder="Username"
-            value={formData.username}
-            onChange={handleChange}
-            required
-            className="w-full border px-3 py-2 rounded-lg focus:ring-2 focus:ring-indigo-400"
-          />
-          <input
-            type="text"
-            name="name"
-            placeholder="Full Name"
-            value={formData.name}
-            onChange={handleChange}
-            required
-            className="w-full border px-3 py-2 rounded-lg focus:ring-2 focus:ring-indigo-400"
-          />
-          <input
-            type="email"
-            name="email"
-            placeholder="Email Address"
-            value={formData.email}
-            onChange={handleChange}
-            required
-            className="w-full border px-3 py-2 rounded-lg focus:ring-2 focus:ring-indigo-400"
-          />
-          <input
-            type="text"
-            name="phone"
-            placeholder="Phone"
-            value={formData.phone}
-            onChange={handleChange}
-            required
-            className="w-full border px-3 py-2 rounded-lg focus:ring-2 focus:ring-indigo-400"
-          />
-          <input
-            type="password"
-            name="password"
-            placeholder="Password"
-            value={formData.password}
-            onChange={handleChange}
-            required
-            className="w-full border px-3 py-2 rounded-lg focus:ring-2 focus:ring-indigo-400"
-          />
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-lg transition"
-          >
-            {loading ? "Registering..." : "Register"}
-          </button>
-        </form>
-
-        <p className="text-center text-sm mt-4">
-          Already have an account?{" "}
-          <Link to="/login" className="text-indigo-600 font-semibold">
-            Login
-          </Link>
-        </p>
-      </div>
-    </div>
+    <form onSubmit={handleSubmit} className="w-96 mx-auto mt-20 p-6 border rounded">
+      <h2 className="text-xl font-bold mb-4">Register</h2>
+      {error && <p className="text-red-500">{error}</p>}
+      <input type="text" name="username" placeholder="Username" value={form.username} onChange={handleChange} className="w-full p-2 mb-3 border rounded" required />
+      <input type="text" name="name" placeholder="Full Name" value={form.name} onChange={handleChange} className="w-full p-2 mb-3 border rounded" required />
+      <input type="email" name="email" placeholder="Email" value={form.email} onChange={handleChange} className="w-full p-2 mb-3 border rounded" required />
+      <input type="text" name="phone" placeholder="Phone" value={form.phone} onChange={handleChange} className="w-full p-2 mb-3 border rounded" required />
+      <input type="password" name="password" placeholder="Password" value={form.password} onChange={handleChange} className="w-full p-2 mb-3 border rounded" required />
+      <input type="password" name="confirmPassword" placeholder="Confirm Password" value={form.confirmPassword} onChange={handleChange} className="w-full p-2 mb-3 border rounded" required />
+      <button type="submit" className="w-full bg-green-600 text-white p-2 rounded">Register</button>
+    </form>
   );
 };

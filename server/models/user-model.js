@@ -35,6 +35,7 @@ userSchema.methods.generateToken = function () {
     return jwt.sign(
       {
         userId: this._id.toString(),
+        username: this.username,
         email: this.email,
         isAdmin: this.isAdmin,
       },
