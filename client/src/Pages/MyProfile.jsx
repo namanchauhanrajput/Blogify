@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
-import { useAuth } from "../context/AuthContext"; 
+import { useAuth } from "../context/AuthContext";
 import axios from "axios";
 
-const API_URL = "https://bloging-platform.onrender.com"; 
+const API_URL = "https://bloging-platform.onrender.com";
 
 const MyProfile = () => {
-  const { token, user } = useAuth(); 
+  const { token, user } = useAuth();
   const [profile, setProfile] = useState(null);
-  const [blogs, setBlogs] = useState([]); // ✅ new state for blogs
+  const [blogs, setBlogs] = useState([]);
   const [editMode, setEditMode] = useState(false);
   const [loading, setLoading] = useState(true);
   const [form, setForm] = useState({
@@ -24,7 +24,6 @@ const MyProfile = () => {
     },
   });
 
-  // ✅ Profile + Blogs fetch
   useEffect(() => {
     if (!user?._id) return;
     const fetchProfile = async () => {
@@ -33,10 +32,10 @@ const MyProfile = () => {
         const res = await axios.get(`${API_URL}/api/blog/user/${user._id}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
-        
-        setProfile(res.data.userProfile);       // ✅ profile set
-        setBlogs(res.data.blogs || []);         // ✅ blogs set
-        
+
+        setProfile(res.data.userProfile);
+        setBlogs(res.data.blogs || []);
+
         setForm({
           name: res.data.userProfile.name || "",
           username: res.data.userProfile.username || "",
@@ -59,10 +58,9 @@ const MyProfile = () => {
     fetchProfile();
   }, [user, token]);
 
-  // ✅ Handle change (form update)
   const handleChange = (e) => {
     const { name, value } = e.target;
-    if (["twitter", "linkedin","instagram", "github", "website"].includes(name)) {
+    if (["twitter", "linkedin", "instagram", "github", "website"].includes(name)) {
       setForm((prev) => ({
         ...prev,
         socialLinks: { ...prev.socialLinks, [name]: value },
@@ -72,7 +70,6 @@ const MyProfile = () => {
     }
   };
 
-  // ✅ Update profile
   const handleUpdate = async () => {
     try {
       const res = await axios.put(
@@ -93,30 +90,32 @@ const MyProfile = () => {
   if (!profile) return <div className="text-center py-10">No profile found.</div>;
 
   return (
-    <div className="max-w-3xl mx-auto p-6 space-y-8">
-      {/* Profile Card */}
-      <div className="bg-white shadow-lg rounded-2xl p-6">
-        {/* Profile Header */}
-        <div className="flex items-center gap-6">
+    <div className="max-w-5xl mx-auto p-4 sm:p-6 md:p-10 space-y-10">
+      {/* Profile Info */}
+      <section className="bg-white rounded-xl shadow-sm p-4 sm:p-6 space-y-6">
+        {/* Header */}
+        <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4">
           <img
             src={profile.profilePhoto}
             alt="Profile"
             className="w-24 h-24 rounded-full object-cover border-2"
           />
-          <div>
-            <p className="text-gray-600">{profile.name}</p>
-            <h2 className="text-2xl font-bold">@{profile.username}</h2>
+          <div className="text-center sm:text-left">
+            <p className="text-gray-600 text-sm sm:text-base">{profile.name}</p>
+            <h2 className="text-xl sm:text-2xl font-bold">@{profile.username}</h2>
           </div>
         </div>
 
         {/* Bio */}
-        <div className="mt-4">
-          <p className="text-gray-700">{profile.bio || "No bio added yet."}</p>
+        <div>
+          <p className="text-gray-700 text-sm sm:text-base">
+            {profile.bio || "No bio added yet."}
+          </p>
         </div>
 
         {/* Social Links */}
-        <div className="mt-4">
-          <ul className="text-blue-600 space-y-1">
+        <div>
+          <ul className="flex flex-wrap gap-4 text-sm text-blue-600">
             {profile.socialLinks.twitter && (
               <li><a href={profile.socialLinks.twitter} target="_blank" rel="noreferrer">Twitter</a></li>
             )}
@@ -135,8 +134,8 @@ const MyProfile = () => {
           </ul>
         </div>
 
-        {/* Edit Button + Form */}
-        <div className="mt-6">
+        {/* Edit Button & Form */}
+        <div>
           {!editMode ? (
             <button
               onClick={() => setEditMode(true)}
@@ -145,19 +144,19 @@ const MyProfile = () => {
               Edit Profile
             </button>
           ) : (
-            <div className="space-y-4">
-              {/* Form */}
+            <div className="space-y-3">
+              {/* Form Fields */}
               <input type="text" name="name" placeholder="Full Name" value={form.name} onChange={handleChange} className="w-full border p-2 rounded" />
               <input type="text" name="username" placeholder="Username" value={form.username} onChange={handleChange} className="w-full border p-2 rounded" />
-              <textarea name="bio" placeholder="Write your bio..." value={form.bio} onChange={handleChange} className="w-full border p-2 rounded" />
+              <textarea name="bio" placeholder="Bio" value={form.bio} onChange={handleChange} className="w-full border p-2 rounded" />
               <input type="text" name="profilePhoto" placeholder="Profile Photo URL" value={form.profilePhoto} onChange={handleChange} className="w-full border p-2 rounded" />
-              <input type="text" name="twitter" placeholder="Twitter URL" value={form.socialLinks.twitter} onChange={handleChange} className="w-full border p-2 rounded" />
-              <input type="text" name="linkedin" placeholder="LinkedIn URL" value={form.socialLinks.linkedin} onChange={handleChange} className="w-full border p-2 rounded" />
-              <input type="text" name="instagram" placeholder="Instagram URL" value={form.socialLinks.instagram} onChange={handleChange} className="w-full border p-2 rounded" />
-              <input type="text" name="github" placeholder="GitHub URL" value={form.socialLinks.github} onChange={handleChange} className="w-full border p-2 rounded" />
-              <input type="text" name="website" placeholder="Website URL" value={form.socialLinks.website} onChange={handleChange} className="w-full border p-2 rounded" />
+              <input type="text" name="twitter" placeholder="Twitter" value={form.socialLinks.twitter} onChange={handleChange} className="w-full border p-2 rounded" />
+              <input type="text" name="linkedin" placeholder="LinkedIn" value={form.socialLinks.linkedin} onChange={handleChange} className="w-full border p-2 rounded" />
+              <input type="text" name="instagram" placeholder="Instagram" value={form.socialLinks.instagram} onChange={handleChange} className="w-full border p-2 rounded" />
+              <input type="text" name="github" placeholder="GitHub" value={form.socialLinks.github} onChange={handleChange} className="w-full border p-2 rounded" />
+              <input type="text" name="website" placeholder="Website" value={form.socialLinks.website} onChange={handleChange} className="w-full border p-2 rounded" />
 
-              {/* Save & Cancel */}
+              {/* Buttons */}
               <div className="flex gap-3">
                 <button onClick={handleUpdate} className="bg-green-600 text-white px-4 py-2 rounded-lg">Save</button>
                 <button onClick={() => setEditMode(false)} className="bg-gray-500 text-white px-4 py-2 rounded-lg">Cancel</button>
@@ -165,25 +164,31 @@ const MyProfile = () => {
             </div>
           )}
         </div>
-      </div>
+      </section>
 
-      {/* ✅ User Blogs Section */}
-      <div className="bg-white shadow-lg rounded-2xl p-6">
-        <h3 className="text-xl font-bold mb-4">My Blogs</h3>
+      {/* Blogs Section */}
+      <section className="space-y-6">
+        <h3 className="text-xl font-bold">My Blogs</h3>
         {blogs.length > 0 ? (
-          <div className="space-y-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             {blogs.map((blog) => (
-              <div key={blog._id} className="border rounded-lg p-4">
+              <div key={blog._id} className="border rounded-lg p-4 space-y-2">
                 <h4 className="font-semibold text-lg">{blog.title}</h4>
-                <img src={blog.image} alt={blog.title} className="w-full max-h-60 object-cover rounded-md my-2" />
-                <p className="text-gray-700">{blog.content}</p>
+                {blog.image && (
+                  <img
+                    src={blog.image}
+                    alt={blog.title}
+                    className="w-full max-h-60 object-cover rounded"
+                  />
+                )}
+                <p className="text-gray-700 text-sm sm:text-base">{blog.content}</p>
               </div>
             ))}
           </div>
         ) : (
           <p className="text-gray-600">No blogs found.</p>
         )}
-      </div>
+      </section>
     </div>
   );
 };
