@@ -1,68 +1,65 @@
+const Blog = require("../models/blog-model");
 const User = require("../models/user-model");
-const cloudinary = require("../config/cloudinary");
-const streamifier = require("streamifier");
 
 // ✅ Get user profile + blogs
 exports.getUserBlogs = async (req, res) => {
   try {
     const { userId } = req.params;
-    const user = await User.findById(userId).select("-password -otp -otpExpiry");
-    if (!user) return res.status(404).json({ message: "User not found" });
 
+    // 1. User profile fetch
+    const user = await User.findById(userId).select("-password -otp -otpExpiry");
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // 2. उस user के blogs निकालो
     const blogs = await Blog.find({ author: userId })
       .sort({ createdAt: -1 })
-      .populate("author", "username name profilePhoto");
+      .populate("author", "username name profilePhoto"); 
+      // populate ताकि blog में भी author details दिखें
 
-    res.status(200).json({ userProfile: user, blogs });
+    res.status(200).json({
+      userProfile: user,
+      blogs: blogs,
+    });
   } catch (error) {
     console.error("Get user blogs error:", error);
     res.status(500).json({ message: "Something went wrong" });
   }
 };
 
-// ✅ Update user profile with Cloudinary
+// ✅ Update user profile (bio, photo, social links, username, name)
 exports.updateUserProfile = async (req, res) => {
   try {
-    const userId = req.userID;
-    const { bio, socialLinks, name, username } = req.body;
+    const userId = req.userID; 
+    const { bio, profilePhoto, socialLinks, name, username } = req.body;
 
-    // Check username uniqueness
+    // Username पहले से exist तो नहीं?
     if (username) {
       const existingUser = await User.findOne({ username, _id: { $ne: userId } });
-      if (existingUser) return res.status(400).json({ message: "Username already taken" });
+      if (existingUser) {
+        return res.status(400).json({ message: "Username already taken" });
+      }
     }
 
-    let profilePhotoUrl;
-    if (req.file) {
-      // Cloudinary upload using buffer
-      const uploaded = await new Promise((resolve, reject) => {
-        const uploadStream = cloudinary.uploader.upload_stream(
-          { folder: "profile_photos" },
-          (error, result) => {
-            if (error) return reject(error);
-            resolve(result);
-          }
-        );
-        streamifier.createReadStream(req.file.buffer).pipe(uploadStream);
-      });
-      profilePhotoUrl = uploaded.secure_url;
-    }
-
-    // Build update object dynamically
-    const updateData = {};
-    if (bio !== undefined) updateData.bio = bio;
-    if (profilePhotoUrl) updateData.profilePhoto = profilePhotoUrl;
-    if (socialLinks) updateData.socialLinks = socialLinks;
-    if (name) updateData.name = name;
-    if (username) updateData.username = username;
-
+    // Update user
     const updatedUser = await User.findByIdAndUpdate(
       userId,
-      { $set: updateData },
+      {
+        $set: {
+          ...(bio !== undefined && { bio }),
+          ...(profilePhoto !== undefined && { profilePhoto }),
+          ...(socialLinks && { socialLinks }),
+          ...(name && { name }),
+          ...(username && { username }),
+        },
+      },
       { new: true, runValidators: true }
     ).select("-password -otp -otpExpiry");
 
-    if (!updatedUser) return res.status(404).json({ message: "User not found" });
+    if (!updatedUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
 
     res.status(200).json({
       message: "Profile updated successfully",
@@ -70,6 +67,6 @@ exports.updateUserProfile = async (req, res) => {
     });
   } catch (error) {
     console.error("Update profile error:", error);
-    res.status(500).json({ message: "Something went wrong", error: error.message });
+    res.status(500).json({ message: "Something went wrong" });
   }
 };

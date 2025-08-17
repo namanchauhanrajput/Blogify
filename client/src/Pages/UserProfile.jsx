@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import BlogCard from "../components/BlogCard";
 
-const API_URL = "https://bloging-platform.onrender.com";
+const API_URL = "http://localhost:5000/api";
 
 const UserProfile = () => {
   const { userId } = useParams();
@@ -18,7 +18,7 @@ const UserProfile = () => {
         setLoading(true);
         setError(""); // ✅ Reset error on reload
 
-        const res = await axios.get(`${API_URL}/api/blog/user/${userId}`, {
+        const res = await axios.get(`${API_URL}/blog/user/${userId}`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`, // ✅ Agar auth required hai
           },
