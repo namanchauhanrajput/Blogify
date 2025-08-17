@@ -1,3 +1,4 @@
+// src/components/Navbar.jsx
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
@@ -35,16 +36,19 @@ export default function Navbar() {
           <Link to="/" className={navLinkClasses}>
             Home
           </Link>
+
           {isLoggedIn && (
             <Link to="/create-blog" className={primaryBtnClasses}>
               New Post
             </Link>
           )}
+
           {isLoggedIn && (
             <Link to="/my-profile" className={secondaryBtnClasses}>
               Profile
             </Link>
           )}
+
           {!isLoggedIn ? (
             <>
               <Link to="/login" className={navLinkClasses}>
@@ -63,14 +67,20 @@ export default function Navbar() {
       </aside>
 
       {/* Mobile Bottom Navigation */}
-      <nav className="md:hidden fixed bottom-0 left-0 w-full bg-white border-t border-gray-200 flex justify-around items-center h-14 z-50">
+      <nav className="md:hidden fixed bottom-0 left-0 w-full bg-white border-t border-gray-200 flex justify-around items-center h-16 z-50">
         <Link to="/" className="flex flex-col items-center text-xs">
           Home
         </Link>
 
         {isLoggedIn && (
-          <Link to="/create" className="flex flex-col items-center text-xs">
+          <Link to="/create-blog" className="flex flex-col items-center text-xs">
             New Post
+          </Link>
+        )}
+
+        {isLoggedIn && (
+          <Link to="/my-profile" className="flex flex-col items-center text-xs">
+            Profile
           </Link>
         )}
 

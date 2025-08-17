@@ -1,17 +1,27 @@
 const Blog = require("../models/blog-model");
 const User = require("../models/user-model");
 
-// ✅ Get user profile
+// ✅ Get user profile + blogs
 exports.getUserBlogs = async (req, res) => {
   try {
     const { userId } = req.params;
 
+    // 1. User profile fetch
     const user = await User.findById(userId).select("-password -otp -otpExpiry");
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    res.status(200).json({ userProfile: user });
+    // 2. उस user के blogs निकालो
+    const blogs = await Blog.find({ author: userId })
+      .sort({ createdAt: -1 })
+      .populate("author", "username name profilePhoto"); 
+      // populate ताकि blog में भी author details दिखें
+
+    res.status(200).json({
+      userProfile: user,
+      blogs: blogs,
+    });
   } catch (error) {
     console.error("Get user blogs error:", error);
     res.status(500).json({ message: "Something went wrong" });
@@ -24,7 +34,7 @@ exports.updateUserProfile = async (req, res) => {
     const userId = req.userID; 
     const { bio, profilePhoto, socialLinks, name, username } = req.body;
 
-  
+    // Username पहले से exist तो नहीं?
     if (username) {
       const existingUser = await User.findOne({ username, _id: { $ne: userId } });
       if (existingUser) {
@@ -32,6 +42,7 @@ exports.updateUserProfile = async (req, res) => {
       }
     }
 
+    // Update user
     const updatedUser = await User.findByIdAndUpdate(
       userId,
       {
