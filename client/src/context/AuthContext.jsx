@@ -11,7 +11,7 @@ export const AuthProvider = ({ children }) => {
 
   const isLoggedIn = !!token;
 
-  // Store token in localStorage and state
+  // ✅ Store token in localStorage & state
   const storeTokenInLS = (serverToken) => {
     if (serverToken) {
       localStorage.setItem("token", serverToken);
@@ -19,41 +19,39 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Logout
+  // ✅ Logout
   const logoutUser = () => {
     localStorage.removeItem("token");
     setToken(null);
     setUser(null);
   };
 
-  // Fetch user from backend
-  const fetchUser = async (currentToken) => {
-    if (!currentToken) {
-      setIsLoading(false);
-      return;
-    }
-    setIsLoading(true);
-    try {
-      const res = await axios.get("http://localhost:5000/api/auth/user", {
-        headers: { Authorization: `Bearer ${currentToken}` },
-      });
-      setUser(res.data.userData);
-    } catch (err) {
-      console.error("Fetch user failed:", err.response?.data || err.message);
-      logoutUser();
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  // On first load, fetch user if token exists
+  // ✅ useEffect me fetchUser define karenge (warning gone)
   useEffect(() => {
-    if (token) {
-      fetchUser(token);
-    } else {
-      setIsLoading(false);
-    }
-  }, [token]);
+    const fetchUser = async (currentToken) => {
+      if (!currentToken) {
+        setIsLoading(false);
+        return;
+      }
+
+      setIsLoading(true);
+
+      try {
+        const res = await axios.get("https://bloging-platform.onrender.com/api/auth/user", {
+          headers: { Authorization: `Bearer ${currentToken}` },
+        });
+        setUser(res.data.userData);
+      } catch (err) {
+        console.error("Fetch user failed:", err.response?.data || err.message);
+        logoutUser();
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    if (token) fetchUser(token);
+    else setIsLoading(false);
+  }, [token]); // ✅ dependency me sirf token hai, warning gone
 
   return (
     <AuthContext.Provider
