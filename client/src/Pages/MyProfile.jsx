@@ -73,7 +73,7 @@ const MyProfile = () => {
   const handleUpdate = async () => {
     try {
       const res = await axios.put(
-        `${API_URL}/blog/user/update/profile`,
+        `${API_URL}/api/blog/user/update/profile`,
         form,
         { headers: { Authorization: `Bearer ${token}` } }
       );
