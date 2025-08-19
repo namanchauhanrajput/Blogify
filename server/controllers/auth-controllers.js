@@ -89,11 +89,13 @@ const transporter = nodemailer.createTransport({
 // ========================= FORGET PASSWORD =========================
 const forgetPassword = async (req, res) => {
   try {
-    const { email } = req.body;
-    const user = await User.findOne({ email });
+    const { email, username } = req.body;
+
+    // Find user by BOTH username and email
+    const user = await User.findOne({ email, username });
 
     if (!user) {
-      return res.status(400).json({ message: "User not found" });
+      return res.status(400).json({ message: "User with this email & username not found" });
     }
 
     // generate OTP
@@ -106,7 +108,7 @@ const forgetPassword = async (req, res) => {
     await transporter.sendMail({
       to: user.email,
       subject: "Password Reset OTP",
-      text: `Your OTP is ${otp}. It is valid for 10 minutes.`,
+      text: `Hi ${user.username},\n\nYour OTP is ${otp}. It is valid for 10 minutes.\n\nIf you didn't request this, please ignore.`,
     });
 
     res.json({ message: "OTP sent to your email" });
@@ -119,19 +121,21 @@ const forgetPassword = async (req, res) => {
 // ========================= RESET PASSWORD =========================
 const resetPassword = async (req, res) => {
   try {
-    const { otp, newPassword, confirmPassword } = req.body;
+    const { username, otp, newPassword, confirmPassword } = req.body;
 
     if (newPassword !== confirmPassword) {
       return res.status(400).json({ message: "Passwords do not match" });
     }
 
+    // Find user by BOTH username and OTP
     const user = await User.findOne({
+      username,
       otp,
-      otpExpiry: { $gt: Date.now() },
+      otpExpiry: { $gt: Date.now() }, // otp valid ho
     });
 
     if (!user) {
-      return res.status(400).json({ message: "Invalid or expired OTP" });
+      return res.status(400).json({ message: "Invalid username or expired OTP" });
     }
 
     user.password = await bcrypt.hash(newPassword, 10);
@@ -145,6 +149,7 @@ const resetPassword = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
 
 module.exports = {
   register,

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import { useAuth } from "../context/AuthContext";
 
@@ -44,6 +44,17 @@ export const Register = () => {
       <input type="password" name="password" placeholder="Password" value={form.password} onChange={handleChange} className="w-full p-2 mb-3 border rounded" required />
       <input type="password" name="confirmPassword" placeholder="Confirm Password" value={form.confirmPassword} onChange={handleChange} className="w-full p-2 mb-3 border rounded" required />
       <button type="submit" className="w-full bg-green-600 text-white p-2 rounded">Register</button>
+
+      {/* Links for login password */}
+      <div className="flex justify-center items-center text-sm mt-3">
+        <p className="text-gray-700">
+          Don't have an account?{" "}
+          <Link to="/register" className="text-blue-600 hover:underline">
+            Signup
+          </Link>
+        </p>
+      </div>
+
     </form>
   );
 };

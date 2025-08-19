@@ -2,9 +2,10 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export const ForgotPassword = () => {
-  const navigate = useNavigate(); // ✅ FIXED navigate
+  const navigate = useNavigate();
   const [step, setStep] = useState(1); // 1 = Forgot, 2 = Reset
   const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [otp, setOtp] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -20,11 +21,14 @@ export const ForgotPassword = () => {
     setLoading(true);
 
     try {
-      const res = await fetch("https://bloging-platform.onrender.com/api/auth/forget-password", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
-      });
+      const res = await fetch(
+        "https://bloging-platform.onrender.com/api/auth/forget-password",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, username }),
+        }
+      );
 
       const data = await res.json();
       if (res.ok) {
@@ -48,21 +52,25 @@ export const ForgotPassword = () => {
     setLoading(true);
 
     try {
-      const res = await fetch("https://bloging-platform.onrender.com/api/auth/reset-password", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ otp, newPassword, confirmPassword }),
-      });
+      const res = await fetch(
+        "https://bloging-platform.onrender.com/api/auth/reset-password",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username, otp, newPassword, confirmPassword }),
+        }
+      );
 
       const data = await res.json();
       if (res.ok) {
         setMessage(data.message);
-        setStep(1); // Back to step 1 after success
+        setStep(1); // Reset back to step 1
         setEmail("");
+        setUsername("");
         setOtp("");
         setNewPassword("");
         setConfirmPassword("");
-        navigate("/login"); // ✅ Redirect to login page
+        navigate("/login"); // Redirect to login page
       } else {
         setError(data.message || "Error resetting password");
       }
@@ -92,8 +100,22 @@ export const ForgotPassword = () => {
         )}
 
         {step === 1 ? (
-          // FORGOT PASSWORD FORM
+          // ================== FORGOT PASSWORD FORM ==================
           <form onSubmit={handleSendOtp} className="space-y-4">
+            <div>
+              <label className="block text-gray-600 text-sm font-medium mb-1">
+                Username
+              </label>
+              <input
+                type="text"
+                placeholder="Enter your username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                required
+                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400 outline-none text-gray-700"
+              />
+            </div>
+
             <div>
               <label className="block text-gray-600 text-sm font-medium mb-1">
                 Registered Email
@@ -117,8 +139,22 @@ export const ForgotPassword = () => {
             </button>
           </form>
         ) : (
-          // RESET PASSWORD FORM
+          // ================== RESET PASSWORD FORM ==================
           <form onSubmit={handleResetPassword} className="space-y-4">
+            <div>
+              <label className="block text-gray-600 text-sm font-medium mb-1">
+                Username
+              </label>
+              <input
+                type="text"
+                placeholder="Enter your username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                required
+                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-purple-400 outline-none text-gray-700"
+              />
+            </div>
+
             <div>
               <label className="block text-gray-600 text-sm font-medium mb-1">
                 OTP

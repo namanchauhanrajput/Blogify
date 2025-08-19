@@ -9,20 +9,22 @@ export const EditBlog = () => {
   const { token } = useAuth();
   const navigate = useNavigate();
 
-  const [form, setForm] = useState({ title: "", content: "", category: "" });
+  const [form, setForm] = useState({ title: "", content: "", category: "", tags: "" });
   const [image, setImage] = useState(null);
   const [existingImage, setExistingImage] = useState("");
   const [preview, setPreview] = useState("");
   const [saving, setSaving] = useState(false);
 
   const fetchBlog = async () => {
-    const res = await fetch(endpoints.blog(id), { headers: authHeaders(token) });
+    const res = await fetch(endpoints.getBlog(id), { headers: authHeaders(token) });
+    if (!res.ok) throw new Error("Failed to fetch blog");
     const data = await res.json();
     const b = data.blog || data;
     setForm({
       title: b.title || "",
       content: b.content || "",
       category: b.category || "",
+      tags: b.tags ? b.tags.join(", ") : "",
     });
     setExistingImage(b.image || "");
   };
@@ -47,9 +49,10 @@ export const EditBlog = () => {
       fd.append("title", form.title);
       fd.append("content", form.content);
       fd.append("category", form.category || "");
+      fd.append("tags", form.tags);
       if (image) fd.append("image", image);
 
-      const res = await fetch(endpoints.blog(id), {
+      const res = await fetch(endpoints.updateBlog(id), {
         method: "PUT",
         headers: { ...authHeaders(token) },
         body: fd,
@@ -65,53 +68,77 @@ export const EditBlog = () => {
   };
 
   return (
-    <div className="max-w-3xl mx-auto px-4 py-6">
-      <h1 className="text-2xl font-bold mb-4">Edit Blog</h1>
+    <div className="max-w-4xl mx-auto px-4 py-8">
+      <h1 className="text-3xl font-bold mb-6 text-gray-800">✏️ Edit Blog</h1>
 
-      <form onSubmit={submit} className="space-y-4 bg-white p-5 rounded-2xl shadow">
-        <input
-          name="title"
-          placeholder="Blog title"
-          value={form.title}
-          onChange={onChange}
-          required
-          className="w-full border rounded-lg px-4 py-2"
-        />
-        <textarea
-          name="content"
-          placeholder="Write your content..."
-          rows={8}
-          value={form.content}
-          onChange={onChange}
-          required
-          className="w-full border rounded-lg px-4 py-2"
-        />
-        <input
-          name="category"
-          placeholder="Category (optional)"
-          value={form.category}
-          onChange={onChange}
-          className="w-full border rounded-lg px-4 py-2"
-        />
-
+      <form onSubmit={submit} className="space-y-6 bg-white p-6 rounded-2xl shadow-lg">
+        {/* Title */}
         <div>
-          <label className="block mb-2 text-sm text-gray-600">Cover Image (optional)</label>
+          <label className="block mb-2 font-medium text-gray-700">Blog Title</label>
+          <input
+            name="title"
+            placeholder="Enter blog title"
+            value={form.title}
+            onChange={onChange}
+            required
+            className="w-full border rounded-lg px-4 py-2 focus:ring focus:ring-blue-200"
+          />
+        </div>
+
+        {/* Content */}
+        <div>
+          <label className="block mb-2 font-medium text-gray-700">Content</label>
+          <textarea
+            name="content"
+            placeholder="Write your content..."
+            rows={10}
+            value={form.content}
+            onChange={onChange}
+            required
+            className="w-full border rounded-lg px-4 py-2 focus:ring focus:ring-blue-200"
+          />
+        </div>
+
+        {/* Category */}
+        <div>
+          <label className="block mb-2 font-medium text-gray-700">Category</label>
+          <select
+            name="category"
+            value={form.category}
+            onChange={onChange}
+            className="w-full border rounded-lg px-4 py-2 focus:ring focus:ring-blue-200"
+          >
+            <option value="">Select category</option>
+            <option value="Technology">Technology</option>
+            <option value="Business">Business</option>
+            <option value="Lifestyle">Lifestyle</option>
+            <option value="Education">Education</option>
+            <option value="Travel">Travel</option>
+          </select>
+        </div>
+
+        {/* Tags */}
+      
+        {/* Image */}
+        <div>
+          <label className="block mb-2 font-medium text-gray-700">Cover Image</label>
           <input type="file" accept="image/*" onChange={onImage} />
           {(preview || existingImage) && (
             <img
               src={preview || existingImage}
               alt="preview"
-              className="mt-3 w-full h-64 object-cover rounded-xl"
+              className="mt-3 w-full h-64 object-cover rounded-xl border"
             />
           )}
         </div>
 
+        {/* Submit */}
         <button
           type="submit"
           disabled={saving}
-          className="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700"
+          className="w-full py-3 rounded-xl bg-blue-600 text-white font-semibold hover:bg-blue-700 transition"
         >
-          {saving ? "Saving..." : "Save Changes"}
+          {saving ? "Saving..." : "💾 Save Changes"}
         </button>
       </form>
     </div>

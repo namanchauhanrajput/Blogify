@@ -10,17 +10,17 @@ const UserProfile = () => {
   const [profile, setProfile] = useState(null);
   const [blogs, setBlogs] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(""); // ✅ Error state add
+  const [error, setError] = useState("");
 
   useEffect(() => {
     const fetchProfileData = async () => {
       try {
         setLoading(true);
-        setError(""); // ✅ Reset error on reload
+        setError("");
 
         const res = await axios.get(`${API_URL}/blog/user/${userId}`, {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`, // ✅ Agar auth required hai
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         });
 
@@ -29,8 +29,7 @@ const UserProfile = () => {
       } catch (err) {
         console.error("Error fetching user profile:", err);
 
-        // ✅ Error message backend se aayega toh usko set kar do
-        if (err.response && err.response.data && err.response.data.message) {
+        if (err.response?.data?.message) {
           setError(err.response.data.message);
         } else {
           setError("Something went wrong. Please try again.");
@@ -45,6 +44,21 @@ const UserProfile = () => {
   if (loading) return <div className="text-center py-10">Loading...</div>;
   if (error) return <div className="text-center py-10 text-red-500">{error}</div>;
 
+  // ✅ सिर्फ non-empty links रखो
+  const socialLinks = profile?.socialLinks || {};
+  const validLinks = Object.entries(socialLinks).filter(
+    ([, link]) => link && link.trim() !== ""
+  );
+
+  // ✅ Key को readable नाम से map करो
+  const linkLabels = {
+    twitter: "Twitter",
+    linkedin: "LinkedIn",
+    instagram: "Instagram",
+    github: "GitHub",
+    website: "Website",
+  };
+
   return (
     <div className="max-w-4xl mx-auto px-4 py-6 space-y-6">
       {/* Profile Info */}
@@ -57,6 +71,23 @@ const UserProfile = () => {
         <h2 className="text-2xl font-bold mt-3">@{profile?.username}</h2>
         <p className="text-gray-600">{profile?.name}</p>
         <p className="text-gray-600">{profile?.bio}</p>
+
+        {/* ✅ Links tab केवल तभी दिखे जब atleast 1 valid link हो */}
+        {validLinks.length > 0 && (
+          <div className="flex justify-center gap-4 mt-4 flex-wrap text-blue-600">
+            {validLinks.map(([key, link]) => (
+              <a
+                key={key}
+                href={link}
+                target="_blank"
+                rel="noreferrer"
+                className="hover:underline"
+              >
+                {linkLabels[key] || key}
+              </a>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Blogs */}
