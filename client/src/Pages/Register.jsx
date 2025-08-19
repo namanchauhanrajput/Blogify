@@ -49,8 +49,8 @@ export const Register = () => {
       <div className="flex justify-center items-center text-sm mt-3">
         <p className="text-gray-700">
           Don't have an account?{" "}
-          <Link to="/register" className="text-blue-600 hover:underline">
-            Signup
+          <Link to="/login" className="text-blue-600 hover:underline">
+            Login
           </Link>
         </p>
       </div>
