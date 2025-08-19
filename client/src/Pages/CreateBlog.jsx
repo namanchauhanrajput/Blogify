@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
@@ -52,9 +52,7 @@ export const CreateBlog = () => {
         const err = await res.json().catch(() => ({}));
         throw new Error(err.message || "Failed to create blog");
       }
-
-      const created = await res.json();
-      navigate(`/blog/${created._id}`);
+      navigate(`/`);
     } catch (e) {
       setError(e.message);
     } finally {
@@ -132,8 +130,30 @@ export const CreateBlog = () => {
           <button
             type="submit"
             disabled={submitting}
-            className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition-colors disabled:opacity-50"
+            className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 flex justify-center items-center transition disabled:opacity-50"
           >
+            {submitting && (
+              <svg
+                className="animate-spin h-5 w-5 text-white mr-2"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                ></circle>
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8v4l3-3-3-3v4a12 12 0 00-12 12h4z"
+                ></path>
+              </svg>
+            )}
             {submitting ? "Submitting..." : "Create Blog"}
           </button>
         </form>

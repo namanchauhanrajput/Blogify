@@ -3,7 +3,6 @@ import { useParams } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import axios from "axios";
 
-
 const API_URL = "https://bloging-platform.onrender.com";
 
 const Comment = () => {
@@ -11,33 +10,50 @@ const Comment = () => {
   const { token, user } = useAuth();
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [posting, setPosting] = useState(false);
 
-  // ✅ Fetch comments when page loads
+  // Fetch comments
   useEffect(() => {
     const fetchComments = async () => {
       try {
+        setLoading(true);
         const res = await axios.get(`${API_URL}/api/blog/${id}`);
         setComments(res.data?.blog?.comments || []);
       } catch (error) {
         console.error("Error fetching comments:", error);
+      } finally {
+        setLoading(false);
       }
     };
     fetchComments();
   }, [id]);
 
-  // ✅ Add new comment
+  // Add new comment
   const handleAddComment = async (e) => {
     e.preventDefault();
     if (!newComment.trim()) return;
 
     try {
+      setPosting(true);
       const res = await axios.post(
         `${API_URL}/api/blog/comment/${id}`,
         { text: newComment },
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      if (res.data?.blog?.comments) {
+      // Turant frontend me add karo
+      if (res.data?.comment) {
+        const comment = {
+          ...res.data.comment,
+          user: {
+            _id: user._id,
+            username: user.username || user.name || "Anonymous",
+          },
+          createdAt: new Date().toISOString(),
+        };
+        setComments((prev) => [comment, ...prev]);
+      } else if (res.data?.blog?.comments) {
         setComments(res.data.blog.comments);
       } else if (res.data?.comments) {
         setComments(res.data.comments);
@@ -46,6 +62,8 @@ const Comment = () => {
       setNewComment("");
     } catch (error) {
       console.error("Error adding comment:", error);
+    } finally {
+      setPosting(false);
     }
   };
 
@@ -53,7 +71,7 @@ const Comment = () => {
     <div className="max-w-3xl mx-auto p-6">
       <h2 className="text-2xl font-bold mb-4">Comments</h2>
 
-      {/* ✅ Add comment form at top */}
+      {/* Add comment form */}
       {user ? (
         <form onSubmit={handleAddComment} className="mb-6 flex gap-2">
           <input
@@ -65,25 +83,83 @@ const Comment = () => {
           />
           <button
             type="submit"
-            className="bg-blue-600 text-white px-4 py-2 rounded"
+            disabled={posting}
+            className="bg-blue-600 text-white px-4 py-2 rounded flex items-center justify-center disabled:opacity-50"
           >
-            Post
+            {posting && (
+              <svg
+                className="animate-spin h-5 w-5 text-white mr-2"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                />
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8v4l3-3-3-3v4a12 12 0 00-12 12h4z"
+                />
+              </svg>
+            )}
+            {posting ? "Posting..." : "Post"}
           </button>
         </form>
       ) : (
         <p className="mb-6 text-gray-500">Please login to add a comment.</p>
       )}
 
-      {/* ✅ Comments list */}
-      {comments.length === 0 ? (
+      {/* Comments list */}
+      {loading ? (
+        <div className="flex flex-col items-center justify-center min-h-[150px]">
+          <svg
+            className="animate-spin h-10 w-10 text-blue-600 mb-2"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <circle
+              className="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              strokeWidth="4"
+            />
+            <path
+              className="opacity-75"
+              fill="currentColor"
+              d="M4 12a8 8 0 018-8v4l3-3-3-3v4a12 12 0 00-12 12h4z"
+            />
+          </svg>
+          <p className="text-gray-600">Loading comments...</p>
+        </div>
+      ) : comments.length === 0 ? (
         <p>No comments yet.</p>
       ) : (
-        comments.map((c) => (
-          <div key={c._id} className="p-4 border-b">
-            <p className="font-semibold">{c.user?.username || "Anonymous"}</p>
-            <p>{c.text}</p>
-          </div>
-        ))
+        comments.map((c) => {
+          const username = c.user?.username || c.user?.name || "Anonymous";
+          const createdAt = c.createdAt
+            ? new Date(c.createdAt).toLocaleString()
+            : "";
+          return (
+            <div key={c._id} className="p-4 border-b">
+              <p className="font-semibold">
+                {username}{" "}
+                {createdAt && (
+                  <span className="text-gray-400 text-sm">· {createdAt}</span>
+                )}
+              </p>
+              <p>{c.text}</p>
+            </div>
+          );
+        })
       )}
     </div>
   );

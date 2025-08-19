@@ -61,7 +61,6 @@ export const Home = () => {
         md:ml-60
       "
     >
-      
       {/* Category Filter */}
       <div className="mb-8 flex flex-col sm:flex-row sm:items-center gap-3">
         <label className="font-medium text-gray-700">
@@ -91,9 +90,32 @@ export const Home = () => {
 
       {/* Blog List */}
       {loading ? (
-        <p className="text-gray-600 text-center md:text-left">
-          Loading...
-        </p>
+        <div className="flex flex-col items-center justify-center min-h-screen">
+          <svg
+            className="animate-spin h-10 w-10 text-blue-600 mb-2"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <circle
+              className="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              strokeWidth="4"
+            />
+            <path
+              className="opacity-75"
+              fill="currentColor"
+              d="M4 12a8 8 0 018-8v4l3-3-3-3v4a12 12 0 00-12 12h4z"
+            />
+          </svg>
+          <p className="text-gray-600 text-center">
+            Loading blogs...
+          </p>
+        </div>
+
       ) : filteredBlogs.length === 0 ? (
         <p className="text-gray-600 text-center md:text-left">
           {selectedCategory === "All"

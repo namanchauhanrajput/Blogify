@@ -1,4 +1,4 @@
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { Heart, MessageSquare, Edit, Trash2 } from "lucide-react";
 import { endpoints, authHeaders } from "../api";
@@ -75,7 +75,6 @@ export default function BlogCard({ blog, onDelete }) {
       });
       if (!res.ok) throw new Error("Delete failed");
       onDelete?.(blog._id);
-      Navigate ("/")
     } catch (err) {
       console.error(err);
       alert("Failed to delete blog");

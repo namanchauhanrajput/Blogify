@@ -3,7 +3,7 @@ import axios from "axios";
 import { useAuth } from "../context/AuthContext"; 
 
 export default function MyProfile() {
-  const { token, user } = useAuth(); // userId, token
+  const { token, user } = useAuth(); 
   const [profile, setProfile] = useState(null);
   const [blogs, setBlogs] = useState([]);
   const [formData, setFormData] = useState({
@@ -19,17 +19,20 @@ export default function MyProfile() {
   const [profilePhoto, setProfilePhoto] = useState(null);
   const [preview, setPreview] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [isEditing, setIsEditing] = useState(false); // state edit mode toggle 
+  const [isEditing, setIsEditing] = useState(false); 
 
   // ✅ Fetch profile + blogs
   useEffect(() => {
     if (!user?._id) return;
-    axios
-      .get(`https://bloging-platform.onrender.com/api/blog/user/${user._id}`)
-      .then((res) => {
+
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const res = await axios.get(
+          `https://bloging-platform.onrender.com/api/blog/user/${user._id}`
+        );
         setProfile(res.data.userProfile);
         setBlogs(res.data.blogs);
-
         setFormData({
           name: res.data.userProfile.name || "",
           username: res.data.userProfile.username || "",
@@ -40,18 +43,22 @@ export default function MyProfile() {
           github: res.data.userProfile.socialLinks?.github || "",
           website: res.data.userProfile.socialLinks?.website || "",
         });
-      })
-      .catch((err) => console.error(err));
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
   }, [user]);
 
-  // ✅ Handle file upload preview
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     setProfilePhoto(file);
     setPreview(URL.createObjectURL(file));
   };
 
-  // ✅ Handle update profile
   const handleUpdate = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -85,7 +92,7 @@ export default function MyProfile() {
       );
 
       setProfile(res.data.user);
-      setIsEditing(false); // ✅ update ke baad form band ho jaye
+      setIsEditing(false); 
       alert("✅ Profile updated successfully!");
     } catch (error) {
       console.error(error);
@@ -95,7 +102,35 @@ export default function MyProfile() {
     }
   };
 
-  if (!profile) return <p className="text-center mt-10">Loading profile...</p>;
+  if (!profile) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <div className="flex flex-col items-center">
+          <svg
+            className="animate-spin h-10 w-10 text-blue-600 mb-2"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <circle
+              className="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              strokeWidth="4"
+            />
+            <path
+              className="opacity-75"
+              fill="currentColor"
+              d="M4 12a8 8 0 018-8v4l3-3-3-3v4a12 12 0 00-12 12h4z"
+            />
+          </svg>
+          <p className="text-gray-600 text-lg">Loading profile...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-5xl mx-auto p-6">
@@ -112,29 +147,19 @@ export default function MyProfile() {
           <p className="mt-2 text-gray-700">{profile.bio}</p>
           <div className="flex gap-3 mt-3 text-blue-600 flex-wrap">
             {profile.socialLinks?.twitter && (
-              <a href={profile.socialLinks.twitter} target="_blank" rel="noreferrer">
-                Twitter
-              </a>
+              <a href={profile.socialLinks.twitter} target="_blank" rel="noreferrer">Twitter</a>
             )}
             {profile.socialLinks?.linkedin && (
-              <a href={profile.socialLinks.linkedin} target="_blank" rel="noreferrer">
-                LinkedIn
-              </a>
+              <a href={profile.socialLinks.linkedin} target="_blank" rel="noreferrer">LinkedIn</a>
             )}
             {profile.socialLinks?.instagram && (
-              <a href={profile.socialLinks.instagram} target="_blank" rel="noreferrer">
-                Instagram
-              </a>
+              <a href={profile.socialLinks.instagram} target="_blank" rel="noreferrer">Instagram</a>
             )}
             {profile.socialLinks?.github && (
-              <a href={profile.socialLinks.github} target="_blank" rel="noreferrer">
-                GitHub
-              </a>
+              <a href={profile.socialLinks.github} target="_blank" rel="noreferrer">GitHub</a>
             )}
             {profile.socialLinks?.website && (
-              <a href={profile.socialLinks.website} target="_blank" rel="noreferrer">
-                Website
-              </a>
+              <a href={profile.socialLinks.website} target="_blank" rel="noreferrer">Website</a>
             )}
           </div>
         </div>
@@ -146,7 +171,7 @@ export default function MyProfile() {
         </button>
       </div>
 
-      {/* Update Form (only when editing) */}
+      {/* Update Form */}
       {isEditing && (
         <form
           onSubmit={handleUpdate}
@@ -181,68 +206,45 @@ export default function MyProfile() {
           />
 
           <div className="grid md:grid-cols-2 gap-4 mt-4">
-            <input
-              type="url"
-              placeholder="Twitter"
-              value={formData.twitter}
-              onChange={(e) =>
-                setFormData({ ...formData, twitter: e.target.value })
-              }
-              className="p-2 border rounded-lg w-full"
-            />
-            <input
-              type="url"
-              placeholder="LinkedIn"
-              value={formData.linkedin}
-              onChange={(e) =>
-                setFormData({ ...formData, linkedin: e.target.value })
-              }
-              className="p-2 border rounded-lg w-full"
-            />
-            <input
-              type="url"
-              placeholder="Instagram"
-              value={formData.instagram}
-              onChange={(e) =>
-                setFormData({ ...formData, instagram: e.target.value })
-              }
-              className="p-2 border rounded-lg w-full"
-            />
-            <input
-              type="url"
-              placeholder="GitHub"
-              value={formData.github}
-              onChange={(e) =>
-                setFormData({ ...formData, github: e.target.value })
-              }
-              className="p-2 border rounded-lg w-full"
-            />
-            <input
-              type="url"
-              placeholder="Website"
-              value={formData.website}
-              onChange={(e) =>
-                setFormData({ ...formData, website: e.target.value })
-              }
-              className="p-2 border rounded-lg w-full"
-            />
+            <input type="url" placeholder="Twitter" value={formData.twitter} onChange={(e)=>setFormData({...formData, twitter:e.target.value})} className="p-2 border rounded-lg w-full"/>
+            <input type="url" placeholder="LinkedIn" value={formData.linkedin} onChange={(e)=>setFormData({...formData, linkedin:e.target.value})} className="p-2 border rounded-lg w-full"/>
+            <input type="url" placeholder="Instagram" value={formData.instagram} onChange={(e)=>setFormData({...formData, instagram:e.target.value})} className="p-2 border rounded-lg w-full"/>
+            <input type="url" placeholder="GitHub" value={formData.github} onChange={(e)=>setFormData({...formData, github:e.target.value})} className="p-2 border rounded-lg w-full"/>
+            <input type="url" placeholder="Website" value={formData.website} onChange={(e)=>setFormData({...formData, website:e.target.value})} className="p-2 border rounded-lg w-full"/>
           </div>
 
           <div className="mt-4">
             <label className="block text-sm font-medium">Profile Photo</label>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleFileChange}
-              className="mt-2"
-            />
+            <input type="file" accept="image/*" onChange={handleFileChange} className="mt-2" />
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            className="mt-6 bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50"
+            className="mt-6 bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50 flex items-center justify-center"
           >
+            {loading && (
+              <svg
+                className="animate-spin h-5 w-5 text-white mr-2"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                />
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8v4l3-3-3-3v4a12 12 0 00-12 12h4z"
+                />
+              </svg>
+            )}
             {loading ? "Updating..." : "Update Profile"}
           </button>
         </form>
