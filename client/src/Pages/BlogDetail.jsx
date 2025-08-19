@@ -20,7 +20,7 @@ const BlogDetail = () => {
     fetchBlog();
   }, [id]);
 
-  if (!blog) return <p className="text-center">Loading...</p>;
+  if (!blog) return <p className="text-center">Loading....</p>;
 
   return (
     <div className="max-w-3xl mx-auto p-6">
