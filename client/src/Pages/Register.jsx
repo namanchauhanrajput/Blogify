@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import { useAuth } from "../context/AuthContext";
-// ✅ Eye icons import
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 export const Register = () => {
@@ -20,7 +19,6 @@ export const Register = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // ✅ States for password visibility
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
@@ -33,6 +31,11 @@ export const Register = () => {
 
     if (form.password !== form.confirmPassword) {
       setError("Passwords do not match");
+      return;
+    }
+
+    if (!/^\d{10}$/.test(form.phone)) {
+      setError("Phone number must be exactly 10 digits");
       return;
     }
 
@@ -92,13 +95,17 @@ export const Register = () => {
         className="w-full p-2 mb-3 border rounded"
         required
       />
+      
+      {/* ✅ Phone field with validation (10 digits only) */}
       <input
         type="text"
         name="phone"
-        placeholder="Phone"
+        placeholder="Phone (10 digits only)"
         value={form.phone}
         onChange={handleChange}
         className="w-full p-2 mb-3 border rounded"
+        pattern="\d{10}"
+        title="Phone number must be exactly 10 digits"
         required
       />
 
@@ -136,7 +143,11 @@ export const Register = () => {
           className="absolute right-3 top-3 cursor-pointer text-gray-600"
           onClick={() => setShowConfirmPassword(!showConfirmPassword)}
         >
-          {showConfirmPassword ? <FaEyeSlash size={18} /> : <FaEye size={18} />}
+          {showConfirmPassword ? (
+            <FaEyeSlash size={18} />
+          ) : (
+            <FaEye size={18} />
+          )}
         </span>
       </div>
 
