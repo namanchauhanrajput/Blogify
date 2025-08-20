@@ -65,7 +65,7 @@ export const Register = () => {
       onSubmit={handleSubmit}
       className="w-96 mx-auto mt-20 p-6 border rounded shadow"
     >
-      <h2 className="text-xl font-bold mb-4">Register</h2>
+      <h2 className="text-xl font-bold mb-4">Registering</h2>
       {error && <p className="text-red-500 mb-3">{error}</p>}
 
       <input
