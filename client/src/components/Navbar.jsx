@@ -1,6 +1,14 @@
 // src/components/Navbar.jsx
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import {
+  Home,
+  PlusSquare,
+  User,
+  LogIn,
+  UserPlus,
+  LogOut,
+} from "lucide-react"; // professional icons
 
 export default function Navbar() {
   const { isLoggedIn, logoutUser, user } = useAuth();
@@ -12,7 +20,7 @@ export default function Navbar() {
   };
 
   const navLinkClasses =
-    "flex items-center justify-center gap-2 px-4 py-2 rounded-lg transition-colors duration-200 hover:bg-gray-200 text-sm font-medium";
+    "flex items-center justify-start gap-2 px-4 py-2 rounded-lg transition-colors duration-200 hover:bg-gray-200 text-sm font-medium";
   const primaryBtnClasses =
     "bg-blue-600 text-white hover:bg-blue-700 " + navLinkClasses;
   const secondaryBtnClasses =
@@ -22,8 +30,8 @@ export default function Navbar() {
 
   return (
     <>
-      {/* Desktop Sidebar */}
-      <aside className="hidden md:flex fixed top-0 left-0 h-screen w-60 bg-white border-r border-gray-200 flex-col">
+      {/* Desktop Sidebar (lg and above) */}
+      <aside className="hidden lg:flex fixed top-0 left-0 h-screen w-60 bg-white border-r border-gray-200 flex-col">
         {/* Logo */}
         <div className="p-4 border-b border-gray-200">
           <Link to="/" className="text-xl font-bold text-black">
@@ -34,63 +42,64 @@ export default function Navbar() {
         {/* Navigation */}
         <nav className="flex flex-col gap-2 p-4">
           <Link to="/" className={navLinkClasses}>
-            Home
+            <Home size={18} /> Home
           </Link>
 
           {isLoggedIn && (
             <Link to="/create-blog" className={primaryBtnClasses}>
-              New Post
+              <PlusSquare size={18} /> New Post
             </Link>
           )}
 
           {isLoggedIn && (
             <Link to="/my-profile" className={secondaryBtnClasses}>
-              Profile
+              <User size={18} /> Profile
             </Link>
           )}
 
           {!isLoggedIn ? (
             <>
               <Link to="/login" className={navLinkClasses}>
-                Login
+                <LogIn size={18} /> Login
               </Link>
               <Link to="/register" className={secondaryBtnClasses}>
-                Register
+                <UserPlus size={18} /> Register
               </Link>
             </>
           ) : (
             <button onClick={handleLogout} className={outlineBtnClasses}>
-              Logout {user?.username ? `(${user.username})` : ""}
+              <LogOut size={18} /> Logout{" "}
+              {user?.username ? `(${user.username})` : ""}
             </button>
           )}
         </nav>
       </aside>
 
-      {/* Mobile Bottom Navigation */}
-      <nav className="md:hidden fixed bottom-0 left-0 w-full bg-white border-t border-gray-200 flex justify-around items-center h-16 z-50">
+      {/* Mobile & Tablet Bottom Navigation (md and below) */}
+      <nav className="lg:hidden fixed bottom-0 left-0 w-full bg-white border-t border-gray-200 flex justify-around items-center h-16 z-50">
         <Link to="/" className="flex flex-col items-center text-xs">
-          Home
+          <Home size={18} /> Home
         </Link>
 
         {isLoggedIn && (
           <Link to="/create-blog" className="flex flex-col items-center text-xs">
-            New Post
+            <PlusSquare size={18} /> Post
           </Link>
         )}
 
         {isLoggedIn && (
           <Link to="/my-profile" className="flex flex-col items-center text-xs">
-            Profile
+            <User size={18} /> Profile
           </Link>
         )}
 
         {!isLoggedIn ? (
           <>
             <Link to="/login" className="flex flex-col items-center text-xs">
-              Login
+              <LogIn size={18} /> Login
             </Link>
             <Link to="/register" className="flex flex-col items-center text-xs">
-              Register
+              <UserPlus size={18} /> Register
             </Link>
           </>
         ) : (
@@ -98,7 +107,7 @@ export default function Navbar() {
             onClick={handleLogout}
             className="flex flex-col items-center text-xs"
           >
-            Logout
+            <LogOut size={18} /> Logout
           </button>
         )}
       </nav>
