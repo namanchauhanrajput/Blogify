@@ -1,5 +1,5 @@
 // src/components/Navbar.jsx
-import { Link, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import {
   Home,
@@ -8,7 +8,7 @@ import {
   LogIn,
   UserPlus,
   LogOut,
-} from "lucide-react"; // professional icons
+} from "lucide-react";
 
 export default function Navbar() {
   const { isLoggedIn, logoutUser } = useAuth();
@@ -19,14 +19,11 @@ export default function Navbar() {
     navigate("/login");
   };
 
-  const navLinkClasses =
-    "flex items-center justify-start gap-2 px-4 py-2 rounded-lg transition-colors duration-200 hover:bg-gray-200 text-sm font-medium";
-  const primaryBtnClasses =
-    "bg-blue-600 text-white hover:bg-blue-700 " + navLinkClasses;
-  const secondaryBtnClasses =
-    "bg-black text-white hover:bg-gray-900 " + navLinkClasses;
-  const outlineBtnClasses =
-    "bg-gray-200 text-black hover:bg-gray-300 " + navLinkClasses;
+  const baseLinkClasses =
+    "flex items-center gap-2 px-4 py-2 rounded-lg transition-colors duration-200 hover:bg-gray-100 text-sm";
+
+  const activeClasses = "font-bold text-black";
+  const inactiveClasses = "text-gray-700";
 
   return (
     <>
@@ -34,41 +31,79 @@ export default function Navbar() {
       <aside className="hidden lg:flex fixed top-0 left-0 h-screen w-60 bg-white border-r border-gray-200 flex-col">
         {/* Logo */}
         <div className="p-4 border-b border-gray-200">
-          <Link to="/" className="text-xl font-bold text-black">
+          <NavLink to="/" className="text-xl font-bold text-black">
             Blogify
-          </Link>
+          </NavLink>
         </div>
 
         {/* Navigation */}
         <nav className="flex flex-col gap-2 p-4">
-          <Link to="/" className={navLinkClasses}>
+          <NavLink
+            to="/"
+            className={({ isActive }) =>
+              `${baseLinkClasses} ${
+                isActive ? activeClasses : inactiveClasses
+              }`
+            }
+          >
             <Home size={18} /> Home
-          </Link>
+          </NavLink>
 
           {isLoggedIn && (
-            <Link to="/create-blog" className={primaryBtnClasses}>
+            <NavLink
+              to="/create-blog"
+              className={({ isActive }) =>
+                `${baseLinkClasses} ${
+                  isActive ? activeClasses : inactiveClasses
+                }`
+              }
+            >
               <PlusSquare size={18} /> New Post
-            </Link>
+            </NavLink>
           )}
 
           {isLoggedIn && (
-            <Link to="/my-profile" className={secondaryBtnClasses}>
+            <NavLink
+              to="/my-profile"
+              className={({ isActive }) =>
+                `${baseLinkClasses} ${
+                  isActive ? activeClasses : inactiveClasses
+                }`
+              }
+            >
               <User size={18} /> Profile
-            </Link>
+            </NavLink>
           )}
 
           {!isLoggedIn ? (
             <>
-              <Link to="/login" className={navLinkClasses}>
+              <NavLink
+                to="/login"
+                className={({ isActive }) =>
+                  `${baseLinkClasses} ${
+                    isActive ? activeClasses : inactiveClasses
+                  }`
+                }
+              >
                 <LogIn size={18} /> Login
-              </Link>
-              <Link to="/register" className={secondaryBtnClasses}>
+              </NavLink>
+              <NavLink
+                to="/register"
+                className={({ isActive }) =>
+                  `${baseLinkClasses} ${
+                    isActive ? activeClasses : inactiveClasses
+                  }`
+                }
+              >
                 <UserPlus size={18} /> Register
-              </Link>
+              </NavLink>
             </>
           ) : (
-            <button onClick={handleLogout} className={outlineBtnClasses}>
-              <LogOut size={18} /> Logout{" "}
+            <button
+              onClick={handleLogout}
+              className={`${baseLinkClasses} text-gray-700`}
+            >
+              <LogOut size={18} /> Logout
             </button>
           )}
         </nav>
@@ -76,35 +111,70 @@ export default function Navbar() {
 
       {/* Mobile & Tablet Bottom Navigation (md and below) */}
       <nav className="lg:hidden fixed bottom-0 left-0 w-full bg-white border-t border-gray-200 flex justify-around items-center h-16 z-50">
-        <Link to="/" className="flex flex-col items-center text-xs">
+        <NavLink
+          to="/"
+          className={({ isActive }) =>
+            `flex flex-col items-center text-xs transition-colors duration-200 hover:text-black ${
+              isActive ? "font-bold text-black" : "text-gray-600"
+            }`
+          }
+        >
           <Home size={18} /> Home
-        </Link>
+        </NavLink>
 
         {isLoggedIn && (
-          <Link to="/create-blog" className="flex flex-col items-center text-xs">
+          <NavLink
+            to="/create-blog"
+            className={({ isActive }) =>
+              `flex flex-col items-center text-xs transition-colors duration-200 hover:text-black ${
+                isActive ? "font-bold text-black" : "text-gray-600"
+              }`
+            }
+          >
             <PlusSquare size={18} /> Post
-          </Link>
+          </NavLink>
         )}
 
         {isLoggedIn && (
-          <Link to="/my-profile" className="flex flex-col items-center text-xs">
+          <NavLink
+            to="/my-profile"
+            className={({ isActive }) =>
+              `flex flex-col items-center text-xs transition-colors duration-200 hover:text-black ${
+                isActive ? "font-bold text-black" : "text-gray-600"
+              }`
+            }
+          >
             <User size={18} /> Profile
-          </Link>
+          </NavLink>
         )}
 
         {!isLoggedIn ? (
           <>
-            <Link to="/login" className="flex flex-col items-center text-xs">
+            <NavLink
+              to="/login"
+              className={({ isActive }) =>
+                `flex flex-col items-center text-xs transition-colors duration-200 hover:text-black ${
+                  isActive ? "font-bold text-black" : "text-gray-600"
+                }`
+              }
+            >
               <LogIn size={18} /> Login
-            </Link>
-            <Link to="/register" className="flex flex-col items-center text-xs">
+            </NavLink>
+            <NavLink
+              to="/register"
+              className={({ isActive }) =>
+                `flex flex-col items-center text-xs transition-colors duration-200 hover:text-black ${
+                  isActive ? "font-bold text-black" : "text-gray-600"
+                }`
+              }
+            >
               <UserPlus size={18} /> Register
-            </Link>
+            </NavLink>
           </>
         ) : (
           <button
             onClick={handleLogout}
-            className="flex flex-col items-center text-xs"
+            className="flex flex-col items-center text-xs text-gray-600 hover:text-black"
           >
             <LogOut size={18} /> Logout
           </button>
