@@ -4,6 +4,7 @@ import { Register } from "./Pages/Register";
 import { Login } from "./Pages/Login";
 import { CreateBlog } from "./Pages/CreateBlog";
 import { ForgotPassword } from "./Pages/ForgotPassword";
+import { ThemeProvider } from "./context/ThemeContext";
 import { Home } from "./Pages/Home";
 import Navbar from "./components/Navbar";
 import MyProfile from "./Pages/MyProfile";
@@ -26,6 +27,7 @@ const PublicRoute = ({ element }) => {
 
 const App = () => {
   return (
+    <ThemeProvider>
     <AuthProvider>
       <BrowserRouter>
         <Navbar />
@@ -76,6 +78,7 @@ const App = () => {
         </Routes>
       </BrowserRouter>
     </AuthProvider>
+    </ThemeProvider>
   );
 };
 

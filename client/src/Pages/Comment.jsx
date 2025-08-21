@@ -42,7 +42,6 @@ const Comment = () => {
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      // Turant frontend me add karo
       if (res.data?.comment) {
         const comment = {
           ...res.data.comment,
@@ -68,7 +67,7 @@ const Comment = () => {
   };
 
   return (
-    <div className="max-w-3xl mx-auto p-6">
+    <div className="max-w-3xl mx-auto p-6 bg-white dark:bg-gray-900 dark:text-gray-100 rounded-lg shadow">
       <h2 className="text-2xl font-bold mb-4">Comments</h2>
 
       {/* Add comment form */}
@@ -79,12 +78,12 @@ const Comment = () => {
             value={newComment}
             onChange={(e) => setNewComment(e.target.value)}
             placeholder="Write a comment..."
-            className="flex-1 border rounded px-3 py-2"
+            className="flex-1 border rounded px-3 py-2 bg-white dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           <button
             type="submit"
             disabled={posting}
-            className="bg-blue-600 text-white px-4 py-2 rounded flex items-center justify-center disabled:opacity-50"
+            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded flex items-center justify-center disabled:opacity-50 transition"
           >
             {posting && (
               <svg
@@ -112,7 +111,9 @@ const Comment = () => {
           </button>
         </form>
       ) : (
-        <p className="mb-6 text-gray-500">Please login to add a comment.</p>
+        <p className="mb-6 text-gray-500 dark:text-gray-400">
+          Please login to add a comment.
+        </p>
       )}
 
       {/* Comments list */}
@@ -138,10 +139,10 @@ const Comment = () => {
               d="M4 12a8 8 0 018-8v4l3-3-3-3v4a12 12 0 00-12 12h4z"
             />
           </svg>
-          <p className="text-gray-600">Loading comments...</p>
+          <p className="text-gray-600 dark:text-gray-400">Loading comments...</p>
         </div>
       ) : comments.length === 0 ? (
-        <p>No comments yet.</p>
+        <p className="text-gray-600 dark:text-gray-400">No comments yet.</p>
       ) : (
         comments.map((c) => {
           const username = c.user?.username || c.user?.name || "Anonymous";
@@ -149,14 +150,17 @@ const Comment = () => {
             ? new Date(c.createdAt).toLocaleString()
             : "";
           return (
-            <div key={c._id} className="p-4 border-b">
+            <div
+              key={c._id}
+              className="p-4 border-b border-gray-200 dark:border-gray-700"
+            >
               <p className="font-semibold">
                 {username}{" "}
                 {createdAt && (
                   <span className="text-gray-400 text-sm">· {createdAt}</span>
                 )}
               </p>
-              <p>{c.text}</p>
+              <p className="text-gray-800 dark:text-gray-300">{c.text}</p>
             </div>
           );
         })

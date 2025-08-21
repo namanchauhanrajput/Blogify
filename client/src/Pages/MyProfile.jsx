@@ -104,7 +104,7 @@ export default function MyProfile() {
 
   if (!profile) {
     return (
-      <div className="flex justify-center items-center min-h-screen">
+      <div className="flex justify-center items-center min-h-screen dark:bg-gray-900">
         <div className="flex flex-col items-center">
           <svg
             className="animate-spin h-10 w-10 text-blue-600 mb-2"
@@ -126,25 +126,25 @@ export default function MyProfile() {
               d="M4 12a8 8 0 018-8v4l3-3-3-3v4a12 12 0 00-12 12h4z"
             />
           </svg>
-          <p className="text-gray-600 text-lg">Loading profile...</p>
+          <p className="text-gray-600 dark:text-gray-300 text-lg">Loading profile...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="max-w-5xl mx-auto p-6">
+    <div className="max-w-5xl mx-auto p-6 dark:bg-gray-900 dark:text-white min-h-screen">
       {/* Profile Header */}
-      <div className="bg-white shadow-md rounded-xl p-6 mb-6 flex flex-col md:flex-row items-center gap-6">
+      <div className="bg-white dark:bg-gray-800 shadow-md rounded-xl p-6 mb-6 flex flex-col md:flex-row items-center gap-6">
         <img
           src={preview || profile.profilePhoto}
           alt="Profile"
-          className="w-32 h-32 rounded-full object-cover border-4 border-gray-200"
+          className="w-32 h-32 rounded-full object-cover border-4 border-gray-200 dark:border-gray-700"
         />
         <div className="flex-1">
           <h2 className="text-2xl font-bold">{profile.name}</h2>
-          <p className="text-gray-600">@{profile.username}</p>
-          <p className="mt-2 text-gray-700">{profile.bio}</p>
+          <p className="text-gray-600 dark:text-gray-400">@{profile.username}</p>
+          <p className="mt-2 text-gray-700 dark:text-gray-300">{profile.bio}</p>
           <div className="flex gap-3 mt-3 text-blue-600 flex-wrap">
             {profile.socialLinks?.twitter && (
               <a href={profile.socialLinks.twitter} target="_blank" rel="noreferrer">Twitter</a>
@@ -175,7 +175,7 @@ export default function MyProfile() {
       {isEditing && (
         <form
           onSubmit={handleUpdate}
-          className="bg-white shadow-md rounded-xl p-6 mb-6"
+          className="bg-white dark:bg-gray-800 shadow-md rounded-xl p-6 mb-6"
         >
           <h3 className="text-xl font-semibold mb-4">Update Profile</h3>
 
@@ -185,7 +185,7 @@ export default function MyProfile() {
               placeholder="Full Name"
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              className="p-2 border rounded-lg w-full"
+              className="p-2 border rounded-lg w-full dark:bg-gray-700 dark:border-gray-600 dark:text-white"
             />
             <input
               type="text"
@@ -194,7 +194,7 @@ export default function MyProfile() {
               onChange={(e) =>
                 setFormData({ ...formData, username: e.target.value })
               }
-              className="p-2 border rounded-lg w-full"
+              className="p-2 border rounded-lg w-full dark:bg-gray-700 dark:border-gray-600 dark:text-white"
             />
           </div>
 
@@ -202,15 +202,15 @@ export default function MyProfile() {
             placeholder="Bio"
             value={formData.bio}
             onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
-            className="p-2 border rounded-lg w-full mt-4"
+            className="p-2 border rounded-lg w-full mt-4 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
           />
 
           <div className="grid md:grid-cols-2 gap-4 mt-4">
-            <input type="url" placeholder="Twitter" value={formData.twitter} onChange={(e)=>setFormData({...formData, twitter:e.target.value})} className="p-2 border rounded-lg w-full"/>
-            <input type="url" placeholder="LinkedIn" value={formData.linkedin} onChange={(e)=>setFormData({...formData, linkedin:e.target.value})} className="p-2 border rounded-lg w-full"/>
-            <input type="url" placeholder="Instagram" value={formData.instagram} onChange={(e)=>setFormData({...formData, instagram:e.target.value})} className="p-2 border rounded-lg w-full"/>
-            <input type="url" placeholder="GitHub" value={formData.github} onChange={(e)=>setFormData({...formData, github:e.target.value})} className="p-2 border rounded-lg w-full"/>
-            <input type="url" placeholder="Website" value={formData.website} onChange={(e)=>setFormData({...formData, website:e.target.value})} className="p-2 border rounded-lg w-full"/>
+            <input type="url" placeholder="Twitter" value={formData.twitter} onChange={(e)=>setFormData({...formData, twitter:e.target.value})} className="p-2 border rounded-lg w-full dark:bg-gray-700 dark:border-gray-600 dark:text-white"/>
+            <input type="url" placeholder="LinkedIn" value={formData.linkedin} onChange={(e)=>setFormData({...formData, linkedin:e.target.value})} className="p-2 border rounded-lg w-full dark:bg-gray-700 dark:border-gray-600 dark:text-white"/>
+            <input type="url" placeholder="Instagram" value={formData.instagram} onChange={(e)=>setFormData({...formData, instagram:e.target.value})} className="p-2 border rounded-lg w-full dark:bg-gray-700 dark:border-gray-600 dark:text-white"/>
+            <input type="url" placeholder="GitHub" value={formData.github} onChange={(e)=>setFormData({...formData, github:e.target.value})} className="p-2 border rounded-lg w-full dark:bg-gray-700 dark:border-gray-600 dark:text-white"/>
+            <input type="url" placeholder="Website" value={formData.website} onChange={(e)=>setFormData({...formData, website:e.target.value})} className="p-2 border rounded-lg w-full dark:bg-gray-700 dark:border-gray-600 dark:text-white"/>
           </div>
 
           <div className="mt-4">
@@ -251,16 +251,16 @@ export default function MyProfile() {
       )}
 
       {/* User Blogs */}
-      <div className="bg-white shadow-md rounded-xl p-6">
+      <div className="bg-white dark:bg-gray-800 shadow-md rounded-xl p-6">
         <h3 className="text-xl font-semibold mb-4">My Blogs</h3>
         {blogs.length === 0 ? (
-          <p className="text-gray-500">No blogs yet.</p>
+          <p className="text-gray-500 dark:text-gray-400">No blogs yet.</p>
         ) : (
           <div className="grid md:grid-cols-2 gap-4">
             {blogs.map((blog) => (
               <div
                 key={blog._id}
-                className="p-4 border rounded-lg hover:shadow-md transition"
+                className="p-4 border rounded-lg hover:shadow-md transition dark:bg-gray-700 dark:border-gray-600"
               >
                 {blog.image && (
                   <img
@@ -270,7 +270,7 @@ export default function MyProfile() {
                   />
                 )}
                 <h4 className="font-bold text-lg">{blog.title}</h4>
-                <p className="text-gray-600 line-clamp-3">{blog.content}</p>
+                <p className="text-gray-600 dark:text-gray-300 line-clamp-3">{blog.content}</p>
                 <p className="text-sm text-gray-400 mt-2">
                   {new Date(blog.createdAt).toLocaleDateString()}
                 </p>

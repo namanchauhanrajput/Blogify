@@ -26,9 +26,7 @@ export const Home = () => {
   const fetchBlogs = async () => {
     try {
       setLoading(true);
-      const res = await fetch(
-        "https://bloging-platform.onrender.com/api/blog"
-      );
+      const res = await fetch("https://bloging-platform.onrender.com/api/blog");
       const data = await res.json();
       setBlogs(data || []);
     } catch (err) {
@@ -53,17 +51,18 @@ export const Home = () => {
       className="
         flex-1 
         min-h-screen 
-        bg-gray-50 
+        bg-gray-50 dark:bg-gray-900
         px-4 
         sm:px-6 
         lg:px-8 
         py-6 
         lg:ml-60
+        text-gray-900 dark:text-gray-100
       "
     >
       {/* Category Filter */}
       <div className="mb-8 flex flex-col sm:flex-row sm:items-center gap-3">
-        <label className="font-medium text-gray-700">
+        <label className="font-medium text-gray-700 dark:text-gray-300">
           Filter by Categories:
         </label>
         <select
@@ -71,17 +70,23 @@ export const Home = () => {
           onChange={(e) => setSelectedCategory(e.target.value)}
           className="
             px-4 py-2 
-            border border-gray-300 
+            border border-gray-300 dark:border-gray-700
             rounded-lg 
             focus:outline-none 
             focus:ring-2 
             focus:ring-blue-500 
             shadow-sm 
             w-full sm:w-auto
+            bg-white dark:bg-gray-800
+            text-gray-900 dark:text-gray-100
           "
         >
           {categories.map((cat) => (
-            <option key={cat} value={cat}>
+            <option
+              key={cat}
+              value={cat}
+              className="bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+            >
               {cat}
             </option>
           ))}
@@ -92,7 +97,7 @@ export const Home = () => {
       {loading ? (
         <div className="flex flex-col items-center justify-center min-h-screen">
           <svg
-            className="animate-spin h-10 w-10 text-blue-600 mb-2"
+            className="animate-spin h-10 w-10 text-blue-600 dark:text-blue-400 mb-2"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
@@ -111,13 +116,12 @@ export const Home = () => {
               d="M4 12a8 8 0 018-8v4l3-3-3-3v4a12 12 0 00-12 12h4z"
             />
           </svg>
-          <p className="text-gray-600 text-center">
+          <p className="text-gray-600 dark:text-gray-400 text-center">
             Loading blogs...
           </p>
         </div>
-
       ) : filteredBlogs.length === 0 ? (
-        <p className="text-gray-600 text-center md:text-left">
+        <p className="text-gray-600 dark:text-gray-400 text-center md:text-left">
           {selectedCategory === "All"
             ? "No blogs yet. Be the first to create!"
             : `No blogs in "${selectedCategory}" category.`}

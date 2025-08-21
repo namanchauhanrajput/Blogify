@@ -100,9 +100,9 @@ export default function BlogCard({ blog, onDelete }) {
   }, [menuOpen]);
 
   return (
-    <article className="bg-white rounded-2xl transition duration-300 overflow-hidden flex flex-col shadow hover:shadow-lg border border-gray-100 relative">
+    <article className="bg-white dark:bg-gray-800 rounded-2xl transition duration-300 overflow-hidden flex flex-col shadow hover:shadow-lg border border-gray-100 dark:border-gray-700 relative">
       {/* Author row */}
-      <div className="flex items-center gap-3 px-4 pt-4 text-xs sm:text-sm text-gray-600">
+      <div className="flex items-center gap-3 px-4 pt-4 text-xs sm:text-sm text-gray-600 dark:text-gray-300">
         {profileImageUrl && !imgError ? (
           <img
             src={profileImageUrl}
@@ -111,7 +111,7 @@ export default function BlogCard({ blog, onDelete }) {
             onError={() => setImgError(true)}
           />
         ) : (
-          <div className="w-9 h-9 rounded-full border flex items-center justify-center font-semibold bg-gray-200">
+          <div className="w-9 h-9 rounded-full border flex items-center justify-center font-semibold bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-200">
             {authorName?.charAt(0)?.toUpperCase() || "U"}
           </div>
         )}
@@ -119,7 +119,7 @@ export default function BlogCard({ blog, onDelete }) {
         {authorId ? (
           <Link
             to={`/profile/${authorId}`}
-            className="hover:underline text-blue-600 font-medium"
+            className="hover:underline text-blue-600 dark:text-blue-400 font-medium"
           >
             {authorName}
           </Link>
@@ -132,22 +132,22 @@ export default function BlogCard({ blog, onDelete }) {
           <div className="ml-auto relative" ref={menuRef}>
             <button
               onClick={() => setMenuOpen((prev) => !prev)}
-              className="p-1 rounded-full hover:bg-gray-100"
+              className="p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
             >
               <MoreVertical size={18} />
             </button>
 
             {menuOpen && (
-              <div className="absolute right-0 mt-2 w-32 bg-white border rounded-lg shadow-lg z-20">
+              <div className="absolute right-0 mt-2 w-32 bg-white dark:bg-gray-900 border dark:border-gray-700 rounded-lg shadow-lg z-20">
                 <button
                   onClick={() => navigate(`/edit-blog/${blog._id}`)}
-                  className="flex items-center gap-2 px-3 py-2 w-full text-left text-sm hover:bg-gray-100"
+                  className="flex items-center gap-2 px-3 py-2 w-full text-left text-sm hover:bg-gray-100 dark:hover:bg-gray-700"
                 >
                   <Edit size={16} /> Edit
                 </button>
                 <button
                   onClick={handleDelete}
-                  className="flex items-center gap-2 px-3 py-2 w-full text-left text-sm hover:bg-gray-100 text-red-600"
+                  className="flex items-center gap-2 px-3 py-2 w-full text-left text-sm hover:bg-gray-100 dark:hover:bg-gray-700 text-red-600"
                 >
                   <Trash2 size={16} /> Delete
                 </button>
@@ -170,10 +170,10 @@ export default function BlogCard({ blog, onDelete }) {
 
       {/* Content */}
       <div className="p-4 flex flex-col flex-grow">
-        <h3 className="text-lg sm:text-xl font-semibold mb-2 line-clamp-2">
+        <h3 className="text-lg sm:text-xl font-semibold mb-2 line-clamp-2 dark:text-gray-100">
           {blog?.title || "Untitled"}
         </h3>
-        <p className="text-gray-600 text-sm sm:text-base mb-3">
+        <p className="text-gray-600 dark:text-gray-300 text-sm sm:text-base mb-3">
           {trimmedContent}
         </p>
 
@@ -183,7 +183,7 @@ export default function BlogCard({ blog, onDelete }) {
           <button
             onClick={toggleLike}
             className={`flex items-center gap-1 ${
-              liked ? "text-rose-600" : "text-gray-600"
+              liked ? "text-rose-600" : "text-gray-600 dark:text-gray-300"
             }`}
           >
             <Heart size={18} fill={liked ? "currentColor" : "none"} />
@@ -193,7 +193,7 @@ export default function BlogCard({ blog, onDelete }) {
           {/* Comment button */}
           <Link
             to={`/comments/${blog._id}`}
-            className="flex items-center gap-1 hover:text-blue-600 ml-4"
+            className="flex items-center gap-1 hover:text-blue-600 dark:hover:text-blue-400 ml-4 text-gray-600 dark:text-gray-300"
           >
             <MessageSquare size={18} /> {blog.comments?.length || 0}
           </Link>
@@ -201,13 +201,13 @@ export default function BlogCard({ blog, onDelete }) {
           {/* Permanent Read More button */}
           <Link
             to={`/blog/${blog?._id}`}
-            className="ml-4 px-3 py-1.5 rounded-lg bg-gray-900 text-white hover:bg-black text-sm sm:text-base"
+            className="ml-4 px-3 py-1.5 rounded-lg bg-gray-900 text-white hover:bg-black dark:bg-blue-600 dark:hover:bg-blue-700 text-sm sm:text-base"
           >
             Read More
           </Link>
 
           {/* Date shifted to absolute right */}
-          <span className="text-gray-400 ml-auto">
+          <span className="text-gray-400 dark:text-gray-500 ml-auto">
             {createdAt.toLocaleDateString()}
           </span>
         </div>

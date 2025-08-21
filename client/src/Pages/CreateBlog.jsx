@@ -15,7 +15,14 @@ export const CreateBlog = () => {
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
-  const categories = ["Travel", "Technology", "Lifestyle", "Food", "Health", "Education"];
+  const categories = [
+    "Travel",
+    "Technology",
+    "Lifestyle",
+    "Food",
+    "Health",
+    "Education",
+  ];
 
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -61,9 +68,9 @@ export const CreateBlog = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      <div className="max-w-3xl mx-auto mt-12 bg-white p-8 rounded shadow-md">
-        <h1 className="text-2xl font-bold mb-6 text-gray-800">
+    <div className="min-h-screen bg-gray-100 dark:bg-gray-900 transition-colors duration-300">
+      <div className="max-w-3xl mx-auto  bg-white dark:bg-gray-800 p-8 rounded shadow-md">
+        <h1 className="text-2xl font-bold mb-6 text-gray-800 dark:text-gray-100">
           Create New Blog
         </h1>
 
@@ -71,38 +78,47 @@ export const CreateBlog = () => {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-gray-700 mb-1">Title *</label>
+            <label className="block text-gray-700 dark:text-gray-300 mb-1">
+              Title *
+            </label>
             <input
               type="text"
               name="title"
               value={form.title}
               onChange={handleChange}
-              className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 
+              dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100"
               placeholder="Enter blog title"
               required
             />
           </div>
 
           <div>
-            <label className="block text-gray-700 mb-1">Content *</label>
+            <label className="block text-gray-700 dark:text-gray-300 mb-1">
+              Content *
+            </label>
             <textarea
               name="content"
               value={form.content}
               onChange={handleChange}
               rows={6}
-              className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 
+              dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100"
               placeholder="Write your blog content here"
               required
             ></textarea>
           </div>
 
           <div>
-            <label className="block text-gray-700 mb-1">Category *</label>
+            <label className="block text-gray-700 dark:text-gray-300 mb-1">
+              Category *
+            </label>
             <select
               name="category"
               value={form.category}
               onChange={handleChange}
-              className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 
+              dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100"
               required
             >
               <option value="" disabled>
@@ -117,12 +133,14 @@ export const CreateBlog = () => {
           </div>
 
           <div>
-            <label className="block text-gray-700 mb-1">Image *</label>
+            <label className="block text-gray-700 dark:text-gray-300 mb-1">
+              Image *
+            </label>
             <input
               type="file"
               accept="image/*"
               onChange={handleImageChange}
-              className="w-full"
+              className="w-full dark:text-gray-200"
               required
             />
           </div>

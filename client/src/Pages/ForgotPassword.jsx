@@ -87,19 +87,19 @@ export const ForgotPassword = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-b from-gray-50 to-yellow-100 px-4">
-      <div className="bg-white shadow-xl rounded-2xl p-8 w-full max-w-md">
-        <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-b from-gray-50 to-yellow-100 dark:from-gray-900 dark:to-gray-800 px-4">
+      <div className="bg-white dark:bg-gray-800 shadow-xl rounded-2xl p-8 w-full max-w-md">
+        <h2 className="text-2xl font-bold text-center text-gray-800 dark:text-gray-100 mb-6">
           {step === 1 ? "Forgot Password" : "Reset Password"}
         </h2>
 
         {message && (
-          <p className="bg-green-100 text-green-600 p-2 rounded mb-4 text-sm">
+          <p className="bg-green-100 dark:bg-green-900 text-green-600 dark:text-green-300 p-2 rounded mb-4 text-sm">
             {message}
           </p>
         )}
         {error && (
-          <p className="bg-red-100 text-red-600 p-2 rounded mb-4 text-sm">
+          <p className="bg-red-100 dark:bg-red-900 text-red-600 dark:text-red-300 p-2 rounded mb-4 text-sm">
             {error}
           </p>
         )}
@@ -113,7 +113,7 @@ export const ForgotPassword = () => {
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 required
-                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-yellow-400 outline-none"
+                className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-yellow-400 outline-none dark:bg-gray-700 dark:text-white"
               />
             </div>
 
@@ -124,7 +124,7 @@ export const ForgotPassword = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-yellow-400 outline-none"
+                className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-yellow-400 outline-none dark:bg-gray-700 dark:text-white"
               />
             </div>
 
@@ -167,7 +167,7 @@ export const ForgotPassword = () => {
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 required
-                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-yellow-400 outline-none"
+                className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-yellow-400 outline-none dark:bg-gray-700 dark:text-white"
               />
             </div>
 
@@ -178,7 +178,7 @@ export const ForgotPassword = () => {
                 value={otp}
                 onChange={(e) => setOtp(e.target.value)}
                 required
-                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-yellow-400 outline-none"
+                className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-yellow-400 outline-none dark:bg-gray-700 dark:text-white"
               />
             </div>
 
@@ -189,10 +189,10 @@ export const ForgotPassword = () => {
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
                 required
-                className="w-full px-4 py-3 border border-gray-300 rounded-xl pr-10 focus:ring-2 focus:ring-yellow-400 outline-none"
+                className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl pr-10 focus:ring-2 focus:ring-yellow-400 outline-none dark:bg-gray-700 dark:text-white"
               />
               <span
-                className="absolute right-3 top-3.5 cursor-pointer text-gray-500"
+                className="absolute right-3 top-3.5 cursor-pointer text-gray-500 dark:text-gray-300"
                 onClick={() => setShowNewPassword(!showNewPassword)}
               >
                 {showNewPassword ? <FaEyeSlash /> : <FaEye />}
@@ -206,10 +206,10 @@ export const ForgotPassword = () => {
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 required
-                className="w-full px-4 py-3 border border-gray-300 rounded-xl pr-10 focus:ring-2 focus:ring-yellow-400 outline-none"
+                className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl pr-10 focus:ring-2 focus:ring-yellow-400 outline-none dark:bg-gray-700 dark:text-white"
               />
               <span
-                className="absolute right-3 top-3.5 cursor-pointer text-gray-500"
+                className="absolute right-3 top-3.5 cursor-pointer text-gray-500 dark:text-gray-300"
                 onClick={() =>
                   setShowConfirmPassword(!showConfirmPassword)
                 }

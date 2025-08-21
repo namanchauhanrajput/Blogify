@@ -32,7 +32,9 @@ const BlogDetail = () => {
 
         setLiked(blogData.likes?.some((l) => l === user?._id));
         setLikesCount(blogData.likes?.length || 0);
-        setCommentCount(blogData.comments?.length || blogData.commentsCount || 0);
+        setCommentCount(
+          blogData.comments?.length || blogData.commentsCount || 0
+        );
 
         setLoading(false);
       } catch (error) {
@@ -155,14 +157,14 @@ const BlogDetail = () => {
   };
 
   return (
-    <div className="max-w-3xl mx-auto p-6 bg-white rounded-xl shadow">
+    <div className="max-w-3xl mx-auto p-6 bg-white dark:bg-gray-900 rounded-xl shadow transition-colors duration-300">
       {/* Author with clickable link */}
-      <p className="text-gray-600 text-sm mb-2">
+      <p className="text-gray-600 dark:text-gray-400 text-sm mb-2">
         By{" "}
         {blog.author?._id ? (
           <Link
             to={`/profile/${blog.author._id}`}
-            className="font-semibold text-blue-600 hover:underline"
+            className="font-semibold text-blue-600 dark:text-blue-400 hover:underline"
           >
             {blog.author.username}
           </Link>
@@ -172,10 +174,12 @@ const BlogDetail = () => {
       </p>
 
       {/* Title */}
-      <h1 className="text-3xl font-bold mb-2">{blog.title}</h1>
+      <h1 className="text-3xl font-bold mb-2 text-gray-900 dark:text-gray-100">
+        {blog.title}
+      </h1>
 
       {/* Date */}
-      <p className="text-gray-500 text-sm mb-4">
+      <p className="text-gray-500 dark:text-gray-400 text-sm mb-4">
         {createdAt.toLocaleDateString()}
       </p>
 
@@ -189,14 +193,16 @@ const BlogDetail = () => {
       )}
 
       {/* Content */}
-      <p className="text-gray-700 leading-relaxed mb-6">{blog.content}</p>
+      <p className="text-gray-700 dark:text-gray-200 leading-relaxed mb-6">
+        {blog.content}
+      </p>
 
       {/* Actions */}
-      <div className="flex items-center gap-6 text-gray-600 mb-4">
+      <div className="flex items-center gap-6 text-gray-600 dark:text-gray-300 mb-4">
         <button
           onClick={toggleLike}
           className={`flex items-center gap-1 ${
-            liked ? "text-rose-600" : "text-gray-600"
+            liked ? "text-rose-600" : "text-gray-600 dark:text-gray-300"
           }`}
         >
           <Heart size={20} fill={liked ? "currentColor" : "none"} />
@@ -206,7 +212,7 @@ const BlogDetail = () => {
         {/* Comment button with loader */}
         <button
           onClick={handleToggleComments}
-          className="flex items-center gap-2 hover:text-blue-600 relative"
+          className="flex items-center gap-2 hover:text-blue-600 dark:hover:text-blue-400 relative"
         >
           {commentsLoading ? (
             <div className="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
@@ -224,7 +230,7 @@ const BlogDetail = () => {
             <textarea
               value={commentText}
               onChange={(e) => setCommentText(e.target.value)}
-              className="w-full border rounded-lg p-2 mb-2"
+              className="w-full border rounded-lg p-2 mb-2 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100"
               rows={3}
               placeholder="Write a comment..."
             ></textarea>
@@ -265,14 +271,14 @@ const BlogDetail = () => {
                   return (
                     <div
                       key={c._id}
-                      className="border rounded-lg p-3 bg-gray-50 text-sm"
+                      className="border rounded-lg p-3 bg-gray-50 dark:bg-gray-800 dark:border-gray-700 text-sm"
                     >
                       <div className="flex justify-between items-center">
                         {/* Comment author clickable */}
                         {userId ? (
                           <Link
                             to={`/profile/${userId}`}
-                            className="font-medium text-blue-600 hover:underline"
+                            className="font-medium text-blue-600 dark:text-blue-400 hover:underline"
                           >
                             {username}
                           </Link>
@@ -282,12 +288,16 @@ const BlogDetail = () => {
 
                         <span className="text-gray-400 text-xs">{date}</span>
                       </div>
-                      <p>{c.text}</p>
+                      <p className="text-gray-700 dark:text-gray-200">
+                        {c.text}
+                      </p>
                     </div>
                   );
                 })
               ) : (
-                <p className="text-gray-500">No comments yet.</p>
+                <p className="text-gray-500 dark:text-gray-400">
+                  No comments yet.
+                </p>
               )}
             </div>
           )}

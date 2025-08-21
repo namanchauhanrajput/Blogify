@@ -61,19 +61,19 @@ export const Register = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-gray-100 via-white to-yellow-50 p-4">
-      <div className="w-full max-w-sm bg-white shadow-lg rounded-2xl p-8">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-gray-100 via-white to-yellow-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 p-4">
+      <div className="w-full max-w-sm bg-white dark:bg-gray-800 shadow-lg rounded-2xl p-8">
         {/* Heading */}
-        <h2 className="text-2xl font-semibold text-center text-gray-800 mb-2">
+        <h2 className="text-2xl font-semibold text-center text-gray-800 dark:text-gray-100 mb-2">
           Create an account
         </h2>
-        <p className="text-center text-gray-500 mb-6 text-sm">
+        <p className="text-center text-gray-500 dark:text-gray-400 mb-6 text-sm">
           Sign up to start your journey
         </p>
 
         {/* Error */}
         {error && (
-          <div className="mb-4 text-sm text-red-600 bg-red-100 border border-red-300 p-2 rounded">
+          <div className="mb-4 text-sm text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-900 border border-red-300 dark:border-red-600 p-2 rounded">
             {error}
           </div>
         )}
@@ -86,7 +86,7 @@ export const Register = () => {
             placeholder="Username"
             value={form.username}
             onChange={handleChange}
-            className="w-full p-3 border rounded-full bg-gray-50 focus:ring-2 focus:ring-yellow-400 focus:outline-none"
+            className="w-full p-3 border rounded-full bg-gray-50 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-yellow-400 focus:outline-none"
             required
           />
 
@@ -97,7 +97,7 @@ export const Register = () => {
             placeholder="Full Name"
             value={form.name}
             onChange={handleChange}
-            className="w-full p-3 border rounded-full bg-gray-50 focus:ring-2 focus:ring-yellow-400 focus:outline-none"
+            className="w-full p-3 border rounded-full bg-gray-50 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-yellow-400 focus:outline-none"
             required
           />
 
@@ -108,7 +108,7 @@ export const Register = () => {
             placeholder="Email"
             value={form.email}
             onChange={handleChange}
-            className="w-full p-3 border rounded-full bg-gray-50 focus:ring-2 focus:ring-yellow-400 focus:outline-none"
+            className="w-full p-3 border rounded-full bg-gray-50 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-yellow-400 focus:outline-none"
             required
           />
 
@@ -119,7 +119,7 @@ export const Register = () => {
             placeholder="Phone (10 digits)"
             value={form.phone}
             onChange={handleChange}
-            className="w-full p-3 border rounded-full bg-gray-50 focus:ring-2 focus:ring-yellow-400 focus:outline-none"
+            className="w-full p-3 border rounded-full bg-gray-50 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-yellow-400 focus:outline-none"
             pattern="\d{10}"
             title="Phone number must be exactly 10 digits"
             required
@@ -133,11 +133,11 @@ export const Register = () => {
               placeholder="Password"
               value={form.password}
               onChange={handleChange}
-              className="w-full p-3 border rounded-full bg-gray-50 pr-10 focus:ring-2 focus:ring-yellow-400 focus:outline-none"
+              className="w-full p-3 border rounded-full bg-gray-50 dark:bg-gray-700 dark:text-white pr-10 focus:ring-2 focus:ring-yellow-400 focus:outline-none"
               required
             />
             <span
-              className="absolute right-4 top-3.5 cursor-pointer text-gray-500 hover:text-gray-700"
+              className="absolute right-4 top-3.5 cursor-pointer text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-100"
               onClick={() => setShowPassword(!showPassword)}
             >
               {showPassword ? <FaEyeSlash size={18} /> : <FaEye size={18} />}
@@ -152,11 +152,11 @@ export const Register = () => {
               placeholder="Confirm Password"
               value={form.confirmPassword}
               onChange={handleChange}
-              className="w-full p-3 border rounded-full bg-gray-50 pr-10 focus:ring-2 focus:ring-yellow-400 focus:outline-none"
+              className="w-full p-3 border rounded-full bg-gray-50 dark:bg-gray-700 dark:text-white pr-10 focus:ring-2 focus:ring-yellow-400 focus:outline-none"
               required
             />
             <span
-              className="absolute right-4 top-3.5 cursor-pointer text-gray-500 hover:text-gray-700"
+              className="absolute right-4 top-3.5 cursor-pointer text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-100"
               onClick={() => setShowConfirmPassword(!showConfirmPassword)}
             >
               {showConfirmPassword ? (
@@ -170,13 +170,13 @@ export const Register = () => {
           {/* Submit */}
           <button
             type="submit"
-            className="w-full bg-yellow-400 text-gray-800 p-3 rounded-full font-semibold hover:bg-yellow-500 transition-all duration-300 flex justify-center items-center"
+            className="w-full bg-yellow-400 text-gray-800 dark:text-gray-900 p-3 rounded-full font-semibold hover:bg-yellow-500 transition-all duration-300 flex justify-center items-center"
             disabled={loading}
           >
             {loading ? (
               <span className="flex items-center gap-2">
                 <svg
-                  className="animate-spin h-5 w-5 text-gray-800"
+                  className="animate-spin h-5 w-5 text-gray-800 dark:text-gray-900"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
@@ -204,11 +204,11 @@ export const Register = () => {
         </form>
 
         {/* Footer */}
-        <p className="text-center text-sm text-gray-600 mt-6">
+        <p className="text-center text-sm text-gray-600 dark:text-gray-400 mt-6">
           Already have an account?{" "}
           <Link
             to="/login"
-            className="text-yellow-600 font-medium hover:underline"
+            className="text-yellow-600 dark:text-yellow-400 font-medium hover:underline"
           >
             Login
           </Link>
