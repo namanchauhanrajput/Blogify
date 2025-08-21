@@ -11,7 +11,7 @@ import {
 } from "lucide-react"; // professional icons
 
 export default function Navbar() {
-  const { isLoggedIn, logoutUser, user } = useAuth();
+  const { isLoggedIn, logoutUser } = useAuth();
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -69,7 +69,6 @@ export default function Navbar() {
           ) : (
             <button onClick={handleLogout} className={outlineBtnClasses}>
               <LogOut size={18} /> Logout{" "}
-              {user?.username ? `(${user.username})` : ""}
             </button>
           )}
         </nav>
