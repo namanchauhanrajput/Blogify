@@ -14,7 +14,7 @@ export const ForgotPassword = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // Password visibility states
+  // Password visibility
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
@@ -38,7 +38,7 @@ export const ForgotPassword = () => {
       const data = await res.json();
       if (res.ok) {
         setMessage(data.message);
-        setStep(2); // Move to reset password step
+        setStep(2);
       } else {
         setError(data.message || "Error sending OTP");
       }
@@ -69,13 +69,13 @@ export const ForgotPassword = () => {
       const data = await res.json();
       if (res.ok) {
         setMessage(data.message);
-        setStep(1); // Reset back to step 1
+        setStep(1);
         setEmail("");
         setUsername("");
         setOtp("");
         setNewPassword("");
         setConfirmPassword("");
-        navigate("/login"); // Redirect to login page
+        navigate("/login");
       } else {
         setError(data.message || "Error resetting password");
       }
@@ -87,8 +87,8 @@ export const ForgotPassword = () => {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100 px-4">
-      <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-md">
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-b from-gray-50 to-yellow-100 px-4">
+      <div className="bg-white shadow-xl rounded-2xl p-8 w-full max-w-md">
         <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">
           {step === 1 ? "Forgot Password" : "Reset Password"}
         </h2>
@@ -105,42 +105,35 @@ export const ForgotPassword = () => {
         )}
 
         {step === 1 ? (
-          // ================== FORGOT PASSWORD FORM ==================
-          <form onSubmit={handleSendOtp} className="space-y-4">
+          <form onSubmit={handleSendOtp} className="space-y-5">
             <div>
-              <label className="block text-gray-600 text-sm font-medium mb-1">
-                Username
-              </label>
               <input
                 type="text"
                 placeholder="Enter your username"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 required
-                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400 outline-none text-gray-700"
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-yellow-400 outline-none"
               />
             </div>
 
             <div>
-              <label className="block text-gray-600 text-sm font-medium mb-1">
-                Registered Email
-              </label>
               <input
                 type="email"
                 placeholder="Enter your registered email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400 outline-none text-gray-700"
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-yellow-400 outline-none"
               />
             </div>
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-lg flex justify-center items-center transition"
+              className="w-full bg-yellow-400 hover:bg-yellow-500 text-white font-semibold py-3 px-4 rounded-xl transition flex justify-center items-center"
             >
-              {loading ? (
+              {loading && (
                 <svg
                   className="animate-spin h-5 w-5 text-white mr-2"
                   xmlns="http://www.w3.org/2000/svg"
@@ -161,55 +154,45 @@ export const ForgotPassword = () => {
                     d="M4 12a8 8 0 018-8v4l3-3-3-3v4a12 12 0 00-12 12h4z"
                   ></path>
                 </svg>
-              ) : null}
+              )}
               {loading ? "Sending OTP..." : "Send OTP"}
             </button>
           </form>
         ) : (
-          // ================== RESET PASSWORD FORM ==================
-          <form onSubmit={handleResetPassword} className="space-y-4">
+          <form onSubmit={handleResetPassword} className="space-y-5">
             <div>
-              <label className="block text-gray-600 text-sm font-medium mb-1">
-                Username
-              </label>
               <input
                 type="text"
                 placeholder="Enter your username"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 required
-                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-purple-400 outline-none text-gray-700"
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-yellow-400 outline-none"
               />
             </div>
 
             <div>
-              <label className="block text-gray-600 text-sm font-medium mb-1">
-                OTP
-              </label>
               <input
                 type="text"
                 placeholder="Enter OTP"
                 value={otp}
                 onChange={(e) => setOtp(e.target.value)}
                 required
-                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-purple-400 outline-none text-gray-700"
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-yellow-400 outline-none"
               />
             </div>
 
             <div className="relative">
-              <label className="block text-gray-600 text-sm font-medium mb-1">
-                New Password
-              </label>
               <input
                 type={showNewPassword ? "text" : "password"}
                 placeholder="Enter new password"
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
                 required
-                className="w-full px-4 py-2 border rounded-lg pr-10 focus:ring-2 focus:ring-purple-400 outline-none text-gray-700"
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl pr-10 focus:ring-2 focus:ring-yellow-400 outline-none"
               />
               <span
-                className="absolute right-3 top-10 cursor-pointer text-gray-600"
+                className="absolute right-3 top-3.5 cursor-pointer text-gray-500"
                 onClick={() => setShowNewPassword(!showNewPassword)}
               >
                 {showNewPassword ? <FaEyeSlash /> : <FaEye />}
@@ -217,20 +200,19 @@ export const ForgotPassword = () => {
             </div>
 
             <div className="relative">
-              <label className="block text-gray-600 text-sm font-medium mb-1">
-                Confirm Password
-              </label>
               <input
                 type={showConfirmPassword ? "text" : "password"}
                 placeholder="Confirm new password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 required
-                className="w-full px-4 py-2 border rounded-lg pr-10 focus:ring-2 focus:ring-purple-400 outline-none text-gray-700"
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl pr-10 focus:ring-2 focus:ring-yellow-400 outline-none"
               />
               <span
-                className="absolute right-3 top-10 cursor-pointer text-gray-600"
-                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                className="absolute right-3 top-3.5 cursor-pointer text-gray-500"
+                onClick={() =>
+                  setShowConfirmPassword(!showConfirmPassword)
+                }
               >
                 {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
               </span>
@@ -239,9 +221,9 @@ export const ForgotPassword = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-purple-500 hover:bg-purple-600 text-white font-medium py-2 px-4 rounded-lg flex justify-center items-center transition"
+              className="w-full bg-yellow-400 hover:bg-yellow-500 text-white font-semibold py-3 px-4 rounded-xl transition flex justify-center items-center"
             >
-              {loading ? (
+              {loading && (
                 <svg
                   className="animate-spin h-5 w-5 text-white mr-2"
                   xmlns="http://www.w3.org/2000/svg"
@@ -262,7 +244,7 @@ export const ForgotPassword = () => {
                     d="M4 12a8 8 0 018-8v4l3-3-3-3v4a12 12 0 00-12 12h4z"
                   ></path>
                 </svg>
-              ) : null}
+              )}
               {loading ? "Resetting..." : "Reset Password"}
             </button>
           </form>
