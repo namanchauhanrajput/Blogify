@@ -58,7 +58,7 @@ export const Home = () => {
         sm:px-6 
         lg:px-8 
         py-6 
-        md:ml-60
+        lg:ml-60
       "
     >
       {/* Category Filter */}
