@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
-import { Heart, MessageSquare, Edit, Trash2 } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import { Heart, MessageSquare, Edit, Trash2, MoreVertical } from "lucide-react";
 import { endpoints, authHeaders } from "../api";
 import { useAuth } from "../context/AuthContext";
 
@@ -19,6 +19,9 @@ export default function BlogCard({ blog, onDelete }) {
   );
   const [likesCount, setLikesCount] = useState(blog?.likes?.length || 0);
   const [imgError, setImgError] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const menuRef = useRef(null); // ✅ menu reference
 
   const API_URL = "https://bloging-platform.onrender.com";
 
@@ -81,8 +84,23 @@ export default function BlogCard({ blog, onDelete }) {
     }
   };
 
+  // ✅ Close menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (menuRef.current && !menuRef.current.contains(e.target)) {
+        setMenuOpen(false);
+      }
+    };
+    if (menuOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [menuOpen]);
+
   return (
-    <article className="bg-white rounded-2xl transition duration-300 overflow-hidden flex flex-col shadow hover:shadow-lg border border-gray-100">
+    <article className="bg-white rounded-2xl transition duration-300 overflow-hidden flex flex-col shadow hover:shadow-lg border border-gray-100 relative">
       {/* Author row */}
       <div className="flex items-center gap-3 px-4 pt-4 text-xs sm:text-sm text-gray-600">
         {profileImageUrl && !imgError ? (
@@ -109,9 +127,34 @@ export default function BlogCard({ blog, onDelete }) {
           <span>{authorName}</span>
         )}
 
-        <span className="text-gray-400 ml-auto">
-          {createdAt.toLocaleDateString()}
-        </span>
+        {/* 3-dot menu only for blog owner */}
+        {user?._id === authorId && (
+          <div className="ml-auto relative" ref={menuRef}>
+            <button
+              onClick={() => setMenuOpen((prev) => !prev)}
+              className="p-1 rounded-full hover:bg-gray-100"
+            >
+              <MoreVertical size={18} />
+            </button>
+
+            {menuOpen && (
+              <div className="absolute right-0 mt-2 w-32 bg-white border rounded-lg shadow-lg z-20">
+                <button
+                  onClick={() => navigate(`/edit-blog/${blog._id}`)}
+                  className="flex items-center gap-2 px-3 py-2 w-full text-left text-sm hover:bg-gray-100"
+                >
+                  <Edit size={16} /> Edit
+                </button>
+                <button
+                  onClick={handleDelete}
+                  className="flex items-center gap-2 px-3 py-2 w-full text-left text-sm hover:bg-gray-100 text-red-600"
+                >
+                  <Trash2 size={16} /> Delete
+                </button>
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Blog image */}
@@ -135,55 +178,38 @@ export default function BlogCard({ blog, onDelete }) {
         </p>
 
         {/* Actions */}
-        <div className="flex items-center justify-between mt-auto">
-          <div className="flex gap-4 text-gray-600 text-sm">
-            {/* Like button */}
-            <button
-              onClick={toggleLike}
-              className={`flex items-center gap-1 ${
-                liked ? "text-rose-600" : "text-gray-600"
-              }`}
-            >
-              <Heart size={18} fill={liked ? "currentColor" : "none"} />
-              {likesCount}
-            </button>
+        <div className="flex items-center mt-auto">
+          {/* Like button */}
+          <button
+            onClick={toggleLike}
+            className={`flex items-center gap-1 ${
+              liked ? "text-rose-600" : "text-gray-600"
+            }`}
+          >
+            <Heart size={18} fill={liked ? "currentColor" : "none"} />
+            {likesCount}
+          </button>
 
-            {/* Comment button */}
-            <Link
-              to={`/comments/${blog._id}`}
-              className="flex items-center gap-1 hover:text-blue-600"
-            >
-              <MessageSquare size={18} /> {blog.comments?.length || 0}
-            </Link>
-          </div>
+          {/* Comment button */}
+          <Link
+            to={`/comments/${blog._id}`}
+            className="flex items-center gap-1 hover:text-blue-600 ml-4"
+          >
+            <MessageSquare size={18} /> {blog.comments?.length || 0}
+          </Link>
 
-          <div className="flex items-center gap-2">
-            {user?._id === authorId && (
-              <>
-                <button
-                  onClick={() => navigate(`/edit-blog/${blog._id}`)}
-                  className="text-gray-500 hover:text-blue-600"
-                >
-                  <Edit size={18} />
-                </button>
-                <button
-                  onClick={handleDelete}
-                  className="text-gray-500 hover:text-red-600"
-                >
-                  <Trash2 size={18} />
-                </button>
-              </>
-            )}
+          {/* Permanent Read More button */}
+          <Link
+            to={`/blog/${blog?._id}`}
+            className="ml-4 px-3 py-1.5 rounded-lg bg-gray-900 text-white hover:bg-black text-sm sm:text-base"
+          >
+            Read More
+          </Link>
 
-            {showReadMore && (
-              <Link
-                to={`/blog/${blog?._id}`}
-                className="px-3 py-1.5 rounded-lg bg-gray-900 text-white hover:bg-black text-sm sm:text-base"
-              >
-                Read More
-              </Link>
-            )}
-          </div>
+          {/* Date shifted to absolute right */}
+          <span className="text-gray-400 ml-auto">
+            {createdAt.toLocaleDateString()}
+          </span>
         </div>
       </div>
     </article>
