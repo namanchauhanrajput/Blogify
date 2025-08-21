@@ -64,7 +64,7 @@ export const Home = () => {
       {/* Category Filter */}
       <div className="mb-8 flex flex-col sm:flex-row sm:items-center gap-3">
         <label className="font-medium text-gray-700">
-          Filter by Category:
+          Filter by Categories:
         </label>
         <select
           value={selectedCategory}
