@@ -16,12 +16,16 @@ export const CreateBlog = () => {
   const [submitting, setSubmitting] = useState(false);
 
   const categories = [
-    "Travel",
+    "Quotes/Poetry",
     "Technology",
+    "Photography",
     "Lifestyle",
-    "Food",
-    "Health",
-    "Education",
+    "Food & Recipes",
+    "Health & Fitness",
+    "Events & Sports",
+    "Entertainment",
+    "Travel & Adventure",
+    "Others"
   ];
 
   const handleChange = (e) =>

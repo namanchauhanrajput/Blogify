@@ -1,11 +1,25 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import BlogCard from "../components/BlogCard";
+import { FaListUl } from "react-icons/fa";
 
 export const Home = () => {
   const [blogs, setBlogs] = useState([]);
   const [categories, setCategories] = useState(["All"]);
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [loading, setLoading] = useState(true);
+  const [open, setOpen] = useState(false);
+
+  const containerRef = useRef(null);
+
+  // Close menus when clicking outside
+  useEffect(() => {
+    const onClickOutside = (e) => {
+      if (!containerRef.current) return;
+      if (!containerRef.current.contains(e.target)) setOpen(false);
+    };
+    if (open) document.addEventListener("mousedown", onClickOutside);
+    return () => document.removeEventListener("mousedown", onClickOutside);
+  }, [open]);
 
   // Fetch categories
   const fetchCategories = async () => {
@@ -52,45 +66,50 @@ export const Home = () => {
         flex-1 
         min-h-screen 
         bg-gray-50 dark:bg-gray-900
-        px-4 
-        sm:px-6 
-        lg:px-8 
-        py-6 
-        lg:ml-60
+        px-4 sm:px-6 lg:px-8 py-6 lg:ml-60
         text-gray-900 dark:text-gray-100
       "
     >
       {/* Category Filter */}
-      <div className="mb-8 flex flex-col sm:flex-row sm:items-center gap-3">
-        <label className="font-medium text-gray-700 dark:text-gray-300">
-          Filter by Categories:
-        </label>
-        <select
-          value={selectedCategory}
-          onChange={(e) => setSelectedCategory(e.target.value)}
-          className="
-            px-4 py-2 
-            border border-gray-300 dark:border-gray-700
-            rounded-lg 
-            focus:outline-none 
-            focus:ring-2 
-            focus:ring-blue-500 
-            shadow-sm 
-            w-full sm:w-auto
-            bg-white dark:bg-gray-800
-            text-gray-900 dark:text-gray-100
-          "
+      <div className="mb-8 relative inline-block" ref={containerRef}>
+        <button
+          onClick={() => setOpen((v) => !v)}
+          aria-expanded={open}
+          className="flex items-center gap-2 px-4 py-2 rounded-lg 
+            bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 
+            shadow-sm hover:shadow-md transition"
         >
-          {categories.map((cat) => (
-            <option
-              key={cat}
-              value={cat}
-              className="bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
-            >
-              {cat}
-            </option>
-          ))}
-        </select>
+          <FaListUl />
+          {selectedCategory}
+        </button>
+
+        {/* Horizontal Dropdown */}
+        {open && (
+          <div
+            className="absolute top-0 left-full ml-2 flex 
+              rounded-lg shadow-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700
+              overflow-x-auto z-50 animate-slide-right whitespace-nowrap"
+          >
+            {categories.map((cat) => (
+              <button
+                key={cat}
+                onClick={() => {
+                  setSelectedCategory(cat);
+                  setOpen(false);
+                }}
+                className={`px-4 py-2 text-sm 
+                  hover:bg-gray-100 dark:hover:bg-gray-700 transition
+                  ${
+                    selectedCategory === cat
+                      ? "bg-gray-100 dark:bg-gray-700 font-medium"
+                      : ""
+                  }`}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Blog List */}
