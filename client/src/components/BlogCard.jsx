@@ -103,7 +103,7 @@ export default function BlogCard({ blog, onDelete }) {
       )}
 
       {/* Absolute overlay content */}
-      <div className="absolute top-0 left-0 w-full h-full flex flex-col justify-between p-4 bg-black/40 text-white">
+      <div className="absolute top-0 left-0 w-full h-full flex flex-col justify-between p-4 bg-black/25 text-white">
         {/* Top bar with author and menu */}
         <div className="flex items-center gap-3 text-xs sm:text-sm">
           {profileImageUrl && !imgError ? (
