@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import ReactCrop, { centerCrop, makeAspectCrop } from "react-image-crop";
+import ReactCrop from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
 
 export const CreateBlog = () => {
@@ -50,7 +50,7 @@ export const CreateBlog = () => {
     }
   };
 
-  // When crop complete → draw cropped image on canvas
+  // Draw cropped output
   const onCropComplete = (c) => {
     setCompletedCrop(c);
     if (imgRef.current && c.width && c.height) {
@@ -133,21 +133,26 @@ export const CreateBlog = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 py-8 bg-gray-100 dark:bg-black">
-      <div className="w-full max-w-lg bg-white dark:bg-[#111] rounded-2xl shadow-xl border border-gray-300 dark:border-gray-800 p-6">
+    <div className="min-h-screen flex items-center justify-center px-4 py-10 
+      bg-gray-50 dark:bg-gradient-to-br dark:from-black dark:to-gray-900 transition-colors">
+      <div className="w-full max-w-2xl bg-white dark:bg-gray-950 rounded-2xl shadow-2xl 
+        border border-gray-200 dark:border-gray-800 p-8 transition-colors">
         {/* Title */}
-        <h1 className="text-3xl font-bold text-pink-500 text-center mb-6">
-          Create Post
+        <h1 className="text-3xl font-bold text-center text-gray-900 dark:text-gray-100 mb-8 tracking-wide">
+          Create New Post
         </h1>
 
         {/* Error */}
         {error && (
-          <p className="text-red-400 mb-4 text-center text-sm">{error}</p>
+          <p className="text-red-500 dark:text-red-400 mb-4 text-center text-sm">
+            {error}
+          </p>
         )}
 
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Upload */}
-          <div className="border-2 border-dashed border-gray-400 dark:border-gray-600 rounded-lg p-6 text-center hover:border-pink-500 transition">
+          <div className="border-2 border-dashed border-gray-300 dark:border-gray-700 
+            rounded-xl p-6 text-center hover:border-blue-500 transition">
             <label className="cursor-pointer">
               <input
                 type="file"
@@ -156,9 +161,9 @@ export const CreateBlog = () => {
                 className="hidden"
               />
               {!imgSrc ? (
-                <div className="flex flex-col items-center justify-center text-gray-600 dark:text-gray-300">
+                <div className="flex flex-col items-center justify-center text-gray-500 dark:text-gray-400">
                   <svg
-                    className="w-10 h-10 mb-2 text-pink-500"
+                    className="w-12 h-12 mb-2 text-blue-500"
                     fill="none"
                     stroke="currentColor"
                     strokeWidth={2}
@@ -171,30 +176,24 @@ export const CreateBlog = () => {
                     />
                   </svg>
                   <span className="text-sm">Upload your photo</span>
-                  <span className="text-xs text-gray-500">
+                  <span className="text-xs text-gray-400 dark:text-gray-500">
                     Drag & drop or click to browse
                   </span>
                 </div>
               ) : (
                 <div className="flex flex-col items-center">
-                  {/* Full view cropper */}
                   <ReactCrop
                     crop={crop}
                     onChange={(_, percentCrop) => setCrop(percentCrop)}
                     onComplete={onCropComplete}
+                    className="rounded-lg"
                   >
                     <img ref={imgRef} src={imgSrc} alt="Preview" />
                   </ReactCrop>
 
-                  {/* Hidden canvas for cropped output */}
-                  <canvas
-                    ref={previewCanvasRef}
-                    className="hidden"
-                  />
+                  <canvas ref={previewCanvasRef} className="hidden" />
 
-                  <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
-                    {image?.name}
-                  </p>
+                  <p className="mt-2 text-xs text-gray-500">{image?.name}</p>
                 </div>
               )}
             </label>
@@ -208,8 +207,9 @@ export const CreateBlog = () => {
               onChange={handleChange}
               rows={4}
               placeholder="What's on your mind?"
-              className="w-full p-3 rounded-lg bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-100 border border-gray-300 dark:border-gray-700 
-              focus:ring-2 focus:ring-pink-500 focus:outline-none resize-none text-sm"
+              className="w-full p-4 rounded-lg bg-gray-100 dark:bg-gray-900 
+              text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-700 
+              focus:ring-2 focus:ring-blue-500 focus:outline-none resize-none text-sm transition-colors"
               required
             ></textarea>
           </div>
@@ -222,8 +222,9 @@ export const CreateBlog = () => {
               value={form.title}
               onChange={handleChange}
               placeholder="Enter blog title"
-              className="w-full p-3 rounded-lg bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-100 border border-gray-300 dark:border-gray-700 
-              focus:ring-2 focus:ring-pink-500 focus:outline-none text-sm"
+              className="w-full p-4 rounded-lg bg-gray-100 dark:bg-gray-900 
+              text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-700 
+              focus:ring-2 focus:ring-blue-500 focus:outline-none text-sm transition-colors"
               required
             />
           </div>
@@ -234,8 +235,9 @@ export const CreateBlog = () => {
               name="category"
               value={form.category}
               onChange={handleChange}
-              className="w-full p-3 rounded-lg bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-100 border border-gray-300 dark:border-gray-700 
-              focus:ring-2 focus:ring-pink-500 focus:outline-none text-sm"
+              className="w-full p-4 rounded-lg bg-gray-100 dark:bg-gray-900 
+              text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-700 
+              focus:ring-2 focus:ring-blue-500 focus:outline-none text-sm transition-colors"
               required
             >
               <option value="" disabled>
@@ -253,8 +255,9 @@ export const CreateBlog = () => {
           <button
             type="submit"
             disabled={submitting}
-            className="w-full py-3 rounded-lg bg-gradient-to-r from-pink-500 to-purple-500 text-white 
-            font-semibold hover:opacity-90 transition disabled:opacity-50 text-sm"
+            className="w-full py-3 rounded-lg bg-gradient-to-r from-blue-600 to-blue-400 
+            text-white font-semibold hover:opacity-90 transition disabled:opacity-50 
+            text-sm shadow-lg"
           >
             {submitting ? "Submitting..." : "Share Post"}
           </button>
