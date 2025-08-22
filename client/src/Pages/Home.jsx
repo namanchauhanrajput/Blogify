@@ -71,24 +71,30 @@ export const Home = () => {
       "
     >
       {/* Category Filter */}
-      <div className="mb-8 relative inline-block" ref={containerRef}>
+      <div
+        className="sticky top-0 z-50 bg-gray-50 dark:bg-gray-900 pb-4"
+        ref={containerRef}
+      >
         <button
           onClick={() => setOpen((v) => !v)}
           aria-expanded={open}
           className="flex items-center gap-2 px-4 py-2 rounded-lg 
             bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 
-            shadow-sm hover:shadow-md transition"
+            shadow-sm hover:shadow-md transition w-full sm:w-auto"
         >
           <FaListUl />
           {selectedCategory}
         </button>
 
-        {/* Horizontal Dropdown */}
+        {/* Dropdown */}
         {open && (
           <div
-            className="absolute top-0 left-full ml-2 flex 
-              rounded-lg shadow-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700
-              overflow-x-auto z-50 animate-slide-right whitespace-nowrap"
+            className={`
+              absolute z-50 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700
+              rounded-lg shadow-lg
+              sm:top-12 sm:left-0 sm:ml-0 sm:flex sm:flex-row sm:whitespace-nowrap animate-slide-down
+              mt-2 flex flex-col w-full sm:w-auto
+            `}
           >
             {categories.map((cat) => (
               <button
@@ -97,7 +103,7 @@ export const Home = () => {
                   setSelectedCategory(cat);
                   setOpen(false);
                 }}
-                className={`px-4 py-2 text-sm 
+                className={`px-4 py-2 text-sm text-left sm:text-center 
                   hover:bg-gray-100 dark:hover:bg-gray-700 transition
                   ${
                     selectedCategory === cat
