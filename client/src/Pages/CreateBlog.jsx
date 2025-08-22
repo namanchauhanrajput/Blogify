@@ -1,6 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import ReactCrop, { centerCrop, makeAspectCrop } from "react-image-crop";
+import "react-image-crop/dist/ReactCrop.css";
 
 export const CreateBlog = () => {
   const { token } = useAuth();
@@ -14,6 +16,13 @@ export const CreateBlog = () => {
   const [image, setImage] = useState(null);
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
+
+  // Crop state
+  const [crop, setCrop] = useState();
+  const [completedCrop, setCompletedCrop] = useState(null);
+  const [imgSrc, setImgSrc] = useState("");
+  const imgRef = useRef(null);
+  const previewCanvasRef = useRef(null);
 
   const categories = [
     "Technology",
@@ -31,7 +40,45 @@ export const CreateBlog = () => {
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
 
-  const handleImageChange = (e) => setImage(e.target.files[0]);
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImage(file);
+      const reader = new FileReader();
+      reader.addEventListener("load", () => setImgSrc(reader.result.toString()));
+      reader.readAsDataURL(file);
+    }
+  };
+
+  // When crop complete → draw cropped image on canvas
+  const onCropComplete = (c) => {
+    setCompletedCrop(c);
+    if (imgRef.current && c.width && c.height) {
+      const canvas = previewCanvasRef.current;
+      const image = imgRef.current;
+      const scaleX = image.naturalWidth / image.width;
+      const scaleY = image.naturalHeight / image.height;
+      const ctx = canvas.getContext("2d");
+      const pixelRatio = window.devicePixelRatio;
+      canvas.width = c.width * pixelRatio;
+      canvas.height = c.height * pixelRatio;
+
+      ctx.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+      ctx.imageSmoothingQuality = "high";
+
+      ctx.drawImage(
+        image,
+        c.x * scaleX,
+        c.y * scaleY,
+        c.width * scaleX,
+        c.height * scaleY,
+        0,
+        0,
+        c.width,
+        c.height
+      );
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -44,11 +91,25 @@ export const CreateBlog = () => {
 
     try {
       setSubmitting(true);
+
+      // If cropped → export cropped canvas as blob
+      let finalImage = image;
+      if (completedCrop && previewCanvasRef.current) {
+        await new Promise((resolve) => {
+          previewCanvasRef.current.toBlob((blob) => {
+            if (blob) {
+              finalImage = new File([blob], image.name, { type: "image/jpeg" });
+            }
+            resolve();
+          }, "image/jpeg");
+        });
+      }
+
       const fd = new FormData();
       fd.append("title", form.title);
       fd.append("content", form.content);
       fd.append("category", form.category);
-      fd.append("image", image);
+      fd.append("image", finalImage);
 
       const res = await fetch(
         "https://bloging-platform.onrender.com/api/blog/create",
@@ -72,67 +133,109 @@ export const CreateBlog = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 px-4 sm:px-6 lg:px-8 py-8">
-      <div className="max-w-3xl mx-auto bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 p-6 sm:p-8">
+    <div className="min-h-screen flex items-center justify-center px-4 py-8 bg-gray-100 dark:bg-black">
+      <div className="w-full max-w-lg bg-white dark:bg-[#111] rounded-2xl shadow-xl border border-gray-300 dark:border-gray-800 p-6">
         {/* Title */}
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-6 text-center">
-          Create New Blog
+        <h1 className="text-3xl font-bold text-pink-500 text-center mb-6">
+          Create Post
         </h1>
 
-        {/* Error Message */}
+        {/* Error */}
         {error && (
-          <p className="text-red-500 mb-4 text-sm sm:text-base text-center">
-            {error}
-          </p>
+          <p className="text-red-400 mb-4 text-center text-sm">{error}</p>
         )}
 
-        {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Upload */}
+          <div className="border-2 border-dashed border-gray-400 dark:border-gray-600 rounded-lg p-6 text-center hover:border-pink-500 transition">
+            <label className="cursor-pointer">
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+                className="hidden"
+              />
+              {!imgSrc ? (
+                <div className="flex flex-col items-center justify-center text-gray-600 dark:text-gray-300">
+                  <svg
+                    className="w-10 h-10 mb-2 text-pink-500"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M3 15a4 4 0 014-4h.586a1 1 0 00.707-.293l2.414-2.414a2 2 0 012.828 0L16.586 11H17a4 4 0 014 4v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5z"
+                    />
+                  </svg>
+                  <span className="text-sm">Upload your photo</span>
+                  <span className="text-xs text-gray-500">
+                    Drag & drop or click to browse
+                  </span>
+                </div>
+              ) : (
+                <div className="flex flex-col items-center">
+                  {/* Full view cropper */}
+                  <ReactCrop
+                    crop={crop}
+                    onChange={(_, percentCrop) => setCrop(percentCrop)}
+                    onComplete={onCropComplete}
+                  >
+                    <img ref={imgRef} src={imgSrc} alt="Preview" />
+                  </ReactCrop>
+
+                  {/* Hidden canvas for cropped output */}
+                  <canvas
+                    ref={previewCanvasRef}
+                    className="hidden"
+                  />
+
+                  <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
+                    {image?.name}
+                  </p>
+                </div>
+              )}
+            </label>
+          </div>
+
+          {/* Caption */}
+          <div>
+            <textarea
+              name="content"
+              value={form.content}
+              onChange={handleChange}
+              rows={4}
+              placeholder="What's on your mind?"
+              className="w-full p-3 rounded-lg bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-100 border border-gray-300 dark:border-gray-700 
+              focus:ring-2 focus:ring-pink-500 focus:outline-none resize-none text-sm"
+              required
+            ></textarea>
+          </div>
+
           {/* Title */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Title *
-            </label>
             <input
               type="text"
               name="title"
               value={form.title}
               onChange={handleChange}
-              className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 
-              dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 text-sm sm:text-base"
               placeholder="Enter blog title"
+              className="w-full p-3 rounded-lg bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-100 border border-gray-300 dark:border-gray-700 
+              focus:ring-2 focus:ring-pink-500 focus:outline-none text-sm"
               required
             />
           </div>
 
-          {/* Content */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Content *
-            </label>
-            <textarea
-              name="content"
-              value={form.content}
-              onChange={handleChange}
-              rows={6}
-              className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 
-              dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 text-sm sm:text-base resize-none"
-              placeholder="Write your blog content here"
-              required
-            ></textarea>
-          </div>
-
           {/* Category */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Category *
-            </label>
             <select
               name="category"
               value={form.category}
               onChange={handleChange}
-              className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 
-              dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 text-sm sm:text-base"
+              className="w-full p-3 rounded-lg bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-100 border border-gray-300 dark:border-gray-700 
+              focus:ring-2 focus:ring-pink-500 focus:outline-none text-sm"
               required
             >
               <option value="" disabled>
@@ -146,51 +249,14 @@ export const CreateBlog = () => {
             </select>
           </div>
 
-          {/* Image */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Image *
-            </label>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleImageChange}
-              className="w-full text-sm text-gray-700 dark:text-gray-200"
-              required
-            />
-          </div>
-
-          {/* Submit Button */}
+          {/* Submit */}
           <button
             type="submit"
             disabled={submitting}
-            className="w-full bg-blue-600 text-white px-6 py-3 rounded-lg font-medium 
-            hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition 
-            flex justify-center items-center disabled:opacity-50 text-sm sm:text-base"
+            className="w-full py-3 rounded-lg bg-gradient-to-r from-pink-500 to-purple-500 text-white 
+            font-semibold hover:opacity-90 transition disabled:opacity-50 text-sm"
           >
-            {submitting && (
-              <svg
-                className="animate-spin h-5 w-5 text-white mr-2"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
-                <circle
-                  className="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  strokeWidth="4"
-                ></circle>
-                <path
-                  className="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8v4l3-3-3-3v4a12 12 0 00-12 12h4z"
-                ></path>
-              </svg>
-            )}
-            {submitting ? "Submitting..." : "Create Blog"}
+            {submitting ? "Submitting..." : "Share Post"}
           </button>
         </form>
       </div>
