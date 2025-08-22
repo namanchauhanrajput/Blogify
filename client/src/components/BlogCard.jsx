@@ -7,7 +7,6 @@ import { useAuth } from "../context/AuthContext";
 export default function BlogCard({ blog, onDelete }) {
   const { token, user } = useAuth();
   const navigate = useNavigate();
-
   const author = blog?.author || {};
   const authorName = author?.username || "Unknown";
   const authorId = author?._id || "";
@@ -20,17 +19,14 @@ export default function BlogCard({ blog, onDelete }) {
   const [likesCount, setLikesCount] = useState(blog?.likes?.length || 0);
   const [imgError, setImgError] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-
-  const menuRef = useRef(null); // ✅ menu reference
+  const menuRef = useRef(null);
 
   const API_URL = "https://bloging-platform.onrender.com";
-
   const profileImageUrl = profilePhoto
     ? profilePhoto.startsWith("https")
       ? profilePhoto
       : `${API_URL}${profilePhoto}`
     : null;
-
   const blogImageUrl = blog?.image
     ? blog.image.startsWith("https")
       ? blog.image
@@ -43,13 +39,11 @@ export default function BlogCard({ blog, onDelete }) {
     ? blog.content.slice(0, maxLength) + "..."
     : blog?.content;
 
-  // ✅ Like handler
   const toggleLike = async () => {
     if (!token) return navigate("/login");
     try {
       setLiked((p) => !p);
       setLikesCount((c) => (liked ? c - 1 : c + 1));
-
       const res = await fetch(endpoints.like(blog._id), {
         method: "POST",
         headers: {
@@ -66,7 +60,6 @@ export default function BlogCard({ blog, onDelete }) {
     }
   };
 
-  // ✅ Delete handler
   const handleDelete = async () => {
     if (!window.confirm("Are you sure you want to delete this blog?")) return;
     try {
@@ -84,7 +77,6 @@ export default function BlogCard({ blog, onDelete }) {
     }
   };
 
-  // ✅ Close menu when clicking outside
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (menuRef.current && !menuRef.current.contains(e.target)) {
@@ -100,116 +92,109 @@ export default function BlogCard({ blog, onDelete }) {
   }, [menuOpen]);
 
   return (
-    <article className="bg-white dark:bg-gray-800 rounded-2xl transition duration-300 overflow-hidden flex flex-col shadow hover:shadow-lg border border-gray-100 dark:border-gray-700 relative">
-      {/* Author row */}
-      <div className="flex items-center gap-3 px-4 pt-4 text-xs sm:text-sm text-gray-600 dark:text-gray-300">
-        {profileImageUrl && !imgError ? (
-          <img
-            src={profileImageUrl}
-            alt={authorName}
-            className="w-9 h-9 rounded-full object-cover border"
-            onError={() => setImgError(true)}
-          />
-        ) : (
-          <div className="w-9 h-9 rounded-full border flex items-center justify-center font-semibold bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-200">
-            {authorName?.charAt(0)?.toUpperCase() || "U"}
-          </div>
-        )}
-
-        {authorId ? (
-          <Link
-            to={`/profile/${authorId}`}
-            className="hover:underline text-blue-600 dark:text-blue-400 font-medium"
-          >
-            {authorName}
-          </Link>
-        ) : (
-          <span>{authorName}</span>
-        )}
-
-        {/* 3-dot menu only for blog owner */}
-        {user?._id === authorId && (
-          <div className="ml-auto relative" ref={menuRef}>
-            <button
-              onClick={() => setMenuOpen((prev) => !prev)}
-              className="p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
-            >
-              <MoreVertical size={18} />
-            </button>
-
-            {menuOpen && (
-              <div className="absolute right-0 mt-2 w-32 bg-white dark:bg-gray-900 border dark:border-gray-700 rounded-lg shadow-lg z-20">
-                <button
-                  onClick={() => navigate(`/edit-blog/${blog._id}`)}
-                  className="flex items-center gap-2 px-3 py-2 w-full text-left text-sm hover:bg-gray-100 dark:hover:bg-gray-700"
-                >
-                  <Edit size={16} /> Edit
-                </button>
-                <button
-                  onClick={handleDelete}
-                  className="flex items-center gap-2 px-3 py-2 w-full text-left text-sm hover:bg-gray-100 dark:hover:bg-gray-700 text-red-600"
-                >
-                  <Trash2 size={16} /> Delete
-                </button>
-              </div>
-            )}
-          </div>
-        )}
-      </div>
-
-      {/* Blog image */}
+    <article className="w-full h-full relative">
+      {/* Blog image full-screen card */}
       {blogImageUrl && (
-        <div className="w-full mt-3">
-          <img
-            src={blogImageUrl}
-            alt={blog?.title || "Blog image"}
-            className="w-full h-52 object-cover object-center rounded-lg"
-          />
-        </div>
+        <img
+          src={blogImageUrl}
+          alt={blog?.title || "Blog image"}
+          className="w-full h-full object-contain"
+        />
       )}
 
-      {/* Content */}
-      <div className="p-4 flex flex-col flex-grow">
-        <h3 className="text-lg sm:text-xl font-semibold mb-2 line-clamp-2 dark:text-gray-100">
-          {blog?.title || "Untitled"}
-        </h3>
-        <p className="text-gray-600 dark:text-gray-300 text-sm sm:text-base mb-3">
-          {trimmedContent}
-        </p>
+      {/* Absolute overlay content */}
+      <div className="absolute top-0 left-0 w-full h-full flex flex-col justify-between p-4 bg-black/40 text-white">
+        {/* Top bar with author and menu */}
+        <div className="flex items-center gap-3 text-xs sm:text-sm">
+          {profileImageUrl && !imgError ? (
+            <img
+              src={profileImageUrl}
+              alt={authorName}
+              className="w-9 h-9 rounded-full object-cover border"
+              onError={() => setImgError(true)}
+            />
+          ) : (
+            <div className="w-9 h-9 rounded-full border flex items-center justify-center font-semibold bg-gray-200 text-gray-700">
+              {authorName?.charAt(0)?.toUpperCase() || "U"}
+            </div>
+          )}
 
-        {/* Actions */}
-        <div className="flex items-center mt-auto">
-          {/* Like button */}
-          <button
-            onClick={toggleLike}
-            className={`flex items-center gap-1 ${
-              liked ? "text-rose-600" : "text-gray-600 dark:text-gray-300"
-            }`}
-          >
-            <Heart size={18} fill={liked ? "currentColor" : "none"} />
-            {likesCount}
-          </button>
+          {authorId ? (
+            <Link
+              to={`/profile/${authorId}`}
+              className="hover:underline text-blue-300 font-medium"
+            >
+              {authorName}
+            </Link>
+          ) : (
+            <span>{authorName}</span>
+          )}
 
-          {/* Comment button */}
-          <Link
-            to={`/comments/${blog._id}`}
-            className="flex items-center gap-1 hover:text-blue-600 dark:hover:text-blue-400 ml-4 text-gray-600 dark:text-gray-300"
-          >
-            <MessageSquare size={18} /> {blog.comments?.length || 0}
-          </Link>
+          {user?._id === authorId && (
+            <div className="ml-auto relative" ref={menuRef}>
+              <button
+                onClick={() => setMenuOpen((prev) => !prev)}
+                className="p-1 rounded-full hover:bg-white/10"
+              >
+                <MoreVertical size={18} />
+              </button>
+              {menuOpen && (
+                <div className="absolute right-0 mt-2 w-32 bg-gray-900 border border-gray-700 rounded-lg shadow-lg z-20">
+                  <button
+                    onClick={() => navigate(`/edit-blog/${blog._id}`)}
+                    className="flex items-center gap-2 px-3 py-2 w-full text-left text-sm hover:bg-gray-800"
+                  >
+                    <Edit size={16} /> Edit
+                  </button>
+                  <button
+                    onClick={handleDelete}
+                    className="flex items-center gap-2 px-3 py-2 w-full text-left text-sm hover:bg-gray-800 text-red-500"
+                  >
+                    <Trash2 size={16} /> Delete
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
 
-          {/* Permanent Read More button */}
-          <Link
-            to={`/blog/${blog?._id}`}
-            className="ml-4 px-3 py-1.5 rounded-lg bg-gray-900 text-white hover:bg-black dark:bg-blue-600 dark:hover:bg-blue-700 text-sm sm:text-base"
-          >
-            Read More
-          </Link>
+        {/* Bottom overlay */}
+        <div>
+          <h3 className="text-lg sm:text-xl font-semibold mb-1 line-clamp-2">
+            {blog?.title || "Untitled"}
+          </h3>
+          <p className="text-sm line-clamp-2">{trimmedContent}</p>
 
-          {/* Date shifted to absolute right */}
-          <span className="text-gray-400 dark:text-gray-500 ml-auto">
-            {createdAt.toLocaleDateString()}
-          </span>
+          <div className="flex items-center mt-2">
+            <button
+              onClick={toggleLike}
+              className={`flex items-center gap-1 ${
+                liked ? "text-rose-400" : "text-white"
+              }`}
+            >
+              <Heart size={18} fill={liked ? "currentColor" : "none"} />
+              {likesCount}
+            </button>
+
+            <Link
+              to={`/comments/${blog._id}`}
+              className="flex items-center gap-1 hover:text-blue-400 ml-4"
+            >
+              <MessageSquare size={18} />
+              {blog.comments?.length || 0}
+            </Link>
+
+            <Link
+              to={`/blog/${blog?._id}`}
+              className="ml-4 px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-sm"
+            >
+              Read More
+            </Link>
+
+            <span className="ml-auto text-sm text-gray-300">
+              {createdAt.toLocaleDateString()}
+            </span>
+          </div>
         </div>
       </div>
     </article>
