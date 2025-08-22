@@ -25,7 +25,7 @@ export const CreateBlog = () => {
     "Sports",
     "Entertainment",
     "Travel",
-    "Others"
+    "Others",
   ];
 
   const handleChange = (e) =>
@@ -72,17 +72,25 @@ export const CreateBlog = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 dark:bg-gray-900 transition-colors duration-300">
-      <div className="max-w-3xl mx-auto  bg-white dark:bg-gray-800 p-8 rounded shadow-md">
-        <h1 className="text-2xl font-bold mb-6 text-gray-800 dark:text-gray-100">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-3xl mx-auto bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700 p-6 sm:p-8">
+        {/* Title */}
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-6 text-center">
           Create New Blog
         </h1>
 
-        {error && <p className="text-red-500 mb-4">{error}</p>}
+        {/* Error Message */}
+        {error && (
+          <p className="text-red-500 mb-4 text-sm sm:text-base text-center">
+            {error}
+          </p>
+        )}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        {/* Form */}
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Title */}
           <div>
-            <label className="block text-gray-700 dark:text-gray-300 mb-1">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Title *
             </label>
             <input
@@ -90,15 +98,16 @@ export const CreateBlog = () => {
               name="title"
               value={form.title}
               onChange={handleChange}
-              className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 
-              dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100"
+              className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 
+              dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 text-sm sm:text-base"
               placeholder="Enter blog title"
               required
             />
           </div>
 
+          {/* Content */}
           <div>
-            <label className="block text-gray-700 dark:text-gray-300 mb-1">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Content *
             </label>
             <textarea
@@ -106,23 +115,24 @@ export const CreateBlog = () => {
               value={form.content}
               onChange={handleChange}
               rows={6}
-              className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 
-              dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100"
+              className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 
+              dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 text-sm sm:text-base resize-none"
               placeholder="Write your blog content here"
               required
             ></textarea>
           </div>
 
+          {/* Category */}
           <div>
-            <label className="block text-gray-700 dark:text-gray-300 mb-1">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Category *
             </label>
             <select
               name="category"
               value={form.category}
               onChange={handleChange}
-              className="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 
-              dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100"
+              className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 
+              dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 text-sm sm:text-base"
               required
             >
               <option value="" disabled>
@@ -136,23 +146,27 @@ export const CreateBlog = () => {
             </select>
           </div>
 
+          {/* Image */}
           <div>
-            <label className="block text-gray-700 dark:text-gray-300 mb-1">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
               Image *
             </label>
             <input
               type="file"
               accept="image/*"
               onChange={handleImageChange}
-              className="w-full dark:text-gray-200"
+              className="w-full text-sm text-gray-700 dark:text-gray-200"
               required
             />
           </div>
 
+          {/* Submit Button */}
           <button
             type="submit"
             disabled={submitting}
-            className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 flex justify-center items-center transition disabled:opacity-50"
+            className="w-full bg-blue-600 text-white px-6 py-3 rounded-lg font-medium 
+            hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition 
+            flex justify-center items-center disabled:opacity-50 text-sm sm:text-base"
           >
             {submitting && (
               <svg
