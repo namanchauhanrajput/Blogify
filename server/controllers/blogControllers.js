@@ -53,7 +53,7 @@ exports.getAllBlogs = async (req, res) => {
     }
 
     const blogs = await Blog.find(filter)
-      .populate("author", "name username")
+      .populate("author", "name username profilePhoto")
       .sort({ createdAt: -1 });
 
     res.json(blogs);
@@ -66,8 +66,8 @@ exports.getAllBlogs = async (req, res) => {
 exports.getBlogById = async (req, res) => {
   try {
     const blog = await Blog.findById(req.params.id)
-      .populate("author", "name username")
-      .populate("comments.user", "name username");
+      .populate("author", "name username profilePhoto") // 🟢 include profilePhoto
+      .populate("comments.user", "name username profilePhoto"); // 🟢 comments user ka bhi photo lao
 
     if (!blog) return res.status(404).json({ error: "Blog not found" });
 
