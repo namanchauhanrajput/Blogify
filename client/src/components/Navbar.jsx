@@ -122,12 +122,8 @@ export default function Navbar() {
         </nav>
       </aside>
 
-      {/* Mobile & Tablet Bottom Navigation */}
+      {/* Mobile & Tablet Bottom Navigation (removed theme toggle here) */}
       <nav className="lg:hidden fixed bottom-0 left-0 w-full bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 flex justify-around items-center h-16 z-50">
-        <button onClick={toggleTheme}>
-          {theme === "dark" ? <Sun size={20} className="text-yellow-400" /> : <Moon size={20} className="text-gray-600" />}
-        </button>
-
         <NavLink
           to="/"
           className={({ isActive }) =>

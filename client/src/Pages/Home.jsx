@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import BlogCard from "../components/BlogCard";
 import { FaListUl } from "react-icons/fa";
+import { Moon, Sun } from "lucide-react";
+import { useTheme } from "../context/ThemeContext";
 
 export const Home = () => {
   const [blogs, setBlogs] = useState([]);
@@ -9,7 +11,13 @@ export const Home = () => {
   const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false);
 
+  const { theme, setTheme } = useTheme();
   const containerRef = useRef(null);
+
+  const toggleTheme = () => {
+    if (theme === "dark") setTheme("light");
+    else setTheme("dark");
+  };
 
   // Close menus when clicking outside
   useEffect(() => {
@@ -72,7 +80,7 @@ export const Home = () => {
     >
       {/* Category Filter */}
       <div
-        className="sticky top-0 z-50 bg-gray-50 dark:bg-gray-900 pb-4"
+        className="sticky top-0 z-50 bg-gray-50 dark:bg-gray-900 pb-4 flex justify-between items-center"
         ref={containerRef}
       >
         <button
@@ -84,6 +92,14 @@ export const Home = () => {
         >
           <FaListUl />
           {selectedCategory}
+        </button>
+
+        {/* Night Mode Toggle (only visible on mobile & tablet) */}
+        <button
+          onClick={toggleTheme}
+          className="ml-2 p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 lg:hidden"
+        >
+          {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
         </button>
 
         {/* Dropdown */}
