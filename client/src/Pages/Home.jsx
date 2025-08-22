@@ -78,17 +78,22 @@ export const Home = () => {
         text-gray-900 dark:text-gray-100
       "
     >
-      {/* Category Filter */}
+      {/* Home Screen Top Navbar */}
       <div
-        className="sticky top-0 z-50 bg-gray-50 dark:bg-gray-900 pb-4 flex justify-between items-center"
+        className="fixed top-0 z-40 
+        w-full lg:w-[calc(100%)] max-w-full
+        bg-gray-50 dark:bg-gray-900 
+        border-b border-gray-200 dark:border-gray-700 
+        flex justify-between items-center px-4 py-3"
         ref={containerRef}
       >
+        {/* Category Filter Button */}
         <button
           onClick={() => setOpen((v) => !v)}
           aria-expanded={open}
           className="flex items-center gap-2 px-4 py-2 rounded-lg 
             bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 
-            shadow-sm hover:shadow-md transition w-full sm:w-auto"
+            shadow-sm hover:shadow-md transition"
         >
           <FaListUl />
           {selectedCategory}
@@ -97,7 +102,7 @@ export const Home = () => {
         {/* Night Mode Toggle (only visible on mobile & tablet) */}
         <button
           onClick={toggleTheme}
-          className="ml-2 p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 lg:hidden"
+          className="p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 lg:hidden mr-2"
         >
           {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
         </button>
@@ -105,12 +110,14 @@ export const Home = () => {
         {/* Dropdown */}
         {open && (
           <div
-            className={`
-              absolute z-50 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700
+            className="
+              absolute top-full mt-2 left-4
+              z-50 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700
               rounded-lg shadow-lg
-              sm:top-12 sm:left-0 sm:ml-0 sm:flex sm:flex-row sm:whitespace-nowrap animate-slide-down
-              mt-2 flex flex-col w-full sm:w-auto
-            `}
+              flex flex-col sm:flex-row sm:space-x-2 sm:space-y-0 space-y-1
+              p-2
+              animate-slide-down
+            "
           >
             {categories.map((cat) => (
               <button
@@ -135,45 +142,47 @@ export const Home = () => {
       </div>
 
       {/* Blog List */}
-      {loading ? (
-        <div className="flex flex-col items-center justify-center min-h-screen">
-          <svg
-            className="animate-spin h-10 w-10 text-blue-600 dark:text-blue-400 mb-2"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-          >
-            <circle
-              className="opacity-25"
-              cx="12"
-              cy="12"
-              r="10"
-              stroke="currentColor"
-              strokeWidth="4"
-            />
-            <path
-              className="opacity-75"
-              fill="currentColor"
-              d="M4 12a8 8 0 018-8v4l3-3-3-3v4a12 12 0 00-12 12h4z"
-            />
-          </svg>
-          <p className="text-gray-600 dark:text-gray-400 text-center">
-            Loading blogs...
+      <div className="pt-20">
+        {loading ? (
+          <div className="flex flex-col items-center justify-center min-h-screen">
+            <svg
+              className="animate-spin h-10 w-10 text-blue-600 dark:text-blue-400 mb-2"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <circle
+                className="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                strokeWidth="4"
+              />
+              <path
+                className="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8v4l3-3-3-3v4a12 12 0 00-12 12h4z"
+              />
+            </svg>
+            <p className="text-gray-600 dark:text-gray-400 text-center">
+              Loading blogs...
+            </p>
+          </div>
+        ) : filteredBlogs.length === 0 ? (
+          <p className="text-gray-600 dark:text-gray-400 text-center md:text-left">
+            {selectedCategory === "All"
+              ? "No blogs yet. Be the first to create!"
+              : `No blogs in "${selectedCategory}" category.`}
           </p>
-        </div>
-      ) : filteredBlogs.length === 0 ? (
-        <p className="text-gray-600 dark:text-gray-400 text-center md:text-left">
-          {selectedCategory === "All"
-            ? "No blogs yet. Be the first to create!"
-            : `No blogs in "${selectedCategory}" category.`}
-        </p>
-      ) : (
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {filteredBlogs.map((b) => (
-            <BlogCard key={b._id} blog={b} />
-          ))}
-        </div>
-      )}
+        ) : (
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {filteredBlogs.map((b) => (
+              <BlogCard key={b._id} blog={b} />
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 };
