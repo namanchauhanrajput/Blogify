@@ -131,7 +131,7 @@ export const Home = () => {
       </div>
 
       {/* Blog List */}
-      <div className="pt-20 px-4 sm:px-6 lg:px-8 pb-20 lg:ml-60 lg:mr-0 lg:w-[calc(100%-15rem)]">
+      <div className="pt-20 px-2 sm:px-6 lg:px-8 pb-20 lg:ml-60 lg:mr-0 lg:w-[calc(100%-15rem)]">
         {loading ? (
           <div className="flex flex-col items-center justify-center min-h-screen">
             <svg
@@ -165,9 +165,9 @@ export const Home = () => {
               : `No blogs in "${selectedCategory}" category.`}
           </p>
         ) : (
-          <div className="grid gap-y-6 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
             {filteredBlogs.map((b) => (
-              <BlogCard key={b._id} blog={b} />
+              <BlogCard key={b._id} blog={b} className="w-full" />
             ))}
           </div>
         )}

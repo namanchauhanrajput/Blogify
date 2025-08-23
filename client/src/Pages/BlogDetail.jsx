@@ -26,6 +26,7 @@ const BlogDetail = () => {
   const [likedUsers, setLikedUsers] = useState([]);
   const [isLiked, setIsLiked] = useState(false);
   const [likeLoading, setLikeLoading] = useState(false);
+  const [showLikes, setShowLikes] = useState(false);
 
   useEffect(() => {
     const fetchBlog = async () => {
@@ -57,7 +58,7 @@ const BlogDetail = () => {
       }
     };
     fetchBlog();
-  }, [id, user, token]);
+  }, [id, token]);
 
   // 🟢 Like toggle handler
   const handleLikeToggle = async () => {
@@ -156,11 +157,28 @@ const BlogDetail = () => {
     setShowComments((p) => !p);
   };
 
-  // Helper: full URL for profile photo
+  // 🟢 Helper: full URL for profile photo
   const getProfilePhotoUrl = (photo) => {
     if (!photo) return "/default-avatar.png";
     if (photo.startsWith("https")) return photo;
     return `${API_URL}${photo}`;
+  };
+
+  // 🟢 Helper: format time ago
+  const timeAgo = (date) => {
+    if (!date) return "";
+    const seconds = Math.floor((new Date() - new Date(date)) / 1000);
+    if (seconds < 60) return `${seconds}s ago`;
+    const minutes = Math.floor(seconds / 60);
+    if (minutes < 60) return `${minutes}m ago`;
+    const hours = Math.floor(minutes / 60);
+    if (hours < 24) return `${hours}h ago`;
+    const days = Math.floor(hours / 24);
+    if (days < 30) return `${days}d ago`;
+    const months = Math.floor(days / 30);
+    if (months < 12) return `${months}mo ago`;
+    const years = Math.floor(months / 12);
+    return `${years}y ago`;
   };
 
   return (
@@ -169,7 +187,7 @@ const BlogDetail = () => {
         {/* Author */}
         <div className="flex items-center gap-3 mb-5">
           <img
-            src={getProfilePhotoUrl(author?.profilePhoto) || "/default-avatar.png"}
+            src={getProfilePhotoUrl(author?.profilePhoto)}
             alt={blog.author?.username}
             className="w-12 h-12 rounded-full object-cover border border-gray-300 dark:border-gray-600"
           />
@@ -223,8 +241,15 @@ const BlogDetail = () => {
                 className={isLiked ? "fill-red-500 text-red-500" : ""}
               />
             )}
-            <span>{likesCount}</span>
           </button>
+
+          {/* Likes Count Toggle */}
+          <span
+            onClick={() => setShowLikes((p) => !p)}
+            className="cursor-pointer text-base sm:text-lg hover:underline"
+          >
+            {likesCount} {likesCount === 1 ? "Like" : "Likes"}
+          </span>
 
           {/* Comments toggle */}
           <button
@@ -240,24 +265,33 @@ const BlogDetail = () => {
           </button>
         </div>
 
-        {/* 🟢 Liked Users List */}
-        {likesCount > 0 && (
-          <div className="mb-6">
-            <h3 className="font-semibold text-lg mb-2">Liked by:</h3>
-            <div className="flex flex-wrap gap-3">
+        {/* 🟢 Liked Users Form-Style List */}
+        {showLikes && likesCount > 0 && (
+          <div className="mb-6 border rounded-lg p-4 bg-gray-50 dark:bg-gray-800">
+            <h3 className="font-semibold text-lg mb-3">Liked by:</h3>
+            <div className="space-y-3">
               {likedUsers.map((u) => (
-                <Link
+                <div
                   key={u._id}
-                  to={`/profile/${u._id}`}
-                  className="flex items-center gap-2 px-3 py-2 rounded-lg bg-gray-100 dark:bg-gray-800"
+                  className="flex items-center justify-between p-2 rounded-md bg-white dark:bg-gray-900 shadow-sm"
                 >
-                  <img
-                    src={getProfilePhotoUrl(u.profilePhoto)}
-                    alt={u.username}
-                    className="w-7 h-7 rounded-full object-cover"
-                  />
-                  <span>{u.username || u.name || "User"}</span>
-                </Link>
+                  <div className="flex items-center gap-3">
+                    <img
+                      src={getProfilePhotoUrl(u.profilePhoto)}
+                      alt={u.username}
+                      className="w-9 h-9 rounded-full object-cover"
+                    />
+                    <Link
+                      to={`/profile/${u._id}`}
+                      className="font-medium text-gray-900 dark:text-white hover:underline"
+                    >
+                      {u.username || u.name || "User"}
+                    </Link>
+                  </div>
+                  <span className="text-xs text-gray-500">
+                    {timeAgo(u.likedAt || new Date())}
+                  </span>
+                </div>
               ))}
             </div>
           </div>
@@ -303,7 +337,7 @@ const BlogDetail = () => {
                     const profilePhoto = getProfilePhotoUrl(
                       c.user?.profilePhoto || c.author?.profilePhoto
                     );
-                    const date = c.createdAt ? new Date(c.createdAt).toLocaleDateString() : "";
+                    const date = timeAgo(c.createdAt);
 
                     return (
                       <div
