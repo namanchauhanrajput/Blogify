@@ -36,10 +36,29 @@ export default function BlogCard({ blog, onDelete }) {
   const maxLength = 120;
   const showReadMore = blog?.content?.length > maxLength;
   const trimmedContent = showReadMore
-    ? blog.content.slice(0, maxLength) + "..."
+    ? blog.content.slice(0, maxLength) + "...."
     : blog?.content;
 
-  const toggleLike = async () => {
+  // ✅ Format time ago
+  const formatTimeAgo = (date) => {
+    const now = new Date();
+    const diff = Math.floor((now - date) / 1000); // seconds
+
+    if (diff < 60) return `${diff} sec ago`;
+    if (diff < 3600) return `${Math.floor(diff / 60)} min ago`;
+    if (diff < 86400) return `${Math.floor(diff / 3600)} hr ago`;
+    if (diff < 604800) return `${Math.floor(diff / 86400)} d ago`;
+    if (diff < 2592000) return `${Math.floor(diff / 604800)} w ago`;
+
+    return date.toLocaleDateString("en-US", {
+      day: "numeric",
+      month: "long",
+      year: date.getFullYear() !== now.getFullYear() ? "numeric" : undefined,
+    });
+  };
+
+  const toggleLike = async (e) => {
+    e.stopPropagation();
     if (!token) return navigate("/login");
     try {
       setLiked((p) => !p);
@@ -60,7 +79,8 @@ export default function BlogCard({ blog, onDelete }) {
     }
   };
 
-  const handleDelete = async () => {
+  const handleDelete = async (e) => {
+    e.stopPropagation();
     if (!window.confirm("Are you sure you want to delete this blog?")) return;
     try {
       const res = await fetch(endpoints.deleteBlog(blog._id), {
@@ -91,28 +111,54 @@ export default function BlogCard({ blog, onDelete }) {
     };
   }, [menuOpen]);
 
+  const handleCardClick = () => {
+    navigate(`/blog/${blog._id}`);
+  };
+
+  // ✅ Get first comment (if any)
+  const firstComment =
+    blog?.comments && blog.comments.length > 0
+      ? blog.comments[0]?.text || ""
+      : "";
+
   return (
-    <article className="w-full h-full relative">
-      {/* Blog image full-screen card */}
+    <article
+      className="w-full h-full relative cursor-pointer bg-gray-200"
+      onClick={handleCardClick}
+    >
+      {/* ✅ Image with background fill */}
       {blogImageUrl && (
-        <img
-          src={blogImageUrl}
-          alt={blog?.title || "Blog image"}
-          className="w-full h-full object-contain"
-        />
+        <div className="w-full h-full flex items-center justify-center bg-gray-500">
+          <img
+            src={blogImageUrl}
+            alt={blog?.title || "Blog image"}
+            className="w-full h-full object-contain"
+          />
+        </div>
       )}
 
-      {/* Absolute overlay content */}
-      <div className="absolute top-0 left-0 w-full h-full flex flex-col justify-between p-4 bg-black/25 text-white">
+      <div className="absolute top-0 left-0 w-full h-full flex flex-col justify-between p-4 text-white">
         {/* Top bar with author and menu */}
         <div className="flex items-center gap-3 text-xs sm:text-sm">
-          {profileImageUrl && !imgError ? (
-            <img
-              src={profileImageUrl}
-              alt={authorName}
-              className="w-9 h-9 rounded-full object-cover border"
-              onError={() => setImgError(true)}
-            />
+          {authorId ? (
+            <Link
+              to={`/profile/${authorId}`}
+              onClick={(e) => e.stopPropagation()}
+              className="flex-shrink-0"
+            >
+              {profileImageUrl && !imgError ? (
+                <img
+                  src={profileImageUrl}
+                  alt={authorName}
+                  className="w-9 h-9 rounded-full object-cover border"
+                  onError={() => setImgError(true)}
+                />
+              ) : (
+                <div className="w-9 h-9 rounded-full border flex items-center justify-center font-semibold bg-gray-200 text-gray-700">
+                  {authorName?.charAt(0)?.toUpperCase() || "U"}
+                </div>
+              )}
+            </Link>
           ) : (
             <div className="w-9 h-9 rounded-full border flex items-center justify-center font-semibold bg-gray-200 text-gray-700">
               {authorName?.charAt(0)?.toUpperCase() || "U"}
@@ -122,7 +168,8 @@ export default function BlogCard({ blog, onDelete }) {
           {authorId ? (
             <Link
               to={`/profile/${authorId}`}
-              className="hover:underline text-blue-300 font-medium"
+              onClick={(e) => e.stopPropagation()}
+              className="font-medium text-gray-100 hover:no-underline"
             >
               {authorName}
             </Link>
@@ -133,7 +180,10 @@ export default function BlogCard({ blog, onDelete }) {
           {user?._id === authorId && (
             <div className="ml-auto relative" ref={menuRef}>
               <button
-                onClick={() => setMenuOpen((prev) => !prev)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setMenuOpen((prev) => !prev);
+                }}
                 className="p-1 rounded-full hover:bg-white/10"
               >
                 <MoreVertical size={18} />
@@ -141,7 +191,10 @@ export default function BlogCard({ blog, onDelete }) {
               {menuOpen && (
                 <div className="absolute right-0 mt-2 w-32 bg-gray-900 border border-gray-700 rounded-lg shadow-lg z-20">
                   <button
-                    onClick={() => navigate(`/edit-blog/${blog._id}`)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      navigate(`/edit-blog/${blog._id}`);
+                    }}
                     className="flex items-center gap-2 px-3 py-2 w-full text-left text-sm hover:bg-gray-800"
                   >
                     <Edit size={16} /> Edit
@@ -166,6 +219,7 @@ export default function BlogCard({ blog, onDelete }) {
           <p className="text-sm line-clamp-2">{trimmedContent}</p>
 
           <div className="flex items-center mt-2">
+            {/* Like button */}
             <button
               onClick={toggleLike}
               className={`flex items-center gap-1 ${
@@ -176,23 +230,24 @@ export default function BlogCard({ blog, onDelete }) {
               {likesCount}
             </button>
 
+            {/* Comment button + preview */}
             <Link
               to={`/comments/${blog._id}`}
-              className="flex items-center gap-1 hover:text-blue-400 ml-4"
+              onClick={(e) => e.stopPropagation()}
+              className="flex items-center gap-1 hover:text-blue-400 ml-4 max-w-[60%] truncate"
             >
               <MessageSquare size={18} />
-              {blog.comments?.length || 0}
+              <span>{blog.comments?.length || 0}</span>
+              {firstComment && (
+                <span className="ml-2 text-xs text-gray-200 truncate">
+                  {firstComment}
+                </span>
+              )}
             </Link>
 
-            <Link
-              to={`/blog/${blog?._id}`}
-              className="ml-4 px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-sm"
-            >
-              Read More
-            </Link>
-
+            {/* Date */}
             <span className="ml-auto text-sm text-gray-300">
-              {createdAt.toLocaleDateString()}
+              {formatTimeAgo(createdAt)}
             </span>
           </div>
         </div>

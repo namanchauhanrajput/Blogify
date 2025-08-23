@@ -15,8 +15,7 @@ export const Home = () => {
   const containerRef = useRef(null);
 
   const toggleTheme = () => {
-    if (theme === "dark") setTheme("light");
-    else setTheme("dark");
+    setTheme(theme === "dark" ? "light" : "dark");
   };
 
   // Close menus when clicking outside
@@ -69,22 +68,15 @@ export const Home = () => {
       : blogs.filter((b) => b.category === selectedCategory);
 
   return (
-    <div
-      className="
-        flex-1 
-        min-h-screen 
-        bg-gray-50 dark:bg-gray-900
-        px-4 sm:px-6 lg:px-8 py-6 lg:ml-60
-        text-gray-900 dark:text-gray-100
-      "
-    >
+    <div className="flex-1 min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 overflow-x-hidden">
       {/* Home Screen Top Navbar */}
       <div
         className="fixed top-0 z-40 
-        w-full lg:w-[calc(100%)] max-w-full
+        w-full lg:w-[calc(100%-15rem)]  
         bg-gray-50 dark:bg-gray-900 
         border-b border-gray-200 dark:border-gray-700 
-        flex justify-between items-center px-4 py-3"
+        flex justify-between items-center px-4 py-3
+        lg:ml-60 lg:mr-0"
         ref={containerRef}
       >
         {/* Category Filter Button */}
@@ -110,14 +102,11 @@ export const Home = () => {
         {/* Dropdown */}
         {open && (
           <div
-            className="
-              absolute top-full mt-2 left-4
+            className="absolute top-full mt-2 left-4
               z-50 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700
               rounded-lg shadow-lg
               flex flex-col sm:flex-row sm:space-x-2 sm:space-y-0 space-y-1
-              p-2
-              animate-slide-down
-            "
+              p-2 animate-slide-down"
           >
             {categories.map((cat) => (
               <button
@@ -142,7 +131,7 @@ export const Home = () => {
       </div>
 
       {/* Blog List */}
-      <div className="pt-20">
+      <div className="pt-20 px-4 sm:px-6 lg:px-8 pb-20 lg:ml-60 lg:mr-0 lg:w-[calc(100%-15rem)]">
         {loading ? (
           <div className="flex flex-col items-center justify-center min-h-screen">
             <svg
@@ -176,7 +165,7 @@ export const Home = () => {
               : `No blogs in "${selectedCategory}" category.`}
           </p>
         ) : (
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-y-6 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
             {filteredBlogs.map((b) => (
               <BlogCard key={b._id} blog={b} />
             ))}

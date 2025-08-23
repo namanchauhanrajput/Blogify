@@ -105,6 +105,14 @@ const UserProfile = () => {
         <p className="text-gray-600 dark:text-gray-300">{profile?.name}</p>
         <p className="text-gray-600 dark:text-gray-400">{profile?.bio}</p>
 
+        {/* ✅ Total Blogs Count */}
+        <p className="mt-3 text-lg font-medium text-gray-800 dark:text-gray-200">
+          Total Posts:{" "}
+          <span className="font-bold text-blue-600 dark:text-blue-400">
+            {blogs.length}
+          </span>
+        </p>
+
         {/* ✅ Links tab केवल तभी दिखे जब atleast 1 valid link हो */}
         {validLinks.length > 0 && (
           <div className="flex justify-center gap-4 mt-4 flex-wrap text-blue-600 dark:text-blue-400">
@@ -126,7 +134,10 @@ const UserProfile = () => {
       {/* Blogs */}
       <div>
         <h3 className="text-xl font-semibold mb-4">
-          Blogs by {profile?.username}
+          Blogs by {profile?.username}{" "}
+          <span className="text-gray-500 dark:text-gray-400 text-base">
+            ({blogs.length})
+          </span>
         </h3>
         {blogs.length > 0 ? (
           <div className="grid gap-6 sm:grid-cols-2">

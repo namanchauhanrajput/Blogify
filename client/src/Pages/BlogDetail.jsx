@@ -1,7 +1,7 @@
 import { useParams, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Heart, MessageSquare } from "lucide-react";
+import { MessageSquare, Heart } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { endpoints, authHeaders } from "../api";
 
@@ -12,30 +12,44 @@ const BlogDetail = () => {
   const { token, user } = useAuth();
 
   const [blog, setBlog] = useState(null);
-  const [liked, setLiked] = useState(false);
-  const [likesCount, setLikesCount] = useState(0);
+  const [author, setAuthor] = useState(null);
   const [showComments, setShowComments] = useState(false);
   const [comments, setComments] = useState([]);
   const [commentText, setCommentText] = useState("");
   const [loading, setLoading] = useState(true);
   const [commentsLoading, setCommentsLoading] = useState(false);
   const [commentCount, setCommentCount] = useState(0);
-  const [posting, setPosting] = useState(false); // ✅ loader for Post button
+  const [posting, setPosting] = useState(false);
 
-  // ✅ Fetch blog details
+  // 🟢 Like states
+  const [likesCount, setLikesCount] = useState(0);
+  const [likedUsers, setLikedUsers] = useState([]);
+  const [isLiked, setIsLiked] = useState(false);
+  const [likeLoading, setLikeLoading] = useState(false);
+
   useEffect(() => {
     const fetchBlog = async () => {
       try {
-        const res = await axios.get(endpoints.getBlog(id));
+        const res = await axios.get(endpoints.getBlog(id), {
+          headers: authHeaders(token),
+        });
+
         const blogData = res.data.blog;
         setBlog(blogData);
+        setCommentCount(blogData.comments?.length || blogData.commentsCount || 0);
 
-        setLiked(blogData.likes?.some((l) => l === user?._id));
-        setLikesCount(blogData.likes?.length || 0);
-        setCommentCount(
-          blogData.comments?.length || blogData.commentsCount || 0
-        );
+        // 🟢 Likes data
+        setLikesCount(res.data.likesCount || 0);
+        setLikedUsers(res.data.likedUsers || []);
+        setIsLiked(res.data.isLikedByCurrentUser || false);
 
+        if (blogData?.author?._id) {
+          const authorRes = await axios.get(
+            `${API_URL}/api/blog/user/${blogData.author._id}`,
+            { headers: authHeaders(token) }
+          );
+          setAuthor(authorRes.data.userProfile);
+        }
         setLoading(false);
       } catch (error) {
         console.error("Error fetching blog:", error);
@@ -43,20 +57,37 @@ const BlogDetail = () => {
       }
     };
     fetchBlog();
-  }, [id, user]);
+  }, [id, user, token]);
 
-  // ✅ Fetch all comments
+  // 🟢 Like toggle handler
+  const handleLikeToggle = async () => {
+    if (!token) return alert("Please login to like");
+    try {
+      setLikeLoading(true);
+      const res = await axios.post(
+        endpoints.like(id),
+        {},
+        { headers: authHeaders(token) }
+      );
+
+      setIsLiked(res.data.liked);
+      setLikesCount(res.data.likesCount);
+      setLikedUsers(res.data.likedUsers || []);
+    } catch (err) {
+      console.error("Error toggling like:", err);
+    } finally {
+      setLikeLoading(false);
+    }
+  };
+
   const fetchComments = async () => {
     try {
       setCommentsLoading(true);
       const res = await axios.get(endpoints.comments(id));
       let allComments = res.data.comments || [];
-
-      // latest first
       allComments = allComments.sort(
         (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
       );
-
       setComments(allComments);
       setCommentCount(allComments.length);
       setCommentsLoading(false);
@@ -68,12 +99,17 @@ const BlogDetail = () => {
 
   if (loading)
     return (
-      <div className="flex justify-center items-center h-screen">
+      <div className="flex justify-center items-center min-h-screen bg-white dark:bg-gray-900">
         <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
 
-  if (!blog) return <p className="text-center">Blog not found</p>;
+  if (!blog)
+    return (
+      <div className="min-h-screen flex justify-center items-center bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300">
+        Blog not found
+      </div>
+    );
 
   const blogImageUrl = blog?.image
     ? blog.image.startsWith("https")
@@ -83,226 +119,229 @@ const BlogDetail = () => {
 
   const createdAt = blog?.createdAt ? new Date(blog.createdAt) : new Date();
 
-  // ✅ Like handler
-  const toggleLike = async () => {
-    if (!token) return alert("Please login to like");
-
-    try {
-      setLiked((p) => !p);
-      setLikesCount((c) => (liked ? c - 1 : c + 1));
-
-      const res = await fetch(endpoints.like(blog._id), {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          ...authHeaders(token),
-        },
-      });
-
-      if (!res.ok) throw new Error("Like failed");
-      const data = await res.json();
-      setLiked(data.liked);
-      setLikesCount(data.likesCount);
-    } catch (e) {
-      console.error(e);
-    }
-  };
-
-  // ✅ Comment handler
   const submitComment = async (e) => {
     e.preventDefault();
     if (!token) return alert("Please login to comment");
     if (!commentText.trim()) return;
-
     try {
-      setPosting(true); // start loader
+      setPosting(true);
       const res = await fetch(endpoints.comment(blog._id), {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          ...authHeaders(token),
-        },
+        headers: { "Content-Type": "application/json", ...authHeaders(token) },
         body: JSON.stringify({ text: commentText }),
       });
-
       if (!res.ok) throw new Error("Failed to add comment");
-
       const data = await res.json();
-
-      // Ensure user data is present in new comment
       const newComment = {
         ...data.comment,
         user: {
           _id: user._id,
           username: user.username || user.name || "Anonymous",
+          profilePhoto: user.profilePhoto || "",
         },
         createdAt: new Date().toISOString(),
       };
-
       setComments((prev) => [newComment, ...prev]);
       setCommentCount((prev) => prev + 1);
       setCommentText("");
     } catch (err) {
       console.error(err);
     } finally {
-      setPosting(false); // stop loader
+      setPosting(false);
     }
   };
 
   const handleToggleComments = () => {
-    if (!showComments) {
-      fetchComments();
-    }
+    if (!showComments) fetchComments();
     setShowComments((p) => !p);
   };
 
+  // Helper: full URL for profile photo
+  const getProfilePhotoUrl = (photo) => {
+    if (!photo) return "/default-avatar.png";
+    if (photo.startsWith("https")) return photo;
+    return `${API_URL}${photo}`;
+  };
+
   return (
-    <div className="max-w-3xl mx-auto p-6 bg-white dark:bg-gray-900 rounded-xl shadow transition-colors duration-300">
-      {/* Author with clickable link */}
-      <p className="text-gray-600 dark:text-gray-400 text-sm mb-2">
-        By{" "}
-        {blog.author?._id ? (
-          <Link
-            to={`/profile/${blog.author._id}`}
-            className="font-semibold text-blue-600 dark:text-blue-400 hover:underline"
-          >
-            {blog.author.username}
-          </Link>
-        ) : (
-          <span className="font-semibold">Unknown</span>
-        )}
-      </p>
-
-      {/* Title */}
-      <h1 className="text-3xl font-bold mb-2 text-gray-900 dark:text-gray-100">
-        {blog.title}
-      </h1>
-
-      {/* Date */}
-      <p className="text-gray-500 dark:text-gray-400 text-sm mb-4">
-        {createdAt.toLocaleDateString()}
-      </p>
-
-      {/* Blog Image */}
-      {blogImageUrl && (
-        <img
-          src={blogImageUrl}
-          alt={blog.title}
-          className="w-full h-72 object-cover rounded-lg mb-6"
-        />
-      )}
-
-      {/* Content */}
-      <p className="text-gray-700 dark:text-gray-200 leading-relaxed mb-6">
-        {blog.content}
-      </p>
-
-      {/* Actions */}
-      <div className="flex items-center gap-6 text-gray-600 dark:text-gray-300 mb-4">
-        <button
-          onClick={toggleLike}
-          className={`flex items-center gap-1 ${
-            liked ? "text-rose-600" : "text-gray-600 dark:text-gray-300"
-          }`}
-        >
-          <Heart size={20} fill={liked ? "currentColor" : "none"} />
-          {likesCount}
-        </button>
-
-        {/* Comment button with loader */}
-        <button
-          onClick={handleToggleComments}
-          className="flex items-center gap-2 hover:text-blue-600 dark:hover:text-blue-400 relative"
-        >
-          {commentsLoading ? (
-            <div className="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-          ) : (
-            <MessageSquare size={20} />
-          )}
-          {commentCount}
-        </button>
-      </div>
-
-      {/* Comments Section */}
-      {showComments && (
-        <>
-          <form onSubmit={submitComment} className="mb-6">
-            <textarea
-              value={commentText}
-              onChange={(e) => setCommentText(e.target.value)}
-              className="w-full border rounded-lg p-2 mb-2 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100"
-              rows={3}
-              placeholder="Write a comment..."
-            ></textarea>
-            <button
-              type="submit"
-              disabled={posting}
-              className={`px-4 py-2 rounded-lg text-white flex items-center justify-center ${
-                posting
-                  ? "bg-blue-400 cursor-not-allowed"
-                  : "bg-blue-600 hover:bg-blue-700"
-              }`}
+    <div className="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-white px-4 sm:px-6 lg:px-8 py-10">
+      <div className="max-w-3xl mx-auto rounded-xl transition-colors duration-300">
+        {/* Author */}
+        <div className="flex items-center gap-3 mb-5">
+          <img
+            src={getProfilePhotoUrl(author?.profilePhoto) || "/default-avatar.png"}
+            alt={blog.author?.username}
+            className="w-12 h-12 rounded-full object-cover border border-gray-300 dark:border-gray-600"
+          />
+          <div>
+            <Link
+              to={`/profile/${blog.author?._id}`}
+              className="font-semibold text-gray-900 dark:text-white hover:underline"
             >
-              {posting ? (
-                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-              ) : (
-                "Post Comment"
-              )}
-            </button>
-          </form>
+              {blog.author?.username || "Unknown"}
+            </Link>
+            <p className="text-gray-500 dark:text-gray-400 text-sm">
+              {createdAt.toLocaleDateString()}
+            </p>
+          </div>
+        </div>
 
-          {commentsLoading ? (
-            <div className="flex justify-center items-center py-6">
-              <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+        {/* Title */}
+        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-5 leading-snug">
+          {blog.title}
+        </h1>
+
+        {/* Blog Image */}
+        {blogImageUrl && (
+          <img
+            src={blogImageUrl}
+            alt={blog.title}
+            className="w-full max-h-[70vh] object-contain rounded-lg mb-6"
+          />
+        )}
+
+        {/* Content */}
+        <div className="prose prose-lg dark:prose-invert max-w-none text-justify leading-relaxed mb-8">
+          {blog.content}
+        </div>
+
+        {/* Actions */}
+        <div className="flex items-center gap-8 text-gray-600 dark:text-gray-300 mb-8">
+          {/* 🟢 Like Button */}
+          <button
+            onClick={handleLikeToggle}
+            disabled={likeLoading}
+            className={`flex items-center gap-2 text-base sm:text-lg ${
+              isLiked ? "text-red-500" : "hover:text-red-500"
+            }`}
+          >
+            {likeLoading ? (
+              <div className="w-5 h-5 border-2 border-red-500 border-t-transparent rounded-full animate-spin"></div>
+            ) : (
+              <Heart
+                size={22}
+                className={isLiked ? "fill-red-500 text-red-500" : ""}
+              />
+            )}
+            <span>{likesCount}</span>
+          </button>
+
+          {/* Comments toggle */}
+          <button
+            onClick={handleToggleComments}
+            className="flex items-center gap-2 text-base sm:text-lg hover:text-blue-600 dark:hover:text-blue-400"
+          >
+            {commentsLoading ? (
+              <div className="w-5 h-5 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+            ) : (
+              <MessageSquare size={22} />
+            )}
+            <span>{commentCount}</span>
+          </button>
+        </div>
+
+        {/* 🟢 Liked Users List */}
+        {likesCount > 0 && (
+          <div className="mb-6">
+            <h3 className="font-semibold text-lg mb-2">Liked by:</h3>
+            <div className="flex flex-wrap gap-3">
+              {likedUsers.map((u) => (
+                <Link
+                  key={u._id}
+                  to={`/profile/${u._id}`}
+                  className="flex items-center gap-2 px-3 py-2 rounded-lg bg-gray-100 dark:bg-gray-800"
+                >
+                  <img
+                    src={getProfilePhotoUrl(u.profilePhoto)}
+                    alt={u.username}
+                    className="w-7 h-7 rounded-full object-cover"
+                  />
+                  <span>{u.username || u.name || "User"}</span>
+                </Link>
+              ))}
             </div>
-          ) : (
-            <div className="space-y-3">
-              {comments.length > 0 ? (
-                comments.map((c) => {
-                  const username =
-                    c.user?.username ||
-                    c.user?.name ||
-                    c.author?.username ||
-                    "Anonymous";
-                  const userId = c.user?._id || c.author?._id;
-                  const date = c.createdAt
-                    ? new Date(c.createdAt).toLocaleDateString()
-                    : "";
-                  return (
-                    <div
-                      key={c._id}
-                      className="border rounded-lg p-3 bg-gray-50 dark:bg-gray-800 dark:border-gray-700 text-sm"
-                    >
-                      <div className="flex justify-between items-center">
-                        {/* Comment author clickable */}
-                        {userId ? (
-                          <Link
-                            to={`/profile/${userId}`}
-                            className="font-medium text-blue-600 dark:text-blue-400 hover:underline"
-                          >
-                            {username}
-                          </Link>
-                        ) : (
-                          <span className="font-medium">{username}</span>
-                        )}
+          </div>
+        )}
 
-                        <span className="text-gray-400 text-xs">{date}</span>
+        {/* Comments */}
+        {showComments && (
+          <div className="mt-6 space-y-6">
+            <form onSubmit={submitComment} className="space-y-3">
+              <textarea
+                value={commentText}
+                onChange={(e) => setCommentText(e.target.value)}
+                className="w-full border rounded-lg p-3 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100 text-sm sm:text-base"
+                rows={3}
+                placeholder="Write a comment..."
+              ></textarea>
+              <button
+                type="submit"
+                disabled={posting}
+                className={`px-5 py-2 rounded-lg text-white text-sm sm:text-base flex items-center justify-center ${
+                  posting ? "bg-blue-400 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700"
+                }`}
+              >
+                {posting ? (
+                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                ) : (
+                  "Post Comment"
+                )}
+              </button>
+            </form>
+
+            {commentsLoading ? (
+              <div className="flex justify-center items-center py-6">
+                <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {comments.length > 0 ? (
+                  comments.map((c) => {
+                    const username =
+                      c.user?.username || c.user?.name || c.author?.username || "Anonymous";
+                    const userId = c.user?._id || c.author?._id;
+                    const profilePhoto = getProfilePhotoUrl(
+                      c.user?.profilePhoto || c.author?.profilePhoto
+                    );
+                    const date = c.createdAt ? new Date(c.createdAt).toLocaleDateString() : "";
+
+                    return (
+                      <div
+                        key={c._id}
+                        className="border rounded-lg p-4 bg-gray-100 dark:bg-gray-800 dark:border-gray-700 text-sm sm:text-base"
+                      >
+                        <div className="flex items-center gap-3 mb-2">
+                          <img
+                            src={profilePhoto || "/default-avatar.png"}
+                            alt={username}
+                            className="w-9 h-9 rounded-full object-cover border border-gray-300 dark:border-gray-600"
+                          />
+                          {userId ? (
+                            <Link
+                              to={`/profile/${userId}`}
+                              className="font-medium text-gray-900 dark:text-white hover:underline"
+                            >
+                              {username}
+                            </Link>
+                          ) : (
+                            <span className="font-medium text-gray-900 dark:text-white">
+                              {username}
+                            </span>
+                          )}
+                          <span className="text-gray-400 text-xs ml-auto">{date}</span>
+                        </div>
+                        <p className="text-gray-700 dark:text-gray-200 leading-relaxed">{c.text}</p>
                       </div>
-                      <p className="text-gray-700 dark:text-gray-200">
-                        {c.text}
-                      </p>
-                    </div>
-                  );
-                })
-              ) : (
-                <p className="text-gray-500 dark:text-gray-400">
-                  No comments yet.
-                </p>
-              )}
-            </div>
-          )}
-        </>
-      )}
+                    );
+                  })
+                ) : (
+                  <p className="text-gray-500 dark:text-gray-400 text-center">No comments yet.</p>
+                )}
+              </div>
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 };

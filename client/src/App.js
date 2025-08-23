@@ -12,6 +12,7 @@ import UserProfile from "./Pages/UserProfile";
 import { EditBlog } from "./Pages/EditBlog";
 import BlogDetail from "./Pages/BlogDetail";
 import Comment from "./Pages/Comment";
+import "./index.css";
 
 // Protected wrapper
 const ProtectedRoute = ({ element }) => {

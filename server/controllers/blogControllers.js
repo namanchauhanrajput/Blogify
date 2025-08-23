@@ -31,7 +31,9 @@ exports.createBlog = async (req, res) => {
     const savedBlog = await newBlog.save();
     res.status(201).json(savedBlog);
   } catch (err) {
-    res.status(500).json({ message: err.message, extraDetails: "Error from Backend" });
+    res
+      .status(500)
+      .json({ message: err.message, extraDetails: "Error from Backend" });
   }
 };
 
@@ -44,7 +46,7 @@ exports.getAllBlogs = async (req, res) => {
     if (search) {
       filter.$or = [
         { title: { $regex: search, $options: "i" } },
-        { content: { $regex: search, $options: "i" } }
+        { content: { $regex: search, $options: "i" } },
       ];
     }
 
@@ -66,18 +68,20 @@ exports.getAllBlogs = async (req, res) => {
 exports.getBlogById = async (req, res) => {
   try {
     const blog = await Blog.findById(req.params.id)
-      .populate("author", "name username profilePhoto") // 🟢 include profilePhoto
-      .populate("comments.user", "name username profilePhoto"); // 🟢 comments user ka bhi photo lao
+      .populate("author", "name username profilePhoto") // 🟢 include author
+      .populate("comments.user", "name username profilePhoto") // 🟢 include comments user
+      .populate("likes", "name username profilePhoto"); // 🟢 include liked users
 
     if (!blog) return res.status(404).json({ error: "Blog not found" });
 
     const userId = req.user?._id?.toString() || null;
-    const isLikedByCurrentUser = userId ? blog.likes.includes(userId) : false;
+    const isLikedByCurrentUser = userId ? blog.likes.some(u => u._id.toString() === userId) : false;
 
     res.json({
       blog,
       likesCount: blog.likes.length,
       isLikedByCurrentUser,
+      likedUsers: blog.likes, // 🟢 send list of users who liked
     });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -157,10 +161,16 @@ exports.toggleLikeBlog = async (req, res) => {
 
     await blog.save();
 
+    const populatedBlog = await Blog.findById(req.params.id).populate(
+      "likes",
+      "name username profilePhoto"
+    );
+
     res.status(200).json({
       message: alreadyLiked ? "Unliked the blog" : "Liked the blog",
       liked: !alreadyLiked,
       likesCount: blog.likes.length,
+      likedUsers: populatedBlog.likes, // 🟢 return liked users list
     });
   } catch (error) {
     res.status(500).json({ message: "Something went wrong" });
@@ -182,7 +192,15 @@ exports.addComment = async (req, res) => {
     blog.comments.push(comment);
     await blog.save();
 
-    res.status(200).json({ message: "Comment added", comment });
+    const populatedBlog = await Blog.findById(req.params.id).populate(
+      "comments.user",
+      "name username profilePhoto"
+    );
+
+    res.status(200).json({
+      message: "Comment added",
+      comments: populatedBlog.comments,
+    });
   } catch (error) {
     res.status(500).json({ message: "Something went wrong" });
   }
@@ -191,7 +209,10 @@ exports.addComment = async (req, res) => {
 // GET COMMENTS
 exports.getComments = async (req, res) => {
   try {
-    const blog = await Blog.findById(req.params.id).populate("comments.user", "name username");
+    const blog = await Blog.findById(req.params.id).populate(
+      "comments.user",
+      "name username"
+    );
     if (!blog) return res.status(404).json({ message: "Blog not found" });
 
     res.status(200).json({ comments: blog.comments });

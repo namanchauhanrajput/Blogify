@@ -34,7 +34,7 @@ export const Login = () => {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gradient-to-b from-gray-100 to-yellow-50 dark:from-gray-900 dark:to-gray-800">
+    <div className="flex flex-col justify-center items-center min-h-screen bg-gradient-to-b from-gray-100 to-yellow-50 dark:from-gray-900 dark:to-gray-800">
       <form
         onSubmit={handleSubmit}
         className="w-[380px] bg-white dark:bg-gray-900 p-8 rounded-2xl shadow-lg"
@@ -129,6 +129,18 @@ export const Login = () => {
           <Link to="/forgot-password">Forgot Password?</Link>
         </p>
       </form>
+
+      {/* Footer */}
+      <p className="text-center text-sm text-gray-600 dark:text-gray-400 mt-4">
+        Developed by{" "}
+        <a href="mailto:kajalkanwar0208@gmail.com" className="text-blue-600 hover:underline">
+          Kajal Kanwar
+        </a>{" "}
+        and{" "}
+        <a href="mailto:namanrajputnn001@gmail.com" className="text-blue-600 hover:underline">
+          Naman Chauhan
+        </a>
+      </p>
     </div>
   );
 };

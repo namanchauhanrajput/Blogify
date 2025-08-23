@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import axios from "axios";
 
@@ -33,6 +33,11 @@ const Comment = () => {
   const handleAddComment = async (e) => {
     e.preventDefault();
     if (!newComment.trim()) return;
+
+    if (!token) {
+      alert("Please login to add a comment.");
+      return;
+    }
 
     try {
       setPosting(true);
@@ -146,21 +151,34 @@ const Comment = () => {
       ) : (
         comments.map((c) => {
           const username = c.user?.username || c.user?.name || "Anonymous";
+          const userId = c.user?._id;
           const createdAt = c.createdAt
             ? new Date(c.createdAt).toLocaleString()
             : "";
+
           return (
             <div
               key={c._id}
               className="p-4 border-b border-gray-200 dark:border-gray-700"
             >
-              <p className="font-semibold">
-                {username}{" "}
+              <div className="flex justify-between items-center">
+                <p className="font-semibold">
+                  {userId ? (
+                    <Link
+                      to={`/profile/${userId}`}
+                      className="text-blue-600 dark:text-blue-400"
+                    >
+                      {username}
+                    </Link>
+                  ) : (
+                    <span>{username}</span>
+                  )}
+                </p>
                 {createdAt && (
-                  <span className="text-gray-400 text-sm">· {createdAt}</span>
+                  <span className="text-gray-400 text-sm">{createdAt}</span>
                 )}
-              </p>
-              <p className="text-gray-800 dark:text-gray-300">{c.text}</p>
+              </div>
+              <p className="text-gray-800 dark:text-gray-300 mt-1">{c.text}</p>
             </div>
           );
         })

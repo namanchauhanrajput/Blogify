@@ -61,7 +61,7 @@ export const Register = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-gray-100 via-white to-yellow-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 p-4">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-gray-100 via-white to-yellow-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 p-4">
       <div className="w-full max-w-sm bg-white dark:bg-gray-800 shadow-lg rounded-2xl p-8">
         {/* Heading */}
         <h2 className="text-2xl font-semibold text-center text-gray-800 dark:text-gray-100 mb-2">
@@ -212,6 +212,24 @@ export const Register = () => {
           >
             Login
           </Link>
+        </p>
+
+        {/* Developed By */}
+        <p className="text-center text-xs text-gray-500 dark:text-gray-400 mt-6">
+          Developed by{" "}
+          <a
+            href="mailto:kajalkanwar0208@gmail.com"
+            className="text-yellow-600 dark:text-yellow-400 hover:underline"
+          >
+            Kajal Kanwar
+          </a>{" "}
+          and{" "}
+          <a
+            href="mailto:namanrajputnn001@gmail.com"
+            className="text-yellow-600 dark:text-yellow-400 hover:underline"
+          >
+            Naman Chauhan
+          </a>
         </p>
       </div>
     </div>

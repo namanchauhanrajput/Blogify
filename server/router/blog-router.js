@@ -21,7 +21,7 @@ router.put("/:id", auth, upload.single("image"), blogController.updateBlog);
 router.delete("/:id", auth, blogController.deleteBlog);
 
 // ==================== LIKES & COMMENTS ====================
-router.post("/like/:id", auth, blogController.toggleLikeBlog);
+router.get("/like/:id", auth, blogController.toggleLikeBlog);
 router.post("/comment/:id", auth, blogController.addComment);
 router.get("/comments/:id", blogController.getComments);
 

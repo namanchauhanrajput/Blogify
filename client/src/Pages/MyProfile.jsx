@@ -1,9 +1,12 @@
+// MyProfile.jsx
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { useAuth } from "../context/AuthContext"; 
+import { useAuth } from "../context/AuthContext";
+import BlogCard from "../components/BlogCard";// ✅ Import BlogCard
+import { useNavigate } from "react-router-dom";
 
 export default function MyProfile() {
-  const { token, user } = useAuth(); 
+  const { token, user } = useAuth();
   const [profile, setProfile] = useState(null);
   const [blogs, setBlogs] = useState([]);
   const [formData, setFormData] = useState({
@@ -19,7 +22,9 @@ export default function MyProfile() {
   const [profilePhoto, setProfilePhoto] = useState(null);
   const [preview, setPreview] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [isEditing, setIsEditing] = useState(false); 
+  const [isEditing, setIsEditing] = useState(false);
+
+   const navigate = useNavigate();
 
   // ✅ Fetch profile + blogs
   useEffect(() => {
@@ -92,7 +97,7 @@ export default function MyProfile() {
       );
 
       setProfile(res.data.user);
-      setIsEditing(false); 
+      setIsEditing(false);
       alert("✅ Profile updated successfully!");
     } catch (error) {
       console.error(error);
@@ -100,6 +105,11 @@ export default function MyProfile() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleDeleteBlog = (id) => {
+    setBlogs((prev) => prev.filter((b) => b._id !== id));
+     navigate("/my-profile");
   };
 
   if (!profile) {
@@ -126,7 +136,9 @@ export default function MyProfile() {
               d="M4 12a8 8 0 018-8v4l3-3-3-3v4a12 12 0 00-12 12h4z"
             />
           </svg>
-          <p className="text-gray-600 dark:text-gray-300 text-lg">Loading profile...</p>
+          <p className="text-gray-600 dark:text-gray-300 text-lg">
+            Loading profile...
+          </p>
         </div>
       </div>
     );
@@ -143,23 +155,59 @@ export default function MyProfile() {
         />
         <div className="flex-1">
           <h2 className="text-2xl font-bold">{profile.name}</h2>
-          <p className="text-gray-600 dark:text-gray-400">@{profile.username}</p>
+          <div className="flex items-center gap-3">
+            <p className="text-gray-600 dark:text-gray-400">@{profile.username}</p>
+            {/* ✅ Show total blogs count */}
+            <span className="bg-blue-100 text-blue-700 dark:bg-blue-800 dark:text-blue-200 px-3 py-1 rounded-full text-sm font-medium">
+              {blogs.length} Blogs
+            </span>
+          </div>
           <p className="mt-2 text-gray-700 dark:text-gray-300">{profile.bio}</p>
           <div className="flex gap-3 mt-3 text-blue-600 flex-wrap">
             {profile.socialLinks?.twitter && (
-              <a href={profile.socialLinks.twitter} target="_blank" rel="noreferrer">Twitter</a>
+              <a
+                href={profile.socialLinks.twitter}
+                target="_blank"
+                rel="noreferrer"
+              >
+                Twitter
+              </a>
             )}
             {profile.socialLinks?.linkedin && (
-              <a href={profile.socialLinks.linkedin} target="_blank" rel="noreferrer">LinkedIn</a>
+              <a
+                href={profile.socialLinks.linkedin}
+                target="_blank"
+                rel="noreferrer"
+              >
+                LinkedIn
+              </a>
             )}
             {profile.socialLinks?.instagram && (
-              <a href={profile.socialLinks.instagram} target="_blank" rel="noreferrer">Instagram</a>
+              <a
+                href={profile.socialLinks.instagram}
+                target="_blank"
+                rel="noreferrer"
+              >
+                Instagram
+              </a>
             )}
             {profile.socialLinks?.github && (
-              <a href={profile.socialLinks.github} target="_blank" rel="noreferrer">GitHub</a>
+              <a
+                href={profile.socialLinks.github}
+                target="_blank"
+                rel="noreferrer"
+              >
+                GitHub
+              </a>
             )}
             {profile.socialLinks?.website && (
-              <a href={profile.socialLinks.website} target="_blank" rel="noreferrer">Website</a>
+              <a
+                href={profile.socialLinks.website}
+                target="_blank"
+                rel="noreferrer"
+              >
+                Website
+              </a>
             )}
           </div>
         </div>
@@ -206,16 +254,61 @@ export default function MyProfile() {
           />
 
           <div className="grid md:grid-cols-2 gap-4 mt-4">
-            <input type="url" placeholder="Twitter" value={formData.twitter} onChange={(e)=>setFormData({...formData, twitter:e.target.value})} className="p-2 border rounded-lg w-full dark:bg-gray-700 dark:border-gray-600 dark:text-white"/>
-            <input type="url" placeholder="LinkedIn" value={formData.linkedin} onChange={(e)=>setFormData({...formData, linkedin:e.target.value})} className="p-2 border rounded-lg w-full dark:bg-gray-700 dark:border-gray-600 dark:text-white"/>
-            <input type="url" placeholder="Instagram" value={formData.instagram} onChange={(e)=>setFormData({...formData, instagram:e.target.value})} className="p-2 border rounded-lg w-full dark:bg-gray-700 dark:border-gray-600 dark:text-white"/>
-            <input type="url" placeholder="GitHub" value={formData.github} onChange={(e)=>setFormData({...formData, github:e.target.value})} className="p-2 border rounded-lg w-full dark:bg-gray-700 dark:border-gray-600 dark:text-white"/>
-            <input type="url" placeholder="Website" value={formData.website} onChange={(e)=>setFormData({...formData, website:e.target.value})} className="p-2 border rounded-lg w-full dark:bg-gray-700 dark:border-gray-600 dark:text-white"/>
+            <input
+              type="url"
+              placeholder="Twitter"
+              value={formData.twitter}
+              onChange={(e) =>
+                setFormData({ ...formData, twitter: e.target.value })
+              }
+              className="p-2 border rounded-lg w-full dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+            />
+            <input
+              type="url"
+              placeholder="LinkedIn"
+              value={formData.linkedin}
+              onChange={(e) =>
+                setFormData({ ...formData, linkedin: e.target.value })
+              }
+              className="p-2 border rounded-lg w-full dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+            />
+            <input
+              type="url"
+              placeholder="Instagram"
+              value={formData.instagram}
+              onChange={(e) =>
+                setFormData({ ...formData, instagram: e.target.value })
+              }
+              className="p-2 border rounded-lg w-full dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+            />
+            <input
+              type="url"
+              placeholder="GitHub"
+              value={formData.github}
+              onChange={(e) =>
+                setFormData({ ...formData, github: e.target.value })
+              }
+              className="p-2 border rounded-lg w-full dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+            />
+            <input
+              type="url"
+              placeholder="Website"
+              value={formData.website}
+              onChange={(e) =>
+                setFormData({ ...formData, website: e.target.value })
+              }
+              className="p-2 border rounded-lg w-full dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+            />
           </div>
 
           <div className="mt-4">
             <label className="block text-sm font-medium">Profile Photo</label>
-            <input type="file" accept="image/*" onChange={handleFileChange} className="mt-2" />
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleFileChange}
+              className="mt-2"
+            />
           </div>
 
           <button
@@ -258,23 +351,7 @@ export default function MyProfile() {
         ) : (
           <div className="grid md:grid-cols-2 gap-4">
             {blogs.map((blog) => (
-              <div
-                key={blog._id}
-                className="p-4 border rounded-lg hover:shadow-md transition dark:bg-gray-700 dark:border-gray-600"
-              >
-                {blog.image && (
-                  <img
-                    src={blog.image}
-                    alt={blog.title}
-                    className="w-full h-40 object-cover rounded-md mb-3"
-                  />
-                )}
-                <h4 className="font-bold text-lg">{blog.title}</h4>
-                <p className="text-gray-600 dark:text-gray-300 line-clamp-3">{blog.content}</p>
-                <p className="text-sm text-gray-400 mt-2">
-                  {new Date(blog.createdAt).toLocaleDateString()}
-                </p>
-              </div>
+              <BlogCard key={blog._id} blog={blog} onDelete={handleDeleteBlog} />
             ))}
           </div>
         )}
