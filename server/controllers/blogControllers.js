@@ -1,5 +1,6 @@
 const Blog = require("../models/blog-model");
 const cloudinary = require("../config/cloudinary");
+const Notification = require("../models/notification-model"); // 🟢 Notification model import
 
 // CREATE BLOG
 exports.createBlog = async (req, res) => {
@@ -75,7 +76,9 @@ exports.getBlogById = async (req, res) => {
     if (!blog) return res.status(404).json({ error: "Blog not found" });
 
     const userId = req.user?._id?.toString() || null;
-    const isLikedByCurrentUser = userId ? blog.likes.some(u => u._id.toString() === userId) : false;
+    const isLikedByCurrentUser = userId
+      ? blog.likes.some((u) => u._id.toString() === userId)
+      : false;
 
     res.json({
       blog,
@@ -157,6 +160,17 @@ exports.toggleLikeBlog = async (req, res) => {
       blog.likes.pull(userId);
     } else {
       blog.likes.push(userId);
+
+      // 🟢 Create notification only when like added
+      if (blog.author.toString() !== userId.toString()) {
+        await Notification.create({
+          recipient: blog.author,
+          sender: userId,
+          type: "like",
+          blog: blog._id,
+          text: "liked your blog",
+        });
+      }
     }
 
     await blog.save();
@@ -191,6 +205,17 @@ exports.addComment = async (req, res) => {
 
     blog.comments.push(comment);
     await blog.save();
+
+    // 🟢 Create notification for comment
+    if (blog.author.toString() !== req.user._id.toString()) {
+      await Notification.create({
+        recipient: blog.author,
+        sender: req.user._id,
+        type: "comment",
+        blog: blog._id,
+        text: req.body.text ,
+      });
+    }
 
     const populatedBlog = await Blog.findById(req.params.id).populate(
       "comments.user",

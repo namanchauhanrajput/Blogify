@@ -12,6 +12,7 @@ import UserProfile from "./Pages/UserProfile";
 import { EditBlog } from "./Pages/EditBlog";
 import BlogDetail from "./Pages/BlogDetail";
 import Comment from "./Pages/Comment";
+import { Notifications } from "./Pages/Notifications";
 import "./index.css";
 
 // Protected wrapper
@@ -46,6 +47,7 @@ const App = () => {
             path="/forgot-password"
             element={<PublicRoute element={<ForgotPassword />} />}
           />
+          <Route path="/notifications" element={<Notifications />} />
 
           {/* Protected Routes */}
           <Route path="/" element={<ProtectedRoute element={<Home />} />} />

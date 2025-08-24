@@ -77,6 +77,19 @@ export default function Navbar() {
 
           {isLoggedIn && (
             <NavLink
+              to="/notifications"
+              className={({ isActive }) =>
+                `${baseLinkClasses} ${
+                  isActive ? activeClasses : inactiveClasses
+                }`
+              }
+            >
+              <User size={18} /> Notification
+            </NavLink>
+          )}
+
+          {isLoggedIn && (
+            <NavLink
               to="/my-profile"
               className={({ isActive }) =>
                 `${baseLinkClasses} ${
