@@ -130,10 +130,15 @@ export const EditBlog = () => {
           >
             <option value="">Select category</option>
             <option value="Technology">Technology</option>
-            <option value="Business">Business</option>
+            <option value="Photography">Photography</option>
             <option value="Lifestyle">Lifestyle</option>
-            <option value="Education">Education</option>
+            <option value="Quotes">Quotes</option>
+            <option value="Food">Food</option>
+            <option value="Fitness">Fitness</option>
+            <option value="Sports">Sports</option>
+            <option value="Entertainment">Entertainment</option>
             <option value="Travel">Travel</option>
+            <option value="Others">Others</option>
           </select>
         </div>
 
