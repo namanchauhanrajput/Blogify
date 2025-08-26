@@ -85,6 +85,7 @@ exports.getBlogById = async (req, res) => {
       likesCount: blog.likes.length,
       isLikedByCurrentUser,
       likedUsers: blog.likes, // 🟢 send list of users who liked
+       createdAt: blog.createdAt,
     });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -185,6 +186,7 @@ exports.toggleLikeBlog = async (req, res) => {
       liked: !alreadyLiked,
       likesCount: blog.likes.length,
       likedUsers: populatedBlog.likes, // 🟢 return liked users list
+      createdAt: blog.createdAt,
     });
   } catch (error) {
     res.status(500).json({ message: "Something went wrong" });

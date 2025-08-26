@@ -21,7 +21,7 @@ const BlogDetail = () => {
   const [commentCount, setCommentCount] = useState(0);
   const [posting, setPosting] = useState(false);
 
-  // 🟢 Like states
+  // Likes
   const [likesCount, setLikesCount] = useState(0);
   const [likedUsers, setLikedUsers] = useState([]);
   const [isLiked, setIsLiked] = useState(false);
@@ -39,7 +39,7 @@ const BlogDetail = () => {
         setBlog(blogData);
         setCommentCount(blogData.comments?.length || blogData.commentsCount || 0);
 
-        // 🟢 Likes data
+        // Likes
         setLikesCount(res.data.likesCount || 0);
         setLikedUsers(res.data.likedUsers || []);
         setIsLiked(res.data.isLikedByCurrentUser || false);
@@ -60,7 +60,6 @@ const BlogDetail = () => {
     fetchBlog();
   }, [id, token]);
 
-  // 🟢 Like toggle handler
   const handleLikeToggle = async () => {
     if (!token) return alert("Please login to like");
     try {
@@ -157,14 +156,12 @@ const BlogDetail = () => {
     setShowComments((p) => !p);
   };
 
-  // 🟢 Helper: full URL for profile photo
   const getProfilePhotoUrl = (photo) => {
     if (!photo) return "/default-avatar.png";
     if (photo.startsWith("https")) return photo;
     return `${API_URL}${photo}`;
   };
 
-  // 🟢 Helper: format time ago
   const timeAgo = (date) => {
     if (!date) return "";
     const seconds = Math.floor((new Date() - new Date(date)) / 1000);
@@ -225,7 +222,7 @@ const BlogDetail = () => {
 
         {/* Actions */}
         <div className="flex items-center gap-8 text-gray-600 dark:text-gray-300 mb-8">
-          {/* 🟢 Like Button */}
+          {/* Like Button */}
           <button
             onClick={handleLikeToggle}
             disabled={likeLoading}
@@ -265,7 +262,7 @@ const BlogDetail = () => {
           </button>
         </div>
 
-        {/* 🟢 Liked Users Form-Style List */}
+        {/* Liked Users */}
         {showLikes && likesCount > 0 && (
           <div className="mb-6 border rounded-lg p-4 bg-gray-50 dark:bg-gray-800">
             <h3 className="font-semibold text-lg mb-3">Liked by:</h3>
@@ -289,7 +286,7 @@ const BlogDetail = () => {
                     </Link>
                   </div>
                   <span className="text-xs text-gray-500">
-                    {timeAgo(u.likedAt || new Date())}
+                    {timeAgo(u.likedAt || u.createdAt || blog.createdAt)}
                   </span>
                 </div>
               ))}
