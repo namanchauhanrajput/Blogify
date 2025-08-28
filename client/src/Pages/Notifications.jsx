@@ -4,7 +4,7 @@ import { useAuth } from "../context/AuthContext";
 import { Bell, Check, MessageSquare, Heart } from "lucide-react";
 import { Link } from "react-router-dom";
 
-const API_URL = "http://localhost:5000/api/notifications";
+const API_URL = "https://bloging-platform.onrender.com/api/notifications";
 
 export default function Notifications() {
   const { token } = useAuth();
