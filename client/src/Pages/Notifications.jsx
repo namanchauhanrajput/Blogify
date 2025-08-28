@@ -11,7 +11,7 @@ export default function Notifications() {
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // 🔹 Memoized Auth headers (⚡ avoids eslint warning & re-renders)
+  // 🔹 Memoized Auth headers
   const authHeaders = useMemo(
     () => ({
       headers: { Authorization: `Bearer ${token}` },
@@ -56,7 +56,7 @@ export default function Notifications() {
     };
 
     if (token) fetchNotifications();
-  }, [token, authHeaders]); // ✅ fixed dependency warning
+  }, [token, authHeaders]);
 
   if (!token) {
     return (
@@ -93,7 +93,8 @@ export default function Notifications() {
           No notifications found.
         </p>
       ) : (
-        <div className="space-y-3">
+        // 🔹 FIX: scrollable container so it works in mobile too
+        <div className="space-y-3 max-h-[70vh] overflow-y-auto pr-1">
           {notifications.map((n) => (
             <div
               key={n._id}
@@ -116,7 +117,6 @@ export default function Notifications() {
               {/* Content */}
               <div className="flex-1">
                 <p className="text-sm text-gray-800 dark:text-gray-200">
-                  {/* 🔹 Username clickable (➡️ goes to /profile/:id ) */}
                   <Link
                     to={`/profile/${n.sender?._id}`}
                     className="font-semibold text-blue-600 dark:text-white hover:underline"
