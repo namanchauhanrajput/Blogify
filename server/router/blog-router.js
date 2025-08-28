@@ -1,21 +1,43 @@
 const express = require("express");
 const router = express.Router();
 const auth = require("../middlewares/auth-middleware");
-const notificationController = require("../controllers/notificationController");
+const upload = require("../middlewares/multer");
+const { validateBlog } = require("../middlewares/blogValidator");
+const blogController = require("../controllers/blogControllers");
+const userProfileController = require("../controllers/userProfileController");
 
-// Get notifications
-router.get("/", auth, notificationController.getNotifications);
+// ==================== BLOG CRUD ====================
+router.post(
+  "/create",
+  auth,
+  upload.single("image"),
+  validateBlog,
+  blogController.createBlog
+);
 
-// Mark one notification as read
-router.put("/:id/read", auth, notificationController.markAsRead);
+router.get("/", blogController.getAllBlogs);
+router.get("/:id", blogController.getBlogById);
+router.put("/:id", auth, upload.single("image"), blogController.updateBlog);
+router.delete("/:id", auth, blogController.deleteBlog);
 
-// Mark all notifications as read
-router.put("/read-all", auth, notificationController.markAllAsRead);
+// ==================== LIKES & COMMENTS ====================
+router.post("/like/:id", auth, blogController.toggleLikeBlog);
+router.post("/comment/:id", auth, blogController.addComment);
+router.get("/comments/:id", blogController.getComments);
 
-// Delete single notification
-router.delete("/:id", auth, notificationController.deleteNotification);
+// ==================== CATEGORIES ====================
+router.get("/categories/list", blogController.getCategories);
 
-// Delete all notifications
-router.delete("/", auth, notificationController.deleteAllNotifications);
+// ==================== USER PROFILE ====================
+// 🟢 Public profile (no auth required)
+router.get("/user/:userId", userProfileController.getUserBlogs);
+
+// 🟢 Update profile (protected)
+router.put(
+  "/user/update/profile",
+  auth,
+  upload.single("profilePhoto"),
+  userProfileController.updateUserProfile
+);
 
 module.exports = router;
