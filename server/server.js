@@ -3,6 +3,7 @@ const app = express();
 const cors = require("cors");
 const authRoute = require("./router/auth-router");
 const blogRoute = require("./router/blog-router");
+const adminRoute = require("./router/admin-router");
 const notificationRoute = require("./router/notification-router");
 const connectDB = require("./config/db.js");
 const errorMiddleware = require("./middlewares/error-middleware.js");
@@ -22,7 +23,7 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 app.use(express.json());
-
+app.use("/api/admin", adminRoute);
 // Routes
 app.use("/api/auth", authRoute);
 app.use("/api/blog", blogRoute);
