@@ -85,7 +85,7 @@ exports.getBlogById = async (req, res) => {
       likesCount: blog.likes.length,
       isLikedByCurrentUser,
       likedUsers: blog.likes, // 🟢 send list of users who liked
-       createdAt: blog.createdAt,
+      createdAt: blog.createdAt,
     });
   } catch (err) {
     res.status(500).json({ error: err.message });
