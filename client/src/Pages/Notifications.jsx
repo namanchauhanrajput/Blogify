@@ -1,47 +1,29 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import axios from "axios";
 import { useAuth } from "../context/AuthContext";
-import { authHeaders } from "../api";
-import { Bell, Check } from "lucide-react";
+import { Bell, Check, MessageSquare, Heart } from "lucide-react";
 import { Link } from "react-router-dom";
 
-const API_URL = "http://localhost:5000";
+const API_URL = "http://localhost:5000/api/notifications";
 
-export const Notifications = () => {
+export default function Notifications() {
   const { token } = useAuth();
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // 🔹 fetch notifications
-  useEffect(() => {
-    const fetchNotifications = async () => {
-      try {
-        const res = await axios.get(
-          `${API_URL}/api/notifications`,
-          authHeaders(token)
-        );
-        console.log("Notifications API Response:", res.data);
-        setNotifications(res.data.notifications || res.data || []);
-      } catch (err) {
-        console.error(
-          "Error fetching notifications:",
-          err.response?.data || err.message
-        );
-      } finally {
-        setLoading(false);
-      }
-    };
-    if (token) fetchNotifications();
-  }, [token]);
+  // 🔹 Memoized Auth headers (⚡ avoids eslint warning & re-renders)
+  const authHeaders = useMemo(
+    () => ({
+      headers: { Authorization: `Bearer ${token}` },
+      withCredentials: true,
+    }),
+    [token]
+  );
 
-  // 🔹 mark as read
+  // 🔹 Mark single as read
   const markAsRead = async (id) => {
     try {
-      await axios.put(
-        `${API_URL}/api/notifications/${id}/read`,
-        {},
-        authHeaders(token)
-      );
+      await axios.put(`${API_URL}/${id}/read`, {}, authHeaders);
       setNotifications((prev) =>
         prev.map((n) => (n._id === id ? { ...n, isRead: true } : n))
       );
@@ -50,68 +32,136 @@ export const Notifications = () => {
     }
   };
 
-  const getPhotoUrl = (photo) => {
-    if (!photo) return "/default-avatar.png";
-    return photo.startsWith("http") ? photo : `${API_URL}${photo}`;
+  // 🔹 Mark all as read
+  const markAllAsRead = async () => {
+    try {
+      await axios.put(`${API_URL}/read-all`, {}, authHeaders);
+      setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })));
+    } catch (err) {
+      console.error("Error marking all notifications:", err);
+    }
   };
 
-  if (loading) return <p className="text-center">Loading notifications...</p>;
+  // 🔹 Fetch notifications
+  useEffect(() => {
+    const fetchNotifications = async () => {
+      try {
+        const res = await axios.get(API_URL, authHeaders);
+        setNotifications(res.data);
+      } catch (err) {
+        console.error("Error fetching notifications:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (token) fetchNotifications();
+  }, [token, authHeaders]); // ✅ fixed dependency warning
+
+  if (!token) {
+    return (
+      <div className="p-4 text-center text-gray-600 dark:text-gray-300">
+        Please login to view notifications.
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-3xl mx-auto p-4">
-      <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
-        <Bell /> Notifications
-      </h2>
+      {/* Header */}
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-xl font-bold flex items-center gap-2 text-gray-800 dark:text-gray-100">
+          <Bell className="w-5 h-5" /> Notifications
+        </h2>
+        {notifications.length > 0 && (
+          <button
+            onClick={markAllAsRead}
+            className="text-sm text-blue-600 dark:text-blue-400 hover:underline"
+          >
+            Mark all as read
+          </button>
+        )}
+      </div>
 
-      {notifications.length === 0 ? (
-        <p className="text-gray-500 text-center">No notifications yet</p>
+      {/* Loading */}
+      {loading ? (
+        <p className="text-gray-500 dark:text-gray-400">
+          Loading notifications...
+        </p>
+      ) : notifications.length === 0 ? (
+        <p className="text-gray-500 dark:text-gray-400">
+          No notifications found.
+        </p>
       ) : (
-        <ul className="space-y-3">
+        <div className="space-y-3">
           {notifications.map((n) => (
-            <li
+            <div
               key={n._id}
-              className={`p-4 rounded-2xl shadow-md flex items-center justify-between ${
-                n.isRead ? "bg-gray-100" : "bg-blue-100"
+              className={`flex items-start gap-3 p-3 rounded-lg shadow-sm border transition ${
+                n.isRead
+                  ? "bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700"
+                  : "bg-blue-50 dark:bg-blue-900/30 border-blue-200 dark:border-blue-700"
               }`}
             >
-              <div className="flex items-center gap-3">
-                <img
-                  src={getPhotoUrl(n.sender?.profilePhoto)}
-                  alt="User"
-                  className="w-10 h-10 rounded-full"
-                />
-                <div>
-                  <p className="text-sm">
-                    <span className="font-semibold">
-                      {n.sender?.name || "Someone"}
-                    </span>{" "}
-                    {n.text}
-                  </p>
-                  {n.blog && (
-                    <Link
-                      to={`/blog/${n.blog._id}`}
-                      className="text-blue-600 text-xs underline"
-                    >
-                      View blog: {n.blog.title}
-                    </Link>
+              {/* Sender avatar */}
+              <img
+                src={
+                  n.sender?.profilePhoto ||
+                  "https://via.placeholder.com/40?text=U"
+                }
+                alt="sender"
+                className="w-10 h-10 rounded-full object-cover"
+              />
+
+              {/* Content */}
+              <div className="flex-1">
+                <p className="text-sm text-gray-800 dark:text-gray-200">
+                  {/* 🔹 Username clickable (➡️ goes to /profile/:id ) */}
+                  <Link
+                    to={`/profile/${n.sender?._id}`}
+                    className="font-semibold text-blue-600 dark:text-white hover:underline"
+                  >
+                    {n.sender?.name || n.sender?.username || "Someone"}
+                  </Link>{" "}
+                  {n.type === "like" ? (
+                    <span className="text-pink-600 dark:text-pink-400 flex items-center gap-1">
+                      <Heart className="w-4 h-4" /> liked your blog
+                    </span>
+                  ) : (
+                    <span className="text-green-600 dark:text-green-400 flex items-center gap-1">
+                      <MessageSquare className="w-4 h-4" /> commented:{" "}
+                      <span className="italic">"{n.text}"</span>
+                    </span>
                   )}
-                  <p className="text-xs text-gray-500">
-                    {new Date(n.createdAt).toLocaleString()}
-                  </p>
-                </div>
+                </p>
+
+                {n.blog && (
+                  <Link
+                    to={`/blog/${n.blog._id}`}
+                    className="text-xs text-blue-600 dark:text-white hover:underline"
+                  >
+                    View blog: {n.blog.title}
+                  </Link>
+                )}
+
+                <p className="text-xs text-gray-500 dark:text-gray-400">
+                  {new Date(n.createdAt).toLocaleString()}
+                </p>
               </div>
+
+              {/* Mark as read button */}
               {!n.isRead && (
                 <button
                   onClick={() => markAsRead(n._id)}
-                  className="text-green-600 hover:text-green-800"
+                  className="text-xs flex items-center gap-1 text-blue-600 dark:text-blue-400 hover:underline"
                 >
-                  <Check />
+                  <Check className="w-4 h-4" /> Mark read
                 </button>
               )}
-            </li>
+            </div>
           ))}
-        </ul>
+        </div>
       )}
     </div>
   );
-};
+}

@@ -12,7 +12,7 @@ import UserProfile from "./Pages/UserProfile";
 import { EditBlog } from "./Pages/EditBlog";
 import BlogDetail from "./Pages/BlogDetail";
 import Comment from "./Pages/Comment";
-import { Notifications } from "./Pages/Notifications";
+import Notifications from "./Pages/Notifications";
 import "./index.css";
 
 // Protected wrapper
