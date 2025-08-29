@@ -10,10 +10,11 @@ import {
   LogOut,
   Moon,
   Sun,
+  Shield,
 } from "lucide-react";
 
 export default function Navbar() {
-  const { isLoggedIn, logoutUser } = useAuth();
+  const { isLoggedIn, logoutUser, user } = useAuth(); // user se isAdmin mil raha hai
   const { theme, setTheme } = useTheme();
   const navigate = useNavigate();
 
@@ -23,22 +24,26 @@ export default function Navbar() {
   };
 
   const toggleTheme = () => {
-    if (theme === "dark") setTheme("light");
-    else setTheme("dark");
+    setTheme(theme === "dark" ? "light" : "dark");
   };
 
   const baseLinkClasses =
     "flex items-center gap-2 px-4 py-2 rounded-lg transition-colors duration-200 text-sm";
-  const activeClasses = "font-bold text-black dark:text-white bg-gray-100 dark:bg-gray-800";
-  const inactiveClasses = "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800";
+  const activeClasses =
+    "font-bold text-black dark:text-white bg-gray-100 dark:bg-gray-800";
+  const inactiveClasses =
+    "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800";
 
   return (
     <>
-      {/* Desktop Sidebar (lg and above) */}
+      {/* Desktop Sidebar */}
       <aside className="hidden lg:flex fixed top-0 left-0 h-screen w-60 bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 flex-col">
         {/* Logo + Theme Toggle */}
         <div className="p-4 border-b border-gray-200 dark:border-gray-800 flex justify-between items-center">
-          <NavLink to="/" className="text-xl font-bold text-black dark:text-white">
+          <NavLink
+            to="/"
+            className="text-xl font-bold text-black dark:text-white"
+          >
             Blogify
           </NavLink>
           <button
@@ -101,6 +106,20 @@ export default function Navbar() {
             </NavLink>
           )}
 
+          {/* ✅ Show only if user.isAdmin */}
+          {isLoggedIn && user?.isAdmin && (
+            <NavLink
+              to="/admin"
+              className={({ isActive }) =>
+                `${baseLinkClasses} ${
+                  isActive ? activeClasses : inactiveClasses
+                }`
+              }
+            >
+              <Shield size={18} /> Admin Panel
+            </NavLink>
+          )}
+
           {!isLoggedIn ? (
             <>
               <NavLink
@@ -135,7 +154,7 @@ export default function Navbar() {
         </nav>
       </aside>
 
-      {/* Mobile & Tablet Bottom Navigation (removed theme toggle here) */}
+      {/* Mobile Bottom Navigation */}
       <nav className="lg:hidden fixed bottom-0 left-0 w-full bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 flex justify-around items-center h-16 z-50">
         <NavLink
           to="/"
@@ -177,6 +196,22 @@ export default function Navbar() {
             }
           >
             <User size={18} /> Profile
+          </NavLink>
+        )}
+
+        {/* ✅ Admin link mobile */}
+        {isLoggedIn && user?.isAdmin && (
+          <NavLink
+            to="/admin"
+            className={({ isActive }) =>
+              `flex flex-col items-center text-xs transition-colors duration-200 ${
+                isActive
+                  ? "font-bold text-black dark:text-white"
+                  : "text-gray-600 dark:text-gray-300"
+              }`
+            }
+          >
+            <Shield size={18} /> Admin
           </NavLink>
         )}
 
