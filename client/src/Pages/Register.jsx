@@ -54,10 +54,10 @@ export const Register = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col justify-between bg-gradient-to-b from-gray-100 via-white to-yellow-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 p-4">
+    <div className="min-h-screen w-full overflow-x-hidden flex flex-col justify-between bg-gradient-to-b from-gray-100 via-white to-yellow-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
       {/* Registration Card */}
-      <div className="flex flex-1 items-center justify-center">
-        <div className="w-full max-w-sm bg-white dark:bg-gray-800 shadow-lg rounded-2xl p-8">
+      <div className="flex flex-1 items-center justify-center px-0">
+        <div className="w-full max-w-sm bg-white dark:bg-gray-800 shadow-lg rounded-2xl p-6">
           {/* Heading */}
           <h2 className="text-2xl font-semibold text-center text-gray-800 dark:text-gray-100 mb-2">
             Create an account
@@ -188,8 +188,8 @@ export const Register = () => {
         </div>
       </div>
 
-      {/* Developed By (Bottom of Screen, Always Visible) */}
-      <p className="text-center text-xs text-gray-500 dark:text-gray-400 mt-6 mb-2">
+      {/* Developed By (Bottom of Screen, Always Visible but with padding) */}
+      <p className="text-center text-xs text-gray-500 dark:text-gray-400 mt-6 mb-20">
         Developed by{" "}
         <a
           href="mailto:kajalkanwar0208@gmail.com"
