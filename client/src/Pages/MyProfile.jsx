@@ -1,8 +1,7 @@
-// MyProfile.jsx
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useAuth } from "../context/AuthContext";
-import BlogCard from "../components/BlogCard";// ✅ Import BlogCard
+import BlogCard from "../components/BlogCard";
 import { useNavigate } from "react-router-dom";
 
 export default function MyProfile() {
@@ -24,7 +23,7 @@ export default function MyProfile() {
   const [loading, setLoading] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
 
-   const navigate = useNavigate();
+  const navigate = useNavigate();
 
   // ✅ Fetch profile + blogs
   useEffect(() => {
@@ -109,7 +108,7 @@ export default function MyProfile() {
 
   const handleDeleteBlog = (id) => {
     setBlogs((prev) => prev.filter((b) => b._id !== id));
-     navigate("/my-profile");
+    navigate("/my-profile");
   };
 
   if (!profile) {
@@ -145,30 +144,38 @@ export default function MyProfile() {
   }
 
   return (
-    <div className="max-w-5xl mx-auto p-6 dark:bg-gray-900 dark:text-white min-h-screen">
+    // ✅ FIX: margin-left 240px for desktop because of sidebar
+    <div className="lg:ml-60 px-4 sm:px-6 md:px-10 lg:px-20 xl:px-40 py-6 dark:bg-gray-900 dark:text-white min-h-screen transition-all">
       {/* Profile Header */}
-      <div className="bg-white dark:bg-gray-800 shadow-md rounded-xl p-6 mb-6 flex flex-col md:flex-row items-center gap-6">
+      <div className="bg-white dark:bg-gray-800 shadow-md rounded-2xl p-6 mb-6 flex flex-col lg:flex-row items-center lg:items-start gap-6">
+        {/* Profile Photo */}
         <img
           src={preview || profile.profilePhoto}
           alt="Profile"
-          className="w-32 h-32 rounded-full object-cover border-4 border-gray-200 dark:border-gray-700"
+          className="w-28 h-28 sm:w-32 sm:h-32 rounded-full object-cover border-4 border-gray-200 dark:border-gray-700"
         />
-        <div className="flex-1">
+
+        {/* Info */}
+        <div className="flex-1 text-center lg:text-left">
           <h2 className="text-2xl font-bold">{profile.name}</h2>
-          <div className="flex items-center gap-3">
-            <p className="text-gray-600 dark:text-gray-400">@{profile.username}</p>
-            {/* ✅ Show total blogs count */}
+          <div className="flex flex-wrap justify-center lg:justify-start items-center gap-3 mt-2">
+            <p className="text-gray-600 dark:text-gray-400">
+              @{profile.username}
+            </p>
             <span className="bg-blue-100 text-blue-700 dark:bg-blue-800 dark:text-blue-200 px-3 py-1 rounded-full text-sm font-medium">
               {blogs.length} Blogs
             </span>
           </div>
-          <p className="mt-2 text-gray-700 dark:text-gray-300">{profile.bio}</p>
-          <div className="flex gap-3 mt-3 text-blue-600 flex-wrap">
+          <p className="mt-3 text-gray-700 dark:text-gray-300">{profile.bio}</p>
+
+          {/* Social Links */}
+          <div className="flex flex-wrap gap-3 mt-4 justify-center lg:justify-start">
             {profile.socialLinks?.twitter && (
               <a
                 href={profile.socialLinks.twitter}
                 target="_blank"
                 rel="noreferrer"
+                className="hover:underline text-blue-500"
               >
                 Twitter
               </a>
@@ -178,6 +185,7 @@ export default function MyProfile() {
                 href={profile.socialLinks.linkedin}
                 target="_blank"
                 rel="noreferrer"
+                className="hover:underline text-blue-700"
               >
                 LinkedIn
               </a>
@@ -187,6 +195,7 @@ export default function MyProfile() {
                 href={profile.socialLinks.instagram}
                 target="_blank"
                 rel="noreferrer"
+                className="hover:underline text-pink-500"
               >
                 Instagram
               </a>
@@ -196,6 +205,7 @@ export default function MyProfile() {
                 href={profile.socialLinks.github}
                 target="_blank"
                 rel="noreferrer"
+                className="hover:underline text-gray-400"
               >
                 GitHub
               </a>
@@ -205,15 +215,18 @@ export default function MyProfile() {
                 href={profile.socialLinks.website}
                 target="_blank"
                 rel="noreferrer"
+                className="hover:underline text-green-500"
               >
                 Website
               </a>
             )}
           </div>
         </div>
+
+        {/* Edit Button */}
         <button
           onClick={() => setIsEditing(!isEditing)}
-          className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+          className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
         >
           {isEditing ? "Cancel" : "Edit Profile"}
         </button>
@@ -254,51 +267,20 @@ export default function MyProfile() {
           />
 
           <div className="grid md:grid-cols-2 gap-4 mt-4">
-            <input
-              type="url"
-              placeholder="Twitter"
-              value={formData.twitter}
-              onChange={(e) =>
-                setFormData({ ...formData, twitter: e.target.value })
-              }
-              className="p-2 border rounded-lg w-full dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-            />
-            <input
-              type="url"
-              placeholder="LinkedIn"
-              value={formData.linkedin}
-              onChange={(e) =>
-                setFormData({ ...formData, linkedin: e.target.value })
-              }
-              className="p-2 border rounded-lg w-full dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-            />
-            <input
-              type="url"
-              placeholder="Instagram"
-              value={formData.instagram}
-              onChange={(e) =>
-                setFormData({ ...formData, instagram: e.target.value })
-              }
-              className="p-2 border rounded-lg w-full dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-            />
-            <input
-              type="url"
-              placeholder="GitHub"
-              value={formData.github}
-              onChange={(e) =>
-                setFormData({ ...formData, github: e.target.value })
-              }
-              className="p-2 border rounded-lg w-full dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-            />
-            <input
-              type="url"
-              placeholder="Website"
-              value={formData.website}
-              onChange={(e) =>
-                setFormData({ ...formData, website: e.target.value })
-              }
-              className="p-2 border rounded-lg w-full dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-            />
+            {["twitter", "linkedin", "instagram", "github", "website"].map(
+              (field) => (
+                <input
+                  key={field}
+                  type="url"
+                  placeholder={field.charAt(0).toUpperCase() + field.slice(1)}
+                  value={formData[field]}
+                  onChange={(e) =>
+                    setFormData({ ...formData, [field]: e.target.value })
+                  }
+                  className="p-2 border rounded-lg w-full dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                />
+              )
+            )}
           </div>
 
           <div className="mt-4">
@@ -344,12 +326,12 @@ export default function MyProfile() {
       )}
 
       {/* User Blogs */}
-      <div className="bg-white dark:bg-gray-800 shadow-md rounded-xl p-6">
+      <div className="bg-white dark:bg-gray-800 shadow-md rounded-xl p-6 ">
         <h3 className="text-xl font-semibold mb-4">My Blogs</h3>
         {blogs.length === 0 ? (
           <p className="text-gray-500 dark:text-gray-400">No blogs yet.</p>
         ) : (
-          <div className="grid md:grid-cols-2 gap-4">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {blogs.map((blog) => (
               <BlogCard key={blog._id} blog={blog} onDelete={handleDeleteBlog} />
             ))}

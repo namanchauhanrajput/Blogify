@@ -38,7 +38,7 @@ const App = () => {
       <AuthProvider>
         <BrowserRouter>
           <Navbar />
-          <div className="max-w-7xl mx-auto px-4">
+          <div className="">
             <Routes>
               {/* Public Routes */}
               <Route path="/register" element={<PublicRoute element={<Register />} />} />
