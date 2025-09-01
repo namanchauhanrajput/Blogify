@@ -87,51 +87,54 @@ export const ForgotPassword = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-b from-gray-50 to-yellow-100 dark:from-gray-900 dark:to-gray-800 px-4">
-      <div className="bg-white dark:bg-gray-800 shadow-xl rounded-2xl p-8 w-full max-w-md">
-        <h2 className="text-2xl font-bold text-center text-gray-800 dark:text-gray-100 mb-6">
+    <div
+      className="flex flex-col justify-center items-center min-h-screen bg-cover bg-center px-4"
+      style={{
+        backgroundImage: `url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e')`,
+      }}
+    >
+      <div className="w-[90%] max-w-md bg-white dark:bg-gray-900 shadow-xl rounded-2xl p-8">
+        <h2 className="text-2xl font-bold text-center text-gray-900 dark:text-white mb-6">
           {step === 1 ? "Forgot Password" : "Reset Password"}
         </h2>
 
         {message && (
-          <p className="bg-green-100 dark:bg-green-900 text-green-600 dark:text-green-300 p-2 rounded mb-4 text-sm">
+          <p className="bg-green-100 dark:bg-green-900 text-green-600 dark:text-green-300 p-2 rounded mb-4 text-sm text-center">
             {message}
           </p>
         )}
         {error && (
-          <p className="bg-red-100 dark:bg-red-900 text-red-600 dark:text-red-300 p-2 rounded mb-4 text-sm">
+          <p className="bg-red-100 dark:bg-red-900 text-red-600 dark:text-red-300 p-2 rounded mb-4 text-sm text-center">
             {error}
           </p>
         )}
 
         {step === 1 ? (
           <form onSubmit={handleSendOtp} className="space-y-5">
-            <div>
-              <input
-                type="text"
-                placeholder="Enter your username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                required
-                className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-yellow-400 outline-none dark:bg-gray-700 dark:text-white"
-              />
-            </div>
+            <input
+              type="text"
+              placeholder="Enter your username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
+              className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-400 outline-none
+              bg-gray-50 dark:bg-gray-800 dark:text-white dark:border-gray-700"
+            />
 
-            <div>
-              <input
-                type="email"
-                placeholder="Enter your registered email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-yellow-400 outline-none dark:bg-gray-700 dark:text-white"
-              />
-            </div>
+            <input
+              type="email"
+              placeholder="Enter your registered email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-400 outline-none
+              bg-gray-50 dark:bg-gray-800 dark:text-white dark:border-gray-700"
+            />
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-yellow-400 hover:bg-yellow-500 text-white font-semibold py-3 px-4 rounded-xl transition flex justify-center items-center"
+              className="w-full bg-black hover:bg-gray-800 text-white font-semibold py-3 px-4 rounded-lg transition flex justify-center items-center"
             >
               {loading && (
                 <svg
@@ -160,27 +163,25 @@ export const ForgotPassword = () => {
           </form>
         ) : (
           <form onSubmit={handleResetPassword} className="space-y-5">
-            <div>
-              <input
-                type="text"
-                placeholder="Enter your username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                required
-                className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-yellow-400 outline-none dark:bg-gray-700 dark:text-white"
-              />
-            </div>
+            <input
+              type="text"
+              placeholder="Enter your username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
+              className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-400 outline-none
+              bg-gray-50 dark:bg-gray-800 dark:text-white dark:border-gray-700"
+            />
 
-            <div>
-              <input
-                type="text"
-                placeholder="Enter OTP"
-                value={otp}
-                onChange={(e) => setOtp(e.target.value)}
-                required
-                className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-yellow-400 outline-none dark:bg-gray-700 dark:text-white"
-              />
-            </div>
+            <input
+              type="text"
+              placeholder="Enter OTP"
+              value={otp}
+              onChange={(e) => setOtp(e.target.value)}
+              required
+              className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-400 outline-none
+              bg-gray-50 dark:bg-gray-800 dark:text-white dark:border-gray-700"
+            />
 
             <div className="relative">
               <input
@@ -189,7 +190,8 @@ export const ForgotPassword = () => {
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
                 required
-                className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl pr-10 focus:ring-2 focus:ring-yellow-400 outline-none dark:bg-gray-700 dark:text-white"
+                className="w-full p-3 border rounded-lg pr-10 focus:ring-2 focus:ring-blue-400 outline-none
+                bg-gray-50 dark:bg-gray-800 dark:text-white dark:border-gray-700"
               />
               <span
                 className="absolute right-3 top-3.5 cursor-pointer text-gray-500 dark:text-gray-300"
@@ -206,13 +208,12 @@ export const ForgotPassword = () => {
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 required
-                className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl pr-10 focus:ring-2 focus:ring-yellow-400 outline-none dark:bg-gray-700 dark:text-white"
+                className="w-full p-3 border rounded-lg pr-10 focus:ring-2 focus:ring-blue-400 outline-none
+                bg-gray-50 dark:bg-gray-800 dark:text-white dark:border-gray-700"
               />
               <span
                 className="absolute right-3 top-3.5 cursor-pointer text-gray-500 dark:text-gray-300"
-                onClick={() =>
-                  setShowConfirmPassword(!showConfirmPassword)
-                }
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
               >
                 {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
               </span>
@@ -221,7 +222,7 @@ export const ForgotPassword = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-yellow-400 hover:bg-yellow-500 text-white font-semibold py-3 px-4 rounded-xl transition flex justify-center items-center"
+              className="w-full bg-black hover:bg-gray-800 text-white font-semibold py-3 px-4 rounded-lg transition flex justify-center items-center"
             >
               {loading && (
                 <svg
@@ -250,6 +251,18 @@ export const ForgotPassword = () => {
           </form>
         )}
       </div>
+
+      {/* Footer */}
+      <p className="text-center text-sm text-gray-600 dark:text-gray-300 mt-4">
+        Developed by{" "}
+        <a href="mailto:kajalkanwar0208@gmail.com" className="text-blue-600 hover:underline">
+          Kajal Kanwar
+        </a>{" "}
+        and{" "}
+        <a href="mailto:namanrajputnn001@gmail.com" className="text-blue-600 hover:underline">
+          Naman Chauhan
+        </a>
+      </p>
     </div>
   );
 };

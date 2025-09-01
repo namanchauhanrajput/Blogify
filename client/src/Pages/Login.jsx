@@ -34,10 +34,15 @@ export const Login = () => {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center min-h-screen bg-gradient-to-b from-gray-100 to-yellow-50 dark:from-gray-900 dark:to-gray-800">
+    <div
+      className="flex flex-col justify-center items-center min-h-screen bg-cover bg-center"
+      style={{
+        backgroundImage: `url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e')`, // beach bg same as register
+      }}
+    >
       <form
         onSubmit={handleSubmit}
-        className="w-[380px] bg-white dark:bg-gray-900 p-8 rounded-2xl shadow-lg"
+        className="w-[90%] max-w-md bg-white dark:bg-gray-900 p-8 rounded-2xl shadow-xl"
       >
         <h2 className="text-2xl font-bold mb-2 text-center text-gray-900 dark:text-white">
           Welcome Back
@@ -57,7 +62,7 @@ export const Login = () => {
           placeholder="Username"
           value={form.username}
           onChange={handleChange}
-          className="w-full p-3 mb-4 border rounded-full focus:ring-2 focus:ring-blue-400 outline-none 
+          className="w-full p-3 mb-4 border rounded-lg focus:ring-2 focus:ring-blue-400 outline-none 
           bg-gray-50 dark:bg-gray-800 dark:text-white dark:border-gray-700"
           required
         />
@@ -70,7 +75,7 @@ export const Login = () => {
             placeholder="Password"
             value={form.password}
             onChange={handleChange}
-            className="w-full p-3 border rounded-full focus:ring-2 focus:ring-blue-400 outline-none
+            className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-400 outline-none
             bg-gray-50 dark:bg-gray-800 dark:text-white dark:border-gray-700"
             required
           />
@@ -86,13 +91,13 @@ export const Login = () => {
         {/* Submit */}
         <button
           type="submit"
-          className="w-full bg-yellow-400 text-black font-semibold p-3 rounded-full hover:bg-yellow-500 transition disabled:opacity-70 dark:bg-yellow-500 dark:hover:bg-yellow-400 dark:text-black"
+          className="w-full bg-black text-white font-semibold p-3 rounded-lg hover:bg-gray-800 transition disabled:opacity-70"
           disabled={loading}
         >
           {loading ? (
             <span className="flex items-center justify-center gap-2">
               <svg
-                className="animate-spin h-5 w-5 text-black dark:text-white"
+                className="animate-spin h-5 w-5 text-white"
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
@@ -125,13 +130,15 @@ export const Login = () => {
             Sign Up
           </Link>
         </p>
-        <p className="text-center text-sm text-blue-600 dark:text-blue-400 hover:underline mt-2">
-          <Link to="/forgot-password">Forgot Password?</Link>
+        <p className="text-center text-sm mt-2">
+          <Link to="/forgot-password" className="text-blue-600 dark:text-blue-400 hover:underline">
+            Forgot Password?
+          </Link>
         </p>
       </form>
 
       {/* Footer */}
-      <p className="text-center text-sm text-gray-600 dark:text-gray-400 mt-4">
+      <p className="text-center text-sm text-gray-600 dark:text-gray-300 mt-4">
         Developed by{" "}
         <a href="mailto:kajalkanwar0208@gmail.com" className="text-blue-600 hover:underline">
           Kajal Kanwar
