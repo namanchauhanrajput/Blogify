@@ -1,5 +1,5 @@
 // src/App.jsx
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import { Register } from "./Pages/Register";
 import { Login } from "./Pages/Login";
@@ -32,48 +32,59 @@ const PublicRoute = ({ element }) => {
   return token ? <Navigate to="/" replace /> : element;
 };
 
+const AppContent = () => {
+  const location = useLocation();
+  const hideNavbarRoutes = ["/register", "/login", "/forgot-password"];
+
+  return (
+    <>
+      {!hideNavbarRoutes.includes(location.pathname) && <Navbar />}
+      <div className="">
+        <Routes>
+          {/* Public Routes */}
+          <Route path="/register" element={<PublicRoute element={<Register />} />} />
+          <Route path="/login" element={<PublicRoute element={<Login />} />} />
+          <Route path="/forgot-password" element={<PublicRoute element={<ForgotPassword />} />} />
+          <Route path="/notifications" element={<ProtectedRoute element={<Notifications />} />} />
+
+          {/* Protected Routes */}
+          <Route path="/" element={<ProtectedRoute element={<Home />} />} />
+          <Route path="/create-blog" element={<ProtectedRoute element={<CreateBlog />} />} />
+          <Route path="/my-profile" element={<ProtectedRoute element={<MyProfile />} />} />
+          <Route path="/profile/:userId" element={<ProtectedRoute element={<UserProfile />} />} />
+          <Route path="/edit-blog/:id" element={<ProtectedRoute element={<EditBlog />} />} />
+          <Route path="/blog/:id" element={<ProtectedRoute element={<BlogDetail />} />} />
+          <Route path="/comments/:id" element={<ProtectedRoute element={<Comment />} />} />
+
+          {/* Admin nested routes */}
+          <Route
+            path="/admin/*"
+            element={
+              <AdminRoute>
+                <AdminLayout />
+              </AdminRoute>
+            }
+          >
+            {/* note: these child routes are relative to /admin */}
+            <Route index element={<Navigate to="users" replace />} />
+            <Route path="users" element={<UsersPage />} />
+            <Route path="blogs" element={<BlogsPage />} />
+          </Route>
+
+          {/* Catch-all */}
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </div>
+    </>
+  );
+};
+
 const App = () => {
   return (
     <ThemeProvider>
       <AuthProvider>
         <BrowserRouter>
-          <Navbar />
-          <div className="">
-            <Routes>
-              {/* Public Routes */}
-              <Route path="/register" element={<PublicRoute element={<Register />} />} />
-              <Route path="/login" element={<PublicRoute element={<Login />} />} />
-              <Route path="/forgot-password" element={<PublicRoute element={<ForgotPassword />} />} />
-              <Route path="/notifications" element={<ProtectedRoute element={<Notifications />} />} />
-
-              {/* Protected Routes */}
-              <Route path="/" element={<ProtectedRoute element={<Home />} />} />
-              <Route path="/create-blog" element={<ProtectedRoute element={<CreateBlog />} />} />
-              <Route path="/my-profile" element={<ProtectedRoute element={<MyProfile />} />} />
-              <Route path="/profile/:userId" element={<ProtectedRoute element={<UserProfile />} />} />
-              <Route path="/edit-blog/:id" element={<ProtectedRoute element={<EditBlog />} />} />
-              <Route path="/blog/:id" element={<ProtectedRoute element={<BlogDetail />} />} />
-              <Route path="/comments/:id" element={<ProtectedRoute element={<Comment />} />} />
-
-              {/* Admin nested routes */}
-              <Route
-                path="/admin/*"
-                element={
-                  <AdminRoute>
-                    <AdminLayout />
-                  </AdminRoute>
-                }
-              >
-                {/* note: these child routes are relative to /admin */}
-                <Route index element={<Navigate to="users" replace />} />
-                <Route path="users" element={<UsersPage />} />
-                <Route path="blogs" element={<BlogsPage />} />
-              </Route>
-
-              {/* Catch-all */}
-              <Route path="*" element={<Navigate to="/" replace />} />
-            </Routes>
-          </div>
+          <AppContent />
         </BrowserRouter>
       </AuthProvider>
     </ThemeProvider>

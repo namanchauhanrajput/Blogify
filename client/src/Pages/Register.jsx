@@ -7,7 +7,6 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 export const Register = () => {
   const navigate = useNavigate();
   const { storeTokenInLS } = useAuth();
-
   const [form, setForm] = useState({
     username: "",
     name: "",
@@ -17,7 +16,6 @@ export const Register = () => {
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-
   const [showPassword, setShowPassword] = useState(false);
 
   const handleChange = (e) =>
@@ -54,26 +52,29 @@ export const Register = () => {
   };
 
   return (
-    <div className="min-h-screen w-full overflow-x-hidden flex flex-col justify-between bg-gradient-to-b from-gray-100 via-white to-yellow-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
-      {/* Registration Card */}
-      <div className="flex flex-1 items-center justify-center px-0">
-        <div className="w-full max-w-sm bg-white dark:bg-gray-800 shadow-lg rounded-2xl p-6">
-          {/* Heading */}
-          <h2 className="text-2xl font-semibold text-center text-gray-800 dark:text-gray-100 mb-2">
-            Create an account
+    <div
+      className="h-screen flex flex-col justify-between bg-cover bg-center"
+      style={{
+        backgroundImage:
+          "url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e')",
+      }}
+    >
+      {/* Main Content */}
+      <div className="flex flex-1 items-center justify-center px-4 py-8 bg-black/40">
+        <div className="w-full max-w-md bg-white rounded-3xl shadow-2xl overflow-hidden p-10">
+          <h2 className="text-3xl font-bold text-gray-800 mb-2">
+            Journey Begins
           </h2>
-          <p className="text-center text-gray-500 dark:text-gray-400 mb-6 text-sm">
-            Sign up to start your journey
-          </p>
+          <p className="text-gray-500 mb-6">Sign up to explore more</p>
 
           {/* Error */}
           {error && (
-            <div className="mb-4 text-sm text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-900 border border-red-300 dark:border-red-600 p-2 rounded">
+            <div className="mb-4 text-sm text-red-600 bg-red-100 border border-red-300 p-2 rounded">
               {error}
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-3">
+          <form onSubmit={handleSubmit} className="space-y-4">
             {/* Username */}
             <input
               type="text"
@@ -81,10 +82,9 @@ export const Register = () => {
               placeholder="Username"
               value={form.username}
               onChange={handleChange}
-              className="w-full p-3 border rounded-full bg-gray-50 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-yellow-400 focus:outline-none"
+              className="w-full p-3 border rounded-lg bg-gray-50 focus:ring-2 focus:ring-[#0C4A6E] focus:outline-none"
               required
             />
-
             {/* Full Name */}
             <input
               type="text"
@@ -92,10 +92,9 @@ export const Register = () => {
               placeholder="Full Name"
               value={form.name}
               onChange={handleChange}
-              className="w-full p-3 border rounded-full bg-gray-50 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-yellow-400 focus:outline-none"
+              className="w-full p-3 border rounded-lg bg-gray-50 focus:ring-2 focus:ring-[#0C4A6E] focus:outline-none"
               required
             />
-
             {/* Email */}
             <input
               type="email"
@@ -103,10 +102,9 @@ export const Register = () => {
               placeholder="Email"
               value={form.email}
               onChange={handleChange}
-              className="w-full p-3 border rounded-full bg-gray-50 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-yellow-400 focus:outline-none"
+              className="w-full p-3 border rounded-lg bg-gray-50 focus:ring-2 focus:ring-[#0C4A6E] focus:outline-none"
               required
             />
-
             {/* Phone */}
             <input
               type="text"
@@ -114,12 +112,11 @@ export const Register = () => {
               placeholder="Phone"
               value={form.phone}
               onChange={handleChange}
-              className="w-full p-3 border rounded-full bg-gray-50 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-yellow-400 focus:outline-none"
+              className="w-full p-3 border rounded-lg bg-gray-50 focus:ring-2 focus:ring-[#0C4A6E] focus:outline-none"
               pattern="\d{10}"
               title="Phone number must be exactly 10 digits"
               required
             />
-
             {/* Password */}
             <div className="relative">
               <input
@@ -128,27 +125,26 @@ export const Register = () => {
                 placeholder="Password"
                 value={form.password}
                 onChange={handleChange}
-                className="w-full p-3 border rounded-full bg-gray-50 dark:bg-gray-700 dark:text-white pr-10 focus:ring-2 focus:ring-yellow-400 focus:outline-none"
+                className="w-full p-3 border rounded-lg bg-gray-50 pr-10 focus:ring-2 focus:ring-[#0C4A6E] focus:outline-none"
                 required
               />
               <span
-                className="absolute right-4 top-3.5 cursor-pointer text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-100"
+                className="absolute right-4 top-3.5 cursor-pointer text-gray-500 hover:text-gray-700"
                 onClick={() => setShowPassword(!showPassword)}
               >
                 {showPassword ? <FaEyeSlash size={18} /> : <FaEye size={18} />}
               </span>
             </div>
-
             {/* Submit */}
             <button
               type="submit"
-              className="w-full bg-yellow-400 text-gray-800 dark:text-gray-900 p-3 rounded-full font-semibold hover:bg-yellow-500 transition-all duration-300 flex justify-center items-center"
+              className="w-full bg-black text-white p-3 rounded-lg font-semibold hover:bg-gray-900 transition-all duration-300 flex justify-center items-center"
               disabled={loading}
             >
               {loading ? (
                 <span className="flex items-center gap-2">
                   <svg
-                    className="animate-spin h-5 w-5 text-gray-800 dark:text-gray-900"
+                    className="animate-spin h-5 w-5 text-white"
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
                     viewBox="0 0 24 24"
@@ -176,11 +172,11 @@ export const Register = () => {
           </form>
 
           {/* Footer */}
-          <p className="text-center text-sm text-gray-600 dark:text-gray-400 mt-6">
+          <p className="text-center text-sm text-gray-600 mt-6">
             Already have an account?{" "}
             <Link
               to="/login"
-              className="text-yellow-600 dark:text-yellow-400 font-medium hover:underline"
+              className="text-[#0C4A6E] font-medium hover:underline"
             >
               Login
             </Link>
@@ -188,23 +184,23 @@ export const Register = () => {
         </div>
       </div>
 
-      {/* Developed By (Bottom of Screen, Always Visible but with padding) */}
-      <p className="text-center text-xs text-gray-500 dark:text-gray-400 mt-6 mb-20">
+      {/* Developed By Section */}
+      <div className="text-center text-xs text-gray-100 py-4 bg-black/40">
         Developed by{" "}
         <a
           href="mailto:kajalkanwar0208@gmail.com"
-          className="text-yellow-600 dark:text-yellow-400 hover:underline"
+          className="text-[#0C4A6E] font-medium hover:underline"
         >
           Kajal Kanwar
         </a>{" "}
         and{" "}
         <a
           href="mailto:namanrajputnn001@gmail.com"
-          className="text-yellow-600 dark:text-yellow-400 hover:underline"
+          className="text-[#0C4A6E] font-medium hover:underline"
         >
           Naman Chauhan
         </a>
-      </p>
+      </div>
     </div>
   );
 };
