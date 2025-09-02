@@ -12,11 +12,13 @@ import {
   Sun,
   Shield,
 } from "lucide-react";
+import { useEffect, useState } from "react";
 
 export default function Navbar() {
-  const { isLoggedIn, logoutUser, user } = useAuth(); // user se isAdmin mil raha hai
+  const { isLoggedIn, logoutUser, user } = useAuth();
   const { theme, setTheme } = useTheme();
   const navigate = useNavigate();
+  const [isScrolled, setIsScrolled] = useState(false);
 
   const handleLogout = () => {
     logoutUser();
@@ -34,18 +36,120 @@ export default function Navbar() {
   const inactiveClasses =
     "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800";
 
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 10);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
     <>
-      {/* Desktop Sidebar */}
-      <aside className="hidden lg:flex fixed top-0 left-0 h-screen w-60 bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 flex-col">
-        {/* Logo + Theme Toggle */}
-        <div className="p-4 border-b border-gray-200 dark:border-gray-800 flex justify-between items-center">
+      {/* ✅ Top Navbar */}
+      <nav
+        className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
+          isScrolled
+            ? "backdrop-blur-md bg-white/70 dark:bg-gray-900/70 shadow"
+            : "bg-white dark:bg-gray-900"
+        } border-b border-gray-200 dark:border-gray-800`}
+      >
+        <div className="max-w-7xl mx-auto px-4 flex items-center justify-between h-16">
+          {/* Logo */}
           <NavLink
             to="/"
             className="text-xl font-bold text-black dark:text-white"
           >
             Blogify
           </NavLink>
+
+          {/* Links */}
+          <div className="hidden md:flex items-center gap-4">
+            <NavLink
+              to="/"
+              className={({ isActive }) =>
+                `${baseLinkClasses} ${
+                  isActive ? activeClasses : inactiveClasses
+                }`
+              }
+            >
+              <Home size={18} /> Home
+            </NavLink>
+
+            {isLoggedIn && (
+              <NavLink
+                to="/create-blog"
+                className={({ isActive }) =>
+                  `${baseLinkClasses} ${
+                    isActive ? activeClasses : inactiveClasses
+                  }`
+                }
+              >
+                <PlusSquare size={18} /> New Post
+              </NavLink>
+            )}
+
+            {isLoggedIn && (
+              <NavLink
+                to="/my-profile"
+                className={({ isActive }) =>
+                  `${baseLinkClasses} ${
+                    isActive ? activeClasses : inactiveClasses
+                  }`
+                }
+              >
+                <User size={18} /> Profile
+              </NavLink>
+            )}
+
+            {/* ✅ Admin */}
+            {isLoggedIn && user?.isAdmin && (
+              <NavLink
+                to="/admin"
+                className={({ isActive }) =>
+                  `${baseLinkClasses} ${
+                    isActive ? activeClasses : inactiveClasses
+                  }`
+                }
+              >
+                <Shield size={18} /> Admin Panel
+              </NavLink>
+            )}
+
+            {!isLoggedIn ? (
+              <>
+                <NavLink
+                  to="/login"
+                  className={({ isActive }) =>
+                    `${baseLinkClasses} ${
+                      isActive ? activeClasses : inactiveClasses
+                    }`
+                  }
+                >
+                  <LogIn size={18} /> Login
+                </NavLink>
+                <NavLink
+                  to="/register"
+                  className={({ isActive }) =>
+                    `${baseLinkClasses} ${
+                      isActive ? activeClasses : inactiveClasses
+                    }`
+                  }
+                >
+                  <UserPlus size={18} /> Register
+                </NavLink>
+              </>
+            ) : (
+              <button
+                onClick={handleLogout}
+                className={`${baseLinkClasses} text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800`}
+              >
+                <LogOut size={18} /> Logout
+              </button>
+            )}
+          </div>
+
+          {/* Theme Toggle */}
           <button
             onClick={toggleTheme}
             className="p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700"
@@ -53,109 +157,10 @@ export default function Navbar() {
             {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
           </button>
         </div>
+      </nav>
 
-        {/* Navigation */}
-        <nav className="flex flex-col gap-2 p-4">
-          <NavLink
-            to="/"
-            className={({ isActive }) =>
-              `${baseLinkClasses} ${
-                isActive ? activeClasses : inactiveClasses
-              }`
-            }
-          >
-            <Home size={18} /> Home
-          </NavLink>
-
-          {isLoggedIn && (
-            <NavLink
-              to="/create-blog"
-              className={({ isActive }) =>
-                `${baseLinkClasses} ${
-                  isActive ? activeClasses : inactiveClasses
-                }`
-              }
-            >
-              <PlusSquare size={18} /> New Post
-            </NavLink>
-          )}
-
-          {isLoggedIn && (
-            <NavLink
-              to="/notifications"
-              className={({ isActive }) =>
-                `${baseLinkClasses} ${
-                  isActive ? activeClasses : inactiveClasses
-                }`
-              }
-            >
-              <User size={18} /> Notification
-            </NavLink>
-          )}
-
-          {isLoggedIn && (
-            <NavLink
-              to="/my-profile"
-              className={({ isActive }) =>
-                `${baseLinkClasses} ${
-                  isActive ? activeClasses : inactiveClasses
-                }`
-              }
-            >
-              <User size={18} /> Profile
-            </NavLink>
-          )}
-
-          {/* ✅ Show only if user.isAdmin */}
-          {isLoggedIn && user?.isAdmin && (
-            <NavLink
-              to="/admin"
-              className={({ isActive }) =>
-                `${baseLinkClasses} ${
-                  isActive ? activeClasses : inactiveClasses
-                }`
-              }
-            >
-              <Shield size={18} /> Admin Panel
-            </NavLink>
-          )}
-
-          {!isLoggedIn ? (
-            <>
-              <NavLink
-                to="/login"
-                className={({ isActive }) =>
-                  `${baseLinkClasses} ${
-                    isActive ? activeClasses : inactiveClasses
-                  }`
-                }
-              >
-                <LogIn size={18} /> Login
-              </NavLink>
-              <NavLink
-                to="/register"
-                className={({ isActive }) =>
-                  `${baseLinkClasses} ${
-                    isActive ? activeClasses : inactiveClasses
-                  }`
-                }
-              >
-                <UserPlus size={18} /> Register
-              </NavLink>
-            </>
-          ) : (
-            <button
-              onClick={handleLogout}
-              className={`${baseLinkClasses} text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800`}
-            >
-              <LogOut size={18} /> Logout
-            </button>
-          )}
-        </nav>
-      </aside>
-
-      {/* Mobile Bottom Navigation */}
-      <nav className="lg:hidden fixed bottom-0 left-0 w-full bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 flex justify-around items-center h-16 z-50">
+      {/* ✅ Mobile Bottom Navbar remains same */}
+      <nav className="md:hidden fixed bottom-0 left-0 w-full bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 flex justify-around items-center h-16 z-50">
         <NavLink
           to="/"
           className={({ isActive }) =>
@@ -199,7 +204,6 @@ export default function Navbar() {
           </NavLink>
         )}
 
-        {/* ✅ Admin link mobile */}
         {isLoggedIn && user?.isAdmin && (
           <NavLink
             to="/admin"
@@ -243,10 +247,7 @@ export default function Navbar() {
             </NavLink>
           </>
         ) : (
-          <button
-            onClick={handleLogout}
-            className="flex flex-col items-center text-xs text-gray-600 dark:text-gray-300"
-          >
+          <button className="flex flex-col items-center text-xs text-gray-600 dark:text-gray-300">
             <LogOut size={18} /> Logout
           </button>
         )}
