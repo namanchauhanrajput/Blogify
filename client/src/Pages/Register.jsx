@@ -60,12 +60,12 @@ export const Register = () => {
       }}
     >
       {/* Main Content */}
-      <div className="flex flex-1 items-center justify-center px-4 py-8 bg-black/40">
+      <div className="flex flex-1 items-center justify-center px-4 py-8 bg-black/20">
         <div className="w-full max-w-md bg-white rounded-3xl shadow-2xl overflow-hidden p-10">
           <h2 className="text-3xl font-bold text-gray-800 mb-2">
-            Journey Begins
+            Create an account
           </h2>
-          <p className="text-gray-500 mb-6">Sign up to explore more</p>
+          <p className="text-gray-500 mb-6">Sign up to start your journey</p>
 
           {/* Error */}
           {error && (
@@ -82,7 +82,7 @@ export const Register = () => {
               placeholder="Username"
               value={form.username}
               onChange={handleChange}
-              className="w-full p-3 border rounded-lg bg-gray-50 focus:ring-2 focus:ring-[#0C4A6E] focus:outline-none"
+              className="w-full p-3 border rounded-lg bg-gray-50 text-black focus:ring-2 focus:ring-[#0C4A6E] focus:outline-none"
               required
             />
             {/* Full Name */}
@@ -92,7 +92,7 @@ export const Register = () => {
               placeholder="Full Name"
               value={form.name}
               onChange={handleChange}
-              className="w-full p-3 border rounded-lg bg-gray-50 focus:ring-2 focus:ring-[#0C4A6E] focus:outline-none"
+              className="w-full p-3 border rounded-lg bg-gray-50 text-black focus:ring-2 focus:ring-[#0C4A6E] focus:outline-none"
               required
             />
             {/* Email */}
@@ -102,7 +102,7 @@ export const Register = () => {
               placeholder="Email"
               value={form.email}
               onChange={handleChange}
-              className="w-full p-3 border rounded-lg bg-gray-50 focus:ring-2 focus:ring-[#0C4A6E] focus:outline-none"
+              className="w-full p-3 border rounded-lg bg-gray-50 text-black focus:ring-2 focus:ring-[#0C4A6E] focus:outline-none"
               required
             />
             {/* Phone */}
@@ -112,7 +112,7 @@ export const Register = () => {
               placeholder="Phone"
               value={form.phone}
               onChange={handleChange}
-              className="w-full p-3 border rounded-lg bg-gray-50 focus:ring-2 focus:ring-[#0C4A6E] focus:outline-none"
+              className="w-full p-3 border rounded-lg bg-gray-50 text-black focus:ring-2 focus:ring-[#0C4A6E] focus:outline-none"
               pattern="\d{10}"
               title="Phone number must be exactly 10 digits"
               required
@@ -125,7 +125,7 @@ export const Register = () => {
                 placeholder="Password"
                 value={form.password}
                 onChange={handleChange}
-                className="w-full p-3 border rounded-lg bg-gray-50 pr-10 focus:ring-2 focus:ring-[#0C4A6E] focus:outline-none"
+                className="w-full p-3 border rounded-lg bg-gray-50 text-black pr-10 focus:ring-2 focus:ring-[#0C4A6E] focus:outline-none"
                 required
               />
               <span
