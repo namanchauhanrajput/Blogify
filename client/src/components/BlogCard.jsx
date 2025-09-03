@@ -121,12 +121,14 @@ export default function BlogCard({ blog, onDelete }) {
       onClick={handleCardClick}
       className="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden border border-gray-200 dark:border-gray-700 hover:shadow-lg transition cursor-pointer flex flex-col"
     >
-      {/* Blog Image */}
+      {/* Blog Image with Hover Animation */}
       {blogImageUrl && (
-        <img
+        <motion.img
           src={blogImageUrl}
           alt={blog?.title || "Blog image"}
           className="w-full h-60 object-cover"
+          whileHover={{ scale: 1.05 }}
+          transition={{ duration: 0.4, ease: "easeInOut" }}
         />
       )}
 
