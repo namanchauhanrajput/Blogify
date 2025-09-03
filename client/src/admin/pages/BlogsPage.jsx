@@ -8,15 +8,15 @@ import ConfirmDialog from "../components/ConfirmDialog";
 export default function BlogsPage() {
   const { token } = useAuth();
   const api = useMemo(() => adminAxios(token), [token]);
+
   const [loading, setLoading] = useState(false);
   const [blogs, setBlogs] = useState([]);
   const [query, setQuery] = useState("");
-
   const [editOpen, setEditOpen] = useState(false);
   const [selected, setSelected] = useState(null);
-  const [confirm, setConfirm] = useState({ open: false, id: null });
+  const [updateLoading, setUpdateLoading] = useState(false);
+  const [confirm, setConfirm] = useState({ open: false, id: null, loading: false });
 
-  // ✅ useCallback to avoid ESLint dependency warning
   const fetchBlogs = useCallback(async () => {
     setLoading(true);
     try {
@@ -30,7 +30,6 @@ export default function BlogsPage() {
     }
   }, [api]);
 
-  // ✅ safe useEffect
   useEffect(() => {
     fetchBlogs();
   }, [fetchBlogs]);
@@ -44,7 +43,9 @@ export default function BlogsPage() {
     );
   });
 
+  // Update blog
   async function handleUpdate(payload) {
+    setUpdateLoading(true);
     try {
       const { data } = await api.put(endpoints.blogById(selected._id), payload);
       setBlogs((prev) => prev.map((b) => (b._id === data._id ? data : b)));
@@ -53,17 +54,22 @@ export default function BlogsPage() {
     } catch (e) {
       console.error(e);
       alert("Error updating blog");
+    } finally {
+      setUpdateLoading(false);
     }
   }
 
+  // Delete blog with loader
   async function handleDelete(id) {
     try {
+      setConfirm((prev) => ({ ...prev, loading: true }));
       await api.delete(endpoints.blogById(id));
       setBlogs((prev) => prev.filter((b) => b._id !== id));
-      setConfirm({ open: false, id: null });
+      setConfirm({ open: false, id: null, loading: false });
     } catch (e) {
       console.error(e);
       alert("Error deleting blog");
+      setConfirm((prev) => ({ ...prev, loading: false }));
     }
   }
 
@@ -71,10 +77,7 @@ export default function BlogsPage() {
     <section className="p-4">
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-lg font-bold">Blogs</h1>
-        <button
-          onClick={fetchBlogs}
-          className="p-2 rounded-lg border hover:bg-gray-50"
-        >
+        <button onClick={fetchBlogs} className="p-2 rounded-lg border hover:bg-gray-50">
           <RefreshCcw className="w-4 h-4" />
         </button>
       </div>
@@ -132,9 +135,7 @@ export default function BlogsPage() {
                         <Pencil className="w-4 h-4" />
                       </IconBtn>
                       <IconBtn
-                        onClick={() =>
-                          setConfirm({ open: true, id: b._id })
-                        }
+                        onClick={() => setConfirm({ open: true, id: b._id, loading: false })}
                         title="Delete"
                         danger
                       >
@@ -156,13 +157,15 @@ export default function BlogsPage() {
         }}
         onSubmit={handleUpdate}
         initial={selected}
+        loading={updateLoading}
       />
 
       <ConfirmDialog
         open={confirm.open}
         title="Delete blog?"
         description="This action cannot be undone."
-        onCancel={() => setConfirm({ open: false, id: null })}
+        loading={confirm.loading}
+        onCancel={() => setConfirm({ open: false, id: null, loading: false })}
         onConfirm={() => handleDelete(confirm.id)}
       />
     </section>
@@ -176,18 +179,18 @@ function Th({ children }) {
     </th>
   );
 }
+
 function Td({ children }) {
   return <td className="px-3 py-3 text-sm">{children}</td>;
 }
+
 function IconBtn({ children, onClick, title, danger }) {
   return (
     <button
       onClick={onClick}
       title={title}
       className={`p-2 rounded-lg border ${
-        danger
-          ? "border-red-200 text-red-600 hover:bg-red-50"
-          : "hover:bg-gray-50"
+        danger ? "border-red-200 text-red-600 hover:bg-red-50" : "hover:bg-gray-50"
       }`}
     >
       {children}
