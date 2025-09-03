@@ -125,8 +125,19 @@ export const Home = () => {
         )}
       </div>
 
+      {/* ✅ Hero Section - Discover Amazing Stories */}
+      <section className="pt-24 pb-16 bg-gradient-to-r from-purple-600 to-blue-500 text-white text-center">
+        <h1 className="text-4xl sm:text-5xl font-bold mb-4">
+          Discover Amazing Stories
+        </h1>
+        <p className="text-lg sm:text-xl max-w-2xl mx-auto">
+          Join our community of writers and readers. Share your thoughts, learn
+          from others, and explore topics that matter to you.
+        </p>
+      </section>
+
       {/* Blog List */}
-      <div className="pt-20 px-2 sm:px-6 lg:px-8 pb-20 w-full">
+      <div className="px-2 sm:px-6 lg:px-8 pb-20 w-full">
         {loading ? (
           <div className="flex flex-col items-center justify-center min-h-screen">
             <svg
