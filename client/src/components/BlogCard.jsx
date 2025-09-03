@@ -1,6 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
 import { Heart, MessageSquare, Edit, Trash2, MoreVertical } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import { endpoints, authHeaders } from "../api";
 import { useAuth } from "../context/AuthContext";
 
@@ -125,7 +126,7 @@ export default function BlogCard({ blog, onDelete }) {
         <img
           src={blogImageUrl}
           alt={blog?.title || "Blog image"}
-          className="w-full h-48 object-cover"
+          className="w-full h-60 object-cover"
         />
       )}
 
@@ -209,25 +210,33 @@ export default function BlogCard({ blog, onDelete }) {
                 >
                   <MoreVertical size={16} />
                 </button>
-                {menuOpen && (
-                  <div className="absolute right-0 mt-2 w-32 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg z-20">
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        navigate(`/edit-blog/${blog._id}`);
-                      }}
-                      className="flex items-center gap-2 px-3 py-2 w-full text-left text-sm hover:bg-gray-100 dark:hover:bg-gray-800"
+                <AnimatePresence>
+                  {menuOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 10 }}
+                      transition={{ duration: 0.2 }}
+                      className="absolute right-0 bottom-full mb-2 w-32 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg z-20"
                     >
-                      <Edit size={14} /> Edit
-                    </button>
-                    <button
-                      onClick={handleDelete}
-                      className="flex items-center gap-2 px-3 py-2 w-full text-left text-sm hover:bg-gray-100 dark:hover:bg-gray-800 text-red-500"
-                    >
-                      <Trash2 size={14} /> Delete
-                    </button>
-                  </div>
-                )}
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          navigate(`/edit-blog/${blog._id}`);
+                        }}
+                        className="flex items-center gap-2 px-3 py-2 w-full text-left text-sm hover:bg-gray-100 dark:hover:bg-gray-800"
+                      >
+                        <Edit size={14} /> Edit
+                      </button>
+                      <button
+                        onClick={handleDelete}
+                        className="flex items-center gap-2 px-3 py-2 w-full text-left text-sm hover:bg-gray-100 dark:hover:bg-gray-800 text-red-500"
+                      >
+                        <Trash2 size={14} /> Delete
+                      </button>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
             )}
           </div>
