@@ -115,140 +115,121 @@ export default function BlogCard({ blog, onDelete }) {
     navigate(`/blog/${blog._id}`);
   };
 
-  // ✅ Get first comment (if any)
-  const firstComment =
-    blog?.comments && blog.comments.length > 0
-      ? blog.comments[0]?.text || ""
-      : "";
-
   return (
     <article
-      className="w-full h-full relative cursor-pointer bg-gray-200"
       onClick={handleCardClick}
+      className="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden border border-gray-200 dark:border-gray-700 hover:shadow-lg transition cursor-pointer flex flex-col"
     >
-      {/* ✅ Image with background fill */}
+      {/* Blog Image */}
       {blogImageUrl && (
-        <div className="w-full h-full flex items-center justify-center bg-gray-500">
-          <img
-            src={blogImageUrl}
-            alt={blog?.title || "Blog image"}
-            className="w-full h-full object-contain"
-          />
-        </div>
+        <img
+          src={blogImageUrl}
+          alt={blog?.title || "Blog image"}
+          className="w-full h-48 object-cover"
+        />
       )}
 
-      <div className="absolute top-0 left-0 w-full h-full flex flex-col justify-between p-4 text-white">
-        {/* Top bar with author and menu */}
-        <div className="flex items-center gap-3 text-xs sm:text-sm">
-          {authorId ? (
-            <Link
-              to={`/profile/${authorId}`}
-              onClick={(e) => e.stopPropagation()}
-              className="flex-shrink-0"
-            >
-              {profileImageUrl && !imgError ? (
-                <img
-                  src={profileImageUrl}
-                  alt={authorName}
-                  className="w-9 h-9 rounded-full object-cover border"
-                  onError={() => setImgError(true)}
-                />
-              ) : (
-                <div className="w-9 h-9 rounded-full border flex items-center justify-center font-semibold bg-gray-200 text-gray-700">
-                  {authorName?.charAt(0)?.toUpperCase() || "U"}
-                </div>
-              )}
-            </Link>
-          ) : (
-            <div className="w-9 h-9 rounded-full border flex items-center justify-center font-semibold bg-gray-200 text-gray-700">
-              {authorName?.charAt(0)?.toUpperCase() || "U"}
-            </div>
-          )}
+      {/* Content */}
+      <div className="flex flex-col flex-1 p-4">
+        {/* Category + Date */}
+        <div className="flex items-center text-xs text-gray-500 dark:text-gray-400 mb-2">
+          <span className="px-2 py-0.5 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200">
+            {blog?.category || "General"}
+          </span>
+          <span className="ml-2">{formatTimeAgo(createdAt)}</span>
+        </div>
 
-          {authorId ? (
+        {/* Title */}
+        <h3 className="text-lg font-semibold mb-1 line-clamp-2 text-gray-900 dark:text-gray-100">
+          {blog?.title || "Untitled"}
+        </h3>
+
+        {/* Description */}
+        <p className="text-sm text-gray-700 dark:text-gray-300 mb-4 line-clamp-3">
+          {trimmedContent}
+        </p>
+
+        {/* Footer with Author + Actions */}
+        <div className="flex items-center justify-between mt-auto">
+          {/* Author */}
+          <div className="flex items-center gap-2">
+            {profileImageUrl && !imgError ? (
+              <img
+                src={profileImageUrl}
+                alt={authorName}
+                className="w-8 h-8 rounded-full object-cover border"
+                onError={() => setImgError(true)}
+              />
+            ) : (
+              <div className="w-8 h-8 rounded-full border flex items-center justify-center font-semibold bg-gray-200 text-gray-700">
+                {authorName?.charAt(0)?.toUpperCase() || "U"}
+              </div>
+            )}
             <Link
               to={`/profile/${authorId}`}
               onClick={(e) => e.stopPropagation()}
-              className="font-medium text-gray-100 hover:no-underline"
+              className="text-sm font-medium text-gray-800 dark:text-gray-200 hover:underline"
             >
               {authorName}
             </Link>
-          ) : (
-            <span>{authorName}</span>
-          )}
+          </div>
 
-          {user?._id === authorId && (
-            <div className="ml-auto relative" ref={menuRef}>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setMenuOpen((prev) => !prev);
-                }}
-                className="p-1 rounded-full hover:bg-white/10"
-              >
-                <MoreVertical size={18} />
-              </button>
-              {menuOpen && (
-                <div className="absolute right-0 mt-2 w-32 bg-gray-900 border border-gray-700 rounded-lg shadow-lg z-20">
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      navigate(`/edit-blog/${blog._id}`);
-                    }}
-                    className="flex items-center gap-2 px-3 py-2 w-full text-left text-sm hover:bg-gray-800"
-                  >
-                    <Edit size={16} /> Edit
-                  </button>
-                  <button
-                    onClick={handleDelete}
-                    className="flex items-center gap-2 px-3 py-2 w-full text-left text-sm hover:bg-gray-800 text-red-500"
-                  >
-                    <Trash2 size={16} /> Delete
-                  </button>
-                </div>
-              )}
-            </div>
-          )}
-        </div>
-
-        {/* Bottom overlay */}
-        <div>
-          <h3 className="text-lg sm:text-xl font-semibold mb-1 line-clamp-2">
-            {blog?.title || "Untitled"}
-          </h3>
-          <p className="text-sm line-clamp-2">{trimmedContent}</p>
-
-          <div className="flex items-center mt-2">
+          {/* Actions */}
+          <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
             {/* Like button */}
             <button
               onClick={toggleLike}
               className={`flex items-center gap-1 ${
-                liked ? "text-rose-400" : "text-white"
+                liked ? "text-rose-500" : ""
               }`}
             >
-              <Heart size={18} fill={liked ? "currentColor" : "none"} />
+              <Heart size={16} fill={liked ? "currentColor" : "none"} />
               {likesCount}
             </button>
 
-            {/* Comment button + preview */}
+            {/* Comment button */}
             <Link
               to={`/comments/${blog._id}`}
               onClick={(e) => e.stopPropagation()}
-              className="flex items-center gap-1 hover:text-blue-400 ml-4 max-w-[60%] truncate"
+              className="flex items-center gap-1 hover:text-blue-500"
             >
-              <MessageSquare size={18} />
-              <span>{blog.comments?.length || 0}</span>
-              {firstComment && (
-                <span className="ml-2 text-xs text-gray-200 truncate">
-                  {firstComment}
-                </span>
-              )}
+              <MessageSquare size={16} />
+              {blog.comments?.length || 0}
             </Link>
 
-            {/* Date */}
-            <span className="ml-auto text-sm text-gray-300">
-              {formatTimeAgo(createdAt)}
-            </span>
+            {/* Author’s own menu (Edit/Delete) */}
+            {user?._id === authorId && (
+              <div className="relative" ref={menuRef}>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setMenuOpen((prev) => !prev);
+                  }}
+                  className="p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
+                >
+                  <MoreVertical size={16} />
+                </button>
+                {menuOpen && (
+                  <div className="absolute right-0 mt-2 w-32 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg z-20">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        navigate(`/edit-blog/${blog._id}`);
+                      }}
+                      className="flex items-center gap-2 px-3 py-2 w-full text-left text-sm hover:bg-gray-100 dark:hover:bg-gray-800"
+                    >
+                      <Edit size={14} /> Edit
+                    </button>
+                    <button
+                      onClick={handleDelete}
+                      className="flex items-center gap-2 px-3 py-2 w-full text-left text-sm hover:bg-gray-100 dark:hover:bg-gray-800 text-red-500"
+                    >
+                      <Trash2 size={14} /> Delete
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </div>
       </div>

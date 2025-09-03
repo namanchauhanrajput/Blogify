@@ -11,7 +11,6 @@ export const Home = () => {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false);
-
   const { theme, setTheme } = useTheme();
   const containerRef = useRef(null);
 
@@ -72,24 +71,16 @@ export const Home = () => {
     <div className="flex-1 min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 overflow-x-hidden">
       {/* Home Screen Top Navbar */}
       <div
-        className="fixed top-0 z-40 
-        w-full lg:w-[calc(100%-15rem)]  
-        bg-gray-50 dark:bg-gray-900 
-        border-b border-gray-200 dark:border-gray-700 
-        flex justify-between items-center px-4 py-3
-        lg:ml-60 lg:mr-0"
+        className="fixed top-0 z-40 w-full bg-gray-50 dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center px-4 py-3"
         ref={containerRef}
       >
         {/* Category Filter Button */}
         <button
           onClick={() => setOpen((v) => !v)}
           aria-expanded={open}
-          className="flex items-center gap-2 px-4 py-2 rounded-lg 
-            bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 
-            shadow-sm hover:shadow-md transition"
+          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 shadow-sm hover:shadow-md transition"
         >
-          <FaListUl />
-          {selectedCategory}
+          <FaListUl /> {selectedCategory}
         </button>
 
         {/* Right Side Actions (only visible on mobile & tablet) */}
@@ -113,13 +104,7 @@ export const Home = () => {
 
         {/* Dropdown */}
         {open && (
-          <div
-            className="absolute top-full mt-2 left-4
-              z-50 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700
-              rounded-lg shadow-lg
-              flex flex-col sm:flex-row sm:space-x-2 sm:space-y-0 space-y-1
-              p-2 animate-slide-down"
-          >
+          <div className="absolute top-full mt-2 left-4 z-50 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg flex flex-col sm:flex-row sm:space-x-2 sm:space-y-0 space-y-1 p-2 animate-slide-down">
             {categories.map((cat) => (
               <button
                 key={cat}
@@ -127,13 +112,11 @@ export const Home = () => {
                   setSelectedCategory(cat);
                   setOpen(false);
                 }}
-                className={`px-4 py-2 text-sm text-left sm:text-center 
-                  hover:bg-gray-100 dark:hover:bg-gray-700 transition
-                  ${
-                    selectedCategory === cat
-                      ? "bg-gray-100 dark:bg-gray-700 font-medium"
-                      : ""
-                  }`}
+                className={`px-4 py-2 text-sm text-left sm:text-center hover:bg-gray-100 dark:hover:bg-gray-700 transition ${
+                  selectedCategory === cat
+                    ? "bg-gray-100 dark:bg-gray-700 font-medium"
+                    : ""
+                }`}
               >
                 {cat}
               </button>
@@ -143,7 +126,7 @@ export const Home = () => {
       </div>
 
       {/* Blog List */}
-      <div className="pt-20 px-2 sm:px-6 lg:px-8 pb-20 lg:ml-60 lg:mr-0 lg:w-[calc(100%-15rem)]">
+      <div className="pt-20 px-2 sm:px-6 lg:px-8 pb-20 w-full">
         {loading ? (
           <div className="flex flex-col items-center justify-center min-h-screen">
             <svg
