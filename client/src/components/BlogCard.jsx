@@ -119,14 +119,15 @@ export default function BlogCard({ blog, onDelete }) {
   return (
     <article
       onClick={handleCardClick}
-      className="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden border border-gray-200 dark:border-gray-700 hover:shadow-lg transition cursor-pointer flex flex-col"
+      className="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden border border-gray-200 dark:border-gray-700 hover:shadow-lg transition cursor-pointer flex flex-col mx-0" 
+      // ⬅ removed side margins (no extra padding outside)
     >
       {/* Blog Image with Hover Animation */}
       {blogImageUrl && (
         <motion.img
           src={blogImageUrl}
           alt={blog?.title || "Blog image"}
-          className="w-full h-60 object-cover"
+          className="w-full h-80 object-cover" // ⬅ bigger image
           whileHover={{ scale: 1.05 }}
           transition={{ duration: 0.4, ease: "easeInOut" }}
         />
