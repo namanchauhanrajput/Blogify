@@ -4,6 +4,7 @@ import { FaListUl } from "react-icons/fa";
 import { Moon, Sun, Bell } from "lucide-react";
 import { useTheme } from "../context/ThemeContext";
 import { NavLink } from "react-router-dom";
+import { motion } from "framer-motion";
 
 export const Home = () => {
   const [blogs, setBlogs] = useState([]);
@@ -93,7 +94,7 @@ export const Home = () => {
             {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
           </button>
 
-          {/* Notifications Icon */}
+        {/* Notifications Icon */}
           <NavLink
             to="/notifications"
             className="p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700"
@@ -125,19 +126,37 @@ export const Home = () => {
         )}
       </div>
 
-      {/* ✅ Hero Section - Discover Amazing Stories */}
-      <section className="pt-24 pb-16 bg-gradient-to-r from-purple-600 to-blue-500 text-white text-center">
-        <h1 className="text-4xl sm:text-5xl font-bold mb-4">
+      {/* ✅ Hero Section - Smaller + Animated + Blogify Colors */}
+      <motion.section
+        initial={{ opacity: 0, y: 24 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.4 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+        className="pt-20 pb-10 bg-gradient-to-r from-pink-500 via-purple-600 to-indigo-600 text-white text-center shadow-md"
+      >
+        <motion.h1
+          initial={{ opacity: 0, y: 8 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.05, ease: "easeOut" }}
+          className="text-3xl sm:text-4xl font-bold mb-3"
+        >
           Discover Amazing Stories
-        </h1>
-        <p className="text-lg sm:text-xl max-w-2xl mx-auto">
-          Join our community of writers and readers. Share your thoughts, learn
-          from others, and explore topics that matter to you.
-        </p>
-      </section>
+        </motion.h1>
+        <motion.p
+          initial={{ opacity: 0, y: 8 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.15, ease: "easeOut" }}
+          className="text-base sm:text-lg max-w-xl mx-auto"
+        >
+          Your space to create, share, and inspire others. Share your thoughts,
+          learn from others, and explore topics that matter to you.
+        </motion.p>
+      </motion.section>
 
       {/* Blog List */}
-      <div className="px-2 sm:px-6 lg:px-8 pb-20 w-full">
+      <div className="px-2 sm:px-6 lg:px-8 pb-20 w-full mt-6 sm:mt-8">
         {loading ? (
           <div className="flex flex-col items-center justify-center min-h-screen">
             <svg
