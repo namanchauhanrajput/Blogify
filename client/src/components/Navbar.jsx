@@ -1,3 +1,4 @@
+// src/components/Navbar.jsx
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useTheme } from "../context/ThemeContext";
@@ -159,7 +160,7 @@ export default function Navbar() {
         </div>
       </nav>
 
-      {/* ✅ Mobile Bottom Navbar remains same */}
+      {/* ✅ Mobile Bottom Navbar */}
       <nav className="md:hidden fixed bottom-0 left-0 w-full bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 flex justify-around items-center h-16 z-50">
         <NavLink
           to="/"
@@ -247,7 +248,10 @@ export default function Navbar() {
             </NavLink>
           </>
         ) : (
-          <button className="flex flex-col items-center text-xs text-gray-600 dark:text-gray-300">
+          <button
+            onClick={handleLogout}
+            className="flex flex-col items-center text-xs text-gray-600 dark:text-gray-300"
+          >
             <LogOut size={18} /> Logout
           </button>
         )}
