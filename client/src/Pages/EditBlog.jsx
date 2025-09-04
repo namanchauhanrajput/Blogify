@@ -4,6 +4,10 @@ import { useParams, useNavigate } from "react-router-dom";
 import { endpoints, authHeaders } from "../api";
 import { useAuth } from "../context/AuthContext";
 
+// ✅ Import React Quill
+import ReactQuill from "react-quill-new";
+import "react-quill-new/dist/quill.snow.css";
+
 export const EditBlog = () => {
   const { id } = useParams();
   const { token } = useAuth();
@@ -19,6 +23,17 @@ export const EditBlog = () => {
   const [existingImage, setExistingImage] = useState("");
   const [preview, setPreview] = useState("");
   const [saving, setSaving] = useState(false);
+
+  // ✅ Quill toolbar config
+  const quillModules = {
+    toolbar: [
+      [{ header: [1, 2, 3, false] }],
+      ["bold", "italic", "underline", "strike"],
+      [{ list: "ordered" }, { list: "bullet" }],
+      ["link"],
+      ["clean"],
+    ],
+  };
 
   const fetchBlog = async () => {
     const res = await fetch(endpoints.getBlog(id), {
@@ -55,7 +70,7 @@ export const EditBlog = () => {
     try {
       const fd = new FormData();
       fd.append("title", form.title);
-      fd.append("content", form.content);
+      fd.append("content", form.content); // ✅ Quill HTML content
       fd.append("category", form.category || "");
       fd.append("tags", form.tags);
       if (image) fd.append("image", image);
@@ -101,19 +116,18 @@ export const EditBlog = () => {
           />
         </div>
 
-        {/* Content */}
+        {/* ✅ Rich Text Editor for Content */}
         <div>
           <label className="block mb-2 font-medium text-gray-700 dark:text-gray-200">
             Content
           </label>
-          <textarea
-            name="content"
-            placeholder="Write your content..."
-            rows={10}
+          <ReactQuill
+            theme="snow"
             value={form.content}
-            onChange={onChange}
-            required
-            className="w-full border rounded-lg px-4 py-2 focus:ring focus:ring-blue-200 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100"
+            onChange={(value) => setForm({ ...form, content: value })}
+            modules={quillModules}
+            placeholder="Update your content..."
+            className="bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg border border-gray-300 dark:border-gray-600 min-h-[150px]"
           />
         </div>
 

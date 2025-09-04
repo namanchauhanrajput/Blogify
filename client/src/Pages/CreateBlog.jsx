@@ -4,6 +4,30 @@ import { useAuth } from "../context/AuthContext";
 import ReactCrop from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
 
+import ReactQuill from "react-quill-new";
+import "react-quill-new/dist/quill.snow.css";
+
+// ✅ Utility function to clean Quill HTML
+const cleanHtml = (dirty) => {
+  if (!dirty) return "";
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(dirty, "text/html");
+
+  // Remove Quill UI spans
+  doc.querySelectorAll(".ql-ui").forEach((el) => el.remove());
+
+  // Remove data-* attributes
+  doc.querySelectorAll("*").forEach((el) => {
+    [...el.attributes].forEach((attr) => {
+      if (attr.name.startsWith("data-")) {
+        el.removeAttribute(attr.name);
+      }
+    });
+  });
+
+  return doc.body.innerHTML;
+};
+
 export const CreateBlog = () => {
   const { token } = useAuth();
   const navigate = useNavigate();
@@ -80,6 +104,17 @@ export const CreateBlog = () => {
     }
   };
 
+  // ✅ Quill toolbar config (image removed)
+  const quillModules = {
+    toolbar: [
+      [{ header: [1, 2, 3, false] }],
+      ["bold", "italic", "underline", "strike"],
+      [{ list: "ordered" }, { list: "bullet" }],
+      ["link"],
+      ["clean"],
+    ],
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
@@ -91,6 +126,9 @@ export const CreateBlog = () => {
 
     try {
       setSubmitting(true);
+
+      // Clean Quill HTML before sending
+      const cleanContent = cleanHtml(form.content);
 
       // If cropped → export cropped canvas as blob
       let finalImage = image;
@@ -107,7 +145,7 @@ export const CreateBlog = () => {
 
       const fd = new FormData();
       fd.append("title", form.title);
-      fd.append("content", form.content);
+      fd.append("content", cleanContent); // ✅ cleaned content
       fd.append("category", form.category);
       fd.append("image", finalImage);
 
@@ -199,19 +237,18 @@ export const CreateBlog = () => {
             </label>
           </div>
 
-          {/* Caption */}
+          {/* ✅ Rich Text Editor */}
           <div>
-            <textarea
-              name="content"
+            <ReactQuill
+              theme="snow"
               value={form.content}
-              onChange={handleChange}
-              rows={4}
+              onChange={(value) => setForm({ ...form, content: value })}
+              modules={quillModules}
               placeholder="What's on your mind?"
-              className="w-full p-4 rounded-lg bg-gray-100 dark:bg-gray-900 
-              text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-700 
-              focus:ring-2 focus:ring-blue-500 focus:outline-none resize-none text-sm transition-colors"
-              required
-            ></textarea>
+              className="quill-editor bg-gray-100 dark:bg-gray-900 
+                text-gray-900 dark:text-gray-100 rounded-lg border 
+                border-gray-300 dark:border-gray-700 min-h-[150px]"
+            />
           </div>
 
           {/* Title */}
