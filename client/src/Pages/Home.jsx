@@ -94,7 +94,7 @@ export const Home = () => {
             {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
           </button>
 
-        {/* Notifications Icon */}
+          {/* Notifications Icon */}
           <NavLink
             to="/notifications"
             className="p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700"
@@ -126,7 +126,7 @@ export const Home = () => {
         )}
       </div>
 
-      {/* ✅ Hero Section - Smaller + Animated + Blogify Colors */}
+      {/* ✅ Hero Section */}
       <motion.section
         initial={{ opacity: 0, y: 24 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -154,6 +154,25 @@ export const Home = () => {
           learn from others, and explore topics that matter to you.
         </motion.p>
       </motion.section>
+
+      {/* ✅ Categories Section (just below Hero, styled like screenshot) */}
+      <div className="w-full flex justify-center mt-6 sm:mt-8">
+        <div className="flex flex-wrap gap-3 justify-center">
+          {categories.map((cat) => (
+            <button
+              key={cat}
+              onClick={() => setSelectedCategory(cat)}
+              className={`px-4 py-2 rounded-full text-sm font-medium transition ${
+                selectedCategory === cat
+                  ? "bg-indigo-600 text-white shadow-md"
+                  : "bg-gray-200 dark:bg-gray-800 text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-700"
+              }`}
+            >
+              {cat}
+            </button>
+          ))}
+        </div>
+      </div>
 
       {/* Blog List */}
       <div className="px-2 sm:px-6 lg:px-8 pb-20 w-full mt-6 sm:mt-8">
