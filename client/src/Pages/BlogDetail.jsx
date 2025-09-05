@@ -216,9 +216,10 @@ const BlogDetail = () => {
         )}
 
         {/* Content */}
-        <div className="prose prose-lg dark:prose-invert max-w-none text-justify leading-relaxed mb-8">
-          {blog.content}
-        </div>
+        <div
+          className="prose prose-lg dark:prose-invert max-w-none text-justify leading-relaxed mb-8"
+          dangerouslySetInnerHTML={{ __html: blog.content }}
+        />
 
         {/* Actions */}
         <div className="flex items-center gap-8 text-gray-600 dark:text-gray-300 mb-8">
@@ -226,9 +227,8 @@ const BlogDetail = () => {
           <button
             onClick={handleLikeToggle}
             disabled={likeLoading}
-            className={`flex items-center gap-2 text-base sm:text-lg ${
-              isLiked ? "text-red-500" : "hover:text-red-500"
-            }`}
+            className={`flex items-center gap-2 text-base sm:text-lg ${isLiked ? "text-red-500" : "hover:text-red-500"
+              }`}
           >
             {likeLoading ? (
               <div className="w-5 h-5 border-2 border-red-500 border-t-transparent rounded-full animate-spin"></div>
@@ -308,9 +308,8 @@ const BlogDetail = () => {
               <button
                 type="submit"
                 disabled={posting}
-                className={`px-5 py-2 rounded-lg text-white text-sm sm:text-base flex items-center justify-center ${
-                  posting ? "bg-blue-400 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700"
-                }`}
+                className={`px-5 py-2 rounded-lg text-white text-sm sm:text-base flex items-center justify-center ${posting ? "bg-blue-400 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700"
+                  }`}
               >
                 {posting ? (
                   <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>

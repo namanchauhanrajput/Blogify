@@ -119,8 +119,8 @@ export default function BlogCard({ blog, onDelete }) {
   return (
     <article
       onClick={handleCardClick}
-      className="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden border border-gray-200 dark:border-gray-700 hover:shadow-lg transition cursor-pointer flex flex-col mx-0" 
-      // ⬅ removed side margins (no extra padding outside)
+      className="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden border border-gray-200 dark:border-gray-700 hover:shadow-lg transition cursor-pointer flex flex-col mx-0"
+    // ⬅ removed side margins (no extra padding outside)
     >
       {/* Blog Image with Hover Animation */}
       {blogImageUrl && (
@@ -149,9 +149,10 @@ export default function BlogCard({ blog, onDelete }) {
         </h3>
 
         {/* Description */}
-        <p className="text-sm text-gray-700 dark:text-gray-300 mb-4 line-clamp-3">
-          {trimmedContent}
-        </p>
+        <p
+          className="text-sm text-gray-700 dark:text-gray-300 mb-4 line-clamp-3"
+          dangerouslySetInnerHTML={{ __html: trimmedContent }}
+        />
 
         {/* Footer with Author + Actions */}
         <div className="flex items-center justify-between mt-auto">
@@ -183,9 +184,8 @@ export default function BlogCard({ blog, onDelete }) {
             {/* Like button */}
             <button
               onClick={toggleLike}
-              className={`flex items-center gap-1 ${
-                liked ? "text-rose-500" : ""
-              }`}
+              className={`flex items-center gap-1 ${liked ? "text-rose-500" : ""
+                }`}
             >
               <Heart size={16} fill={liked ? "currentColor" : "none"} />
               {likesCount}
