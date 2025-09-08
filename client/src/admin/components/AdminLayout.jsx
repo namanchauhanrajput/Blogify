@@ -4,9 +4,13 @@ import { Users, FileText, ShieldCheck } from "lucide-react";
 
 export default function AdminLayout() {
   return (
-    <div className="min-h-screen grid grid-cols-12 bg-gray-50 dark:bg-gray-900 dark:text-gray-100">
-      {/* Sidebar (fixed / non-scrollable) */}
-      <aside className="col-span-12 md:col-span-3 lg:col-span-2 bg-white dark:bg-gray-800 border-r dark:border-gray-700 shadow-sm h-screen sticky top-0">
+    <div className="min-h-screen grid grid-cols-12 gap-4 bg-gray-50 dark:bg-gray-900 dark:text-gray-100 py-6">
+      {/* Sidebar */}
+      <aside
+        className="col-span-12 md:col-span-3 lg:col-span-2 
+        bg-white dark:bg-gray-800 border dark:border-gray-700 rounded-xl shadow-sm
+        sticky top-20 h-[calc(100vh-5rem)]"
+      >
         {/* Header */}
         <div className="p-4 flex items-center gap-2 border-b dark:border-gray-700">
           <ShieldCheck className="w-5 h-5" />
@@ -43,8 +47,8 @@ export default function AdminLayout() {
         </nav>
       </aside>
 
-      {/* Main Content (scrollable) */}
-      <main className="col-span-12 md:col-span-9 lg:col-span-10 p-4 bg-white dark:bg-gray-800 border-l dark:border-gray-700 shadow-sm overflow-y-auto min-h-screen">
+      {/* Main Content */}
+      <main className="col-span-12 md:col-span-9 lg:col-span-10 p-4 bg-white dark:bg-gray-800 border dark:border-gray-700 rounded-xl shadow-sm">
         <Outlet />
       </main>
     </div>
