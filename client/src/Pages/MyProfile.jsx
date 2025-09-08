@@ -22,7 +22,6 @@ export default function MyProfile() {
   const [preview, setPreview] = useState(null);
   const [loading, setLoading] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-
   const navigate = useNavigate();
 
   // ✅ Fetch profile + blogs
@@ -35,8 +34,10 @@ export default function MyProfile() {
         const res = await axios.get(
           `https://bloging-platform.onrender.com/api/blog/user/${user._id}`
         );
+
         setProfile(res.data.userProfile);
         setBlogs(res.data.blogs);
+
         setFormData({
           name: res.data.userProfile.name || "",
           username: res.data.userProfile.username || "",
@@ -66,7 +67,6 @@ export default function MyProfile() {
   const handleUpdate = async (e) => {
     e.preventDefault();
     setLoading(true);
-
     try {
       const data = new FormData();
       data.append("name", formData.name);
@@ -144,8 +144,8 @@ export default function MyProfile() {
   }
 
   return (
-    // ✅ FIX: margin-left 240px for desktop because of sidebar
-    <div className="lg:ml-60 px-4 sm:px-6 md:px-10 lg:px-20 xl:px-40 py-6 dark:bg-gray-900 dark:text-white min-h-screen transition-all">
+    // ✅ Fullscreen without sidebar offset
+    <div className="w-full px-4 sm:px-6 md:px-10 py-6 dark:bg-gray-900 dark:text-white min-h-screen transition-all mt-16">
       {/* Profile Header */}
       <div className="bg-white dark:bg-gray-800 shadow-md rounded-2xl p-6 mb-6 flex flex-col lg:flex-row items-center lg:items-start gap-6">
         {/* Profile Photo */}
@@ -159,9 +159,7 @@ export default function MyProfile() {
         <div className="flex-1 text-center lg:text-left">
           <h2 className="text-2xl font-bold">{profile.name}</h2>
           <div className="flex flex-wrap justify-center lg:justify-start items-center gap-3 mt-2">
-            <p className="text-gray-600 dark:text-gray-400">
-              @{profile.username}
-            </p>
+            <p className="text-gray-600 dark:text-gray-400">@{profile.username}</p>
             <span className="bg-blue-100 text-blue-700 dark:bg-blue-800 dark:text-blue-200 px-3 py-1 rounded-full text-sm font-medium">
               {blogs.length} Blogs
             </span>
@@ -239,7 +237,6 @@ export default function MyProfile() {
           className="bg-white dark:bg-gray-800 shadow-md rounded-xl p-6 mb-6"
         >
           <h3 className="text-xl font-semibold mb-4">Update Profile</h3>
-
           <div className="grid md:grid-cols-2 gap-4">
             <input
               type="text"
@@ -258,14 +255,12 @@ export default function MyProfile() {
               className="p-2 border rounded-lg w-full dark:bg-gray-700 dark:border-gray-600 dark:text-white"
             />
           </div>
-
           <textarea
             placeholder="Bio"
             value={formData.bio}
             onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
             className="p-2 border rounded-lg w-full mt-4 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
           />
-
           <div className="grid md:grid-cols-2 gap-4 mt-4">
             {["twitter", "linkedin", "instagram", "github", "website"].map(
               (field) => (
@@ -282,17 +277,10 @@ export default function MyProfile() {
               )
             )}
           </div>
-
           <div className="mt-4">
             <label className="block text-sm font-medium">Profile Photo</label>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleFileChange}
-              className="mt-2"
-            />
+            <input type="file" accept="image/*" onChange={handleFileChange} className="mt-2" />
           </div>
-
           <button
             type="submit"
             disabled={loading}
@@ -326,14 +314,16 @@ export default function MyProfile() {
       )}
 
       {/* User Blogs */}
-      <div className="bg-white dark:bg-gray-800 shadow-md rounded-xl p-6 ">
+      <div className="bg-white dark:bg-gray-800 shadow-md rounded-xl p-6">
         <h3 className="text-xl font-semibold mb-4">My Blogs</h3>
         {blogs.length === 0 ? (
           <p className="text-gray-500 dark:text-gray-400">No blogs yet.</p>
         ) : (
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {blogs.map((blog) => (
-              <BlogCard key={blog._id} blog={blog} onDelete={handleDeleteBlog} />
+              <div key={blog._id} className="w-full">
+                <BlogCard blog={blog} onDelete={handleDeleteBlog} />
+              </div>
             ))}
           </div>
         )}
