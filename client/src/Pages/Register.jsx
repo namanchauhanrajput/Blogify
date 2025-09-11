@@ -156,9 +156,10 @@ export const Register = () => {
                 </span>
               </div>
 
+              {/* Updated Sign Up Button */}
               <button
                 type="submit"
-                className="w-full bg-[#0C4A6E] text-white p-2.5 md:p-3 rounded-lg font-semibold hover:bg-[#083247] transition-all duration-300 flex justify-center items-center text-sm md:text-base"
+                className="w-full bg-black text-white p-2.5 md:p-3 rounded-lg font-semibold hover:bg-gray-900 transition-all duration-300 flex justify-center items-center text-sm md:text-base"
                 disabled={loading}
               >
                 {loading ? (
@@ -195,7 +196,7 @@ export const Register = () => {
               Already have an account?{" "}
               <Link
                 to="/login"
-                className="text-[#0C4A6E] font-medium hover:underline"
+                className="text-black font-medium hover:underline"
               >
                 Login
               </Link>
