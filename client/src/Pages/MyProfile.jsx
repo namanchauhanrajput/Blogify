@@ -113,7 +113,7 @@ export default function MyProfile() {
 
   if (!profile) {
     return (
-      <div className="flex justify-center items-center min-h-screen dark:bg-gray-900">
+      <div className="flex justify-center items-center min-h-screen dark:bg-black">
         <div className="flex flex-col items-center">
           <svg
             className="animate-spin h-10 w-10 text-blue-600 mb-2"
@@ -144,15 +144,14 @@ export default function MyProfile() {
   }
 
   return (
-    // ✅ Fullscreen without sidebar offset
-    <div className="w-full px-4 sm:px-6 md:px-10 py-6 dark:bg-gray-900 dark:text-white min-h-screen transition-all mt-16">
+    <div className="w-full px-4 sm:px-6 md:px-10 py-6 dark:bg-black dark:text-white min-h-screen transition-all mt-16">
       {/* Profile Header */}
-      <div className="bg-white dark:bg-gray-800 shadow-md rounded-2xl p-6 mb-6 flex flex-col lg:flex-row items-center lg:items-start gap-6">
+      <div className="bg-white dark:bg-black shadow-md rounded-2xl p-6 mb-6 flex flex-col lg:flex-row items-center lg:items-start gap-6 border dark:border-gray-900">
         {/* Profile Photo */}
         <img
           src={preview || profile.profilePhoto}
           alt="Profile"
-          className="w-28 h-28 sm:w-32 sm:h-32 rounded-full object-cover border-4 border-gray-200 dark:border-gray-700"
+          className="w-28 h-28 sm:w-32 sm:h-32 rounded-full object-cover border-4 border-gray-200 dark:border-gray-800"
         />
 
         {/* Info */}
@@ -160,7 +159,7 @@ export default function MyProfile() {
           <h2 className="text-2xl font-bold">{profile.name}</h2>
           <div className="flex flex-wrap justify-center lg:justify-start items-center gap-3 mt-2">
             <p className="text-gray-600 dark:text-gray-400">@{profile.username}</p>
-            <span className="bg-blue-100 text-blue-700 dark:bg-blue-800 dark:text-blue-200 px-3 py-1 rounded-full text-sm font-medium">
+            <span className="bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-200 px-3 py-1 rounded-full text-sm font-medium">
               {blogs.length} Blogs
             </span>
           </div>
@@ -234,7 +233,7 @@ export default function MyProfile() {
       {isEditing && (
         <form
           onSubmit={handleUpdate}
-          className="bg-white dark:bg-gray-800 shadow-md rounded-xl p-6 mb-6"
+          className="bg-white dark:bg-black shadow-md rounded-xl p-6 mb-6 border dark:border-gray-800"
         >
           <h3 className="text-xl font-semibold mb-4">Update Profile</h3>
           <div className="grid md:grid-cols-2 gap-4">
@@ -243,7 +242,7 @@ export default function MyProfile() {
               placeholder="Full Name"
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              className="p-2 border rounded-lg w-full dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+              className="p-2 border rounded-lg w-full dark:bg-black dark:border-gray-900 dark:text-white"
             />
             <input
               type="text"
@@ -252,14 +251,14 @@ export default function MyProfile() {
               onChange={(e) =>
                 setFormData({ ...formData, username: e.target.value })
               }
-              className="p-2 border rounded-lg w-full dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+              className="p-2 border rounded-lg w-full dark:bg-black dark:border-gray-900 dark:text-white"
             />
           </div>
           <textarea
             placeholder="Bio"
             value={formData.bio}
             onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
-            className="p-2 border rounded-lg w-full mt-4 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+            className="p-2 border rounded-lg w-full mt-4 dark:bg-black dark:border-gray-900 dark:text-white"
           />
           <div className="grid md:grid-cols-2 gap-4 mt-4">
             {["twitter", "linkedin", "instagram", "github", "website"].map(
@@ -272,7 +271,7 @@ export default function MyProfile() {
                   onChange={(e) =>
                     setFormData({ ...formData, [field]: e.target.value })
                   }
-                  className="p-2 border rounded-lg w-full dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                  className="p-2 border rounded-lg w-full dark:bg-black dark:border-gray-700 dark:text-white"
                 />
               )
             )}
@@ -314,7 +313,7 @@ export default function MyProfile() {
       )}
 
       {/* User Blogs */}
-      <div className="bg-white dark:bg-gray-800 shadow-md rounded-xl p-6">
+      <div className="bg-white dark:bg-black shadow-md rounded-xl p-6 border dark:border-gray-900">
         <h3 className="text-xl font-semibold mb-4">My Blogs</h3>
         {blogs.length === 0 ? (
           <p className="text-gray-500 dark:text-gray-400">No blogs yet.</p>

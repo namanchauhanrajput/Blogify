@@ -75,12 +75,12 @@ export default function UsersPage() {
   }
 
   return (
-    <section className="p-4 dark:bg-gray-900 dark:text-gray-100 min-h-screen">
+    <section className="p-4 dark:bg-black dark:text-gray-100 min-h-screen">
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-lg font-bold">Users</h1>
         <button
           onClick={fetchUsers}
-          className="p-2 rounded-lg border hover:bg-gray-50 dark:hover:bg-gray-800 dark:border-gray-700"
+          className="p-2 rounded-lg border hover:bg-gray-50 dark:hover:bg-gray-900 dark:border-gray-700"
         >
           <RefreshCcw className="w-4 h-4" />
         </button>
@@ -92,14 +92,14 @@ export default function UsersPage() {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search users..."
-          className="border rounded-lg px-3 py-2 text-sm w-64 bg-white dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100"
+          className="border rounded-lg px-3 py-2 text-sm w-64 bg-white dark:bg-gray-950 dark:border-gray-700 dark:text-gray-100"
         />
       </div>
 
       <div className="overflow-x-auto">
         <table className="w-full border-collapse">
           <thead>
-            <tr className="border-b dark:border-gray-700">
+            <tr className="border-b dark:border-gray-900">
               <Th>Name</Th>
               <Th>Username</Th>
               <Th>Email</Th>

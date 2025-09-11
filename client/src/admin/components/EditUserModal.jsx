@@ -25,7 +25,7 @@ export default function EditUserModal({ open, onClose, onSubmit, initial, loadin
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-      <div className="w-full max-w-lg rounded-2xl bg-white dark:bg-gray-900 p-5 shadow-xl border border-gray-200 dark:border-gray-700">
+      <div className="w-full max-w-lg rounded-2xl bg-white dark:bg-black p-5 shadow-xl border border-gray-200 dark:border-gray-700">
         {/* Title */}
         <h3 className="text-lg font-semibold mb-4 text-gray-900 dark:text-gray-100">
           Edit User
@@ -38,7 +38,7 @@ export default function EditUserModal({ open, onClose, onSubmit, initial, loadin
               Name
             </label>
             <input
-              className="w-full border rounded-lg px-3 py-2 bg-white dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100"
+              className="w-full border rounded-lg px-3 py-2 bg-white dark:bg-black dark:border-gray-700 dark:text-gray-100"
               value={form.name}
               onChange={(e) => setForm({ ...form, name: e.target.value })}
             />

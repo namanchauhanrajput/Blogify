@@ -99,14 +99,14 @@ const BlogDetail = () => {
 
   if (loading)
     return (
-      <div className="flex justify-center items-center min-h-screen bg-white dark:bg-gray-900">
+      <div className="flex justify-center items-center min-h-screen bg-white dark:bg-black">
         <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
 
   if (!blog)
     return (
-      <div className="min-h-screen flex justify-center items-center bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300">
+      <div className="min-h-screen flex justify-center items-center bg-white dark:bg-black text-gray-700 dark:text-gray-300">
         Blog not found
       </div>
     );
@@ -179,14 +179,16 @@ const BlogDetail = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-white px-4 sm:px-6 lg:px-8 py-10">
+    <>
+    <div className="pt-14"></div>
+    <div className="min-h-screen bg-white dark:bg-black text-gray-900 dark:text-white px-4 sm:px-6 lg:px-8 py-10">
       <div className="max-w-3xl mx-auto rounded-xl transition-colors duration-300">
         {/* Author */}
         <div className="flex items-center gap-3 mb-5">
           <img
             src={getProfilePhotoUrl(author?.profilePhoto)}
             alt={blog.author?.username}
-            className="w-12 h-12 rounded-full object-cover border border-gray-300 dark:border-gray-600"
+            className="w-12 h-12 rounded-full object-cover border border-gray-300 dark:border-gray-700"
           />
           <div>
             <Link
@@ -227,8 +229,9 @@ const BlogDetail = () => {
           <button
             onClick={handleLikeToggle}
             disabled={likeLoading}
-            className={`flex items-center gap-2 text-base sm:text-lg ${isLiked ? "text-red-500" : "hover:text-red-500"
-              }`}
+            className={`flex items-center gap-2 text-base sm:text-lg ${
+              isLiked ? "text-red-500" : "hover:text-red-500"
+            }`}
           >
             {likeLoading ? (
               <div className="w-5 h-5 border-2 border-red-500 border-t-transparent rounded-full animate-spin"></div>
@@ -264,13 +267,13 @@ const BlogDetail = () => {
 
         {/* Liked Users */}
         {showLikes && likesCount > 0 && (
-          <div className="mb-6 border rounded-lg p-4 bg-gray-50 dark:bg-gray-800">
+          <div className="mb-6 border rounded-lg p-4 bg-gray-50 dark:bg-black">
             <h3 className="font-semibold text-lg mb-3">Liked by:</h3>
             <div className="space-y-3">
               {likedUsers.map((u) => (
                 <div
                   key={u._id}
-                  className="flex items-center justify-between p-2 rounded-md bg-white dark:bg-gray-900 shadow-sm"
+                  className="flex items-center justify-between p-2 rounded-md bg-white dark:bg-black shadow-sm"
                 >
                   <div className="flex items-center gap-3">
                     <img
@@ -301,15 +304,18 @@ const BlogDetail = () => {
               <textarea
                 value={commentText}
                 onChange={(e) => setCommentText(e.target.value)}
-                className="w-full border rounded-lg p-3 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100 text-sm sm:text-base"
+                className="w-full border rounded-lg p-3 dark:bg-black dark:border-gray-700 dark:text-gray-100 text-sm sm:text-base"
                 rows={3}
                 placeholder="Write a comment..."
               ></textarea>
               <button
                 type="submit"
                 disabled={posting}
-                className={`px-5 py-2 rounded-lg text-white text-sm sm:text-base flex items-center justify-center ${posting ? "bg-blue-400 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700"
-                  }`}
+                className={`px-5 py-2 rounded-lg text-white text-sm sm:text-base flex items-center justify-center ${
+                  posting
+                    ? "bg-blue-400 cursor-not-allowed"
+                    : "bg-blue-600 hover:bg-blue-700"
+                }`}
               >
                 {posting ? (
                   <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
@@ -338,13 +344,13 @@ const BlogDetail = () => {
                     return (
                       <div
                         key={c._id}
-                        className="border rounded-lg p-4 bg-gray-100 dark:bg-gray-800 dark:border-gray-700 text-sm sm:text-base"
+                        className="border rounded-lg p-4 bg-gray-100 dark:bg-black dark:border-gray-700 text-sm sm:text-base"
                       >
                         <div className="flex items-center gap-3 mb-2">
                           <img
                             src={profilePhoto || "/default-avatar.png"}
                             alt={username}
-                            className="w-9 h-9 rounded-full object-cover border border-gray-300 dark:border-gray-600"
+                            className="w-9 h-9 rounded-full object-cover border border-gray-300 dark:border-gray-700"
                           />
                           {userId ? (
                             <Link
@@ -373,6 +379,7 @@ const BlogDetail = () => {
         )}
       </div>
     </div>
+    </>
   );
 };
 

@@ -48,7 +48,7 @@ export const Home = () => {
       : blogs.filter((b) => b.category === selectedCategory);
 
   return (
-    <div className="flex-1 min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 overflow-x-hidden">
+    <div className="flex-1 min-h-screen bg-gray-50 dark:bg-black text-gray-900 dark:text-white overflow-x-hidden">
       {/* ✅ Hero Section */}
       <motion.section
         initial={{ opacity: 0, y: 24 }}
@@ -88,7 +88,7 @@ export const Home = () => {
               className={`px-4 py-2 rounded-full text-sm font-medium transition ${
                 selectedCategory === cat
                   ? "bg-indigo-600 text-white shadow-md"
-                  : "bg-gray-200 dark:bg-gray-800 text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-700"
+                  : "bg-gray-200 dark:bg-black/70 text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-800"
               }`}
             >
               {cat}

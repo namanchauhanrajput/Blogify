@@ -61,14 +61,14 @@ export default function Notifications() {
 
   if (!token) {
     return (
-      <div className="p-6 text-center text-gray-600 dark:text-gray-300 dark:bg-gray-900 min-h-screen">
+      <div className="p-6 text-center text-gray-600 dark:text-gray-300 dark:bg-black min-h-screen">
         Please login to view notifications.
       </div>
     );
   }
 
   return (
-    <div className="max-w-3xl mx-auto p-4 mt-16 dark:bg-gray-900 min-h-screen transition-all">
+    <div className="max-w-3xl mx-auto p-4 mt-16 pb-10 dark:bg-black min-h-screen transition-all">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-2xl font-bold flex items-center gap-2 text-gray-800 dark:text-gray-100">
@@ -107,7 +107,9 @@ export default function Notifications() {
               d="M4 12a8 8 0 018-8v4l3-3-3-3v4a12 12 0 00-12 12h4z"
             />
           </svg>
-          <p className="text-gray-500 dark:text-gray-400">Loading notifications...</p>
+          <p className="text-gray-500 dark:text-gray-400">
+            Loading notifications...
+          </p>
         </div>
       ) : notifications.length === 0 ? (
         <p className="text-gray-500 dark:text-gray-400 text-center py-10">
@@ -115,13 +117,13 @@ export default function Notifications() {
         </p>
       ) : (
         // 🔹 Scrollable container
-        <div className="space-y-3 max-h-[70vh] overflow-y-auto pr-2 custom-scrollbar">
+        <div className="space-y-3 max-h-[70vh] overflow-y-auto pr-2 custom-scrollbar pb-4">
           {notifications.map((n) => (
             <div
               key={n._id}
               className={`flex items-start gap-3 p-4 rounded-xl shadow-md border transition-all ${
                 n.isRead
-                  ? "bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700"
+                  ? "bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-700"
                   : "bg-blue-50 dark:bg-blue-900/30 border-blue-300 dark:border-blue-600"
               }`}
             >

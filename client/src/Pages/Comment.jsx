@@ -72,7 +72,7 @@ const Comment = () => {
   };
 
   return (
-    <div className="max-w-3xl mx-auto p-6 bg-white dark:bg-gray-900 dark:text-gray-100 rounded-lg shadow">
+    <div className="max-w-3xl mx-auto p-6 bg-white dark:bg-black dark:text-white rounded-lg shadow">
       <h2 className="text-2xl font-bold mb-4">Comments</h2>
 
       {/* Add comment form */}
@@ -83,7 +83,7 @@ const Comment = () => {
             value={newComment}
             onChange={(e) => setNewComment(e.target.value)}
             placeholder="Write a comment..."
-            className="flex-1 border rounded px-3 py-2 bg-white dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="flex-1 border rounded px-3 py-2 bg-white dark:bg-black dark:border-gray-700 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           <button
             type="submit"
@@ -144,7 +144,9 @@ const Comment = () => {
               d="M4 12a8 8 0 018-8v4l3-3-3-3v4a12 12 0 00-12 12h4z"
             />
           </svg>
-          <p className="text-gray-600 dark:text-gray-400">Loading comments...</p>
+          <p className="text-gray-600 dark:text-gray-400">
+            Loading comments...
+          </p>
         </div>
       ) : comments.length === 0 ? (
         <p className="text-gray-600 dark:text-gray-400">No comments yet.</p>
@@ -178,7 +180,7 @@ const Comment = () => {
                   <span className="text-gray-400 text-sm">{createdAt}</span>
                 )}
               </div>
-              <p className="text-gray-800 dark:text-gray-300 mt-1">{c.text}</p>
+              <p className="text-gray-800 dark:text-gray-200 mt-1">{c.text}</p>
             </div>
           );
         })

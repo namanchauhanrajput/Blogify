@@ -5,7 +5,7 @@
 html,
 body,
 #root {
-  @apply bg-white dark:bg-gray-900 text-gray-900 dark:text-white;
+  @apply bg-white dark:bg-black text-gray-900 dark:text-white;
   height: 100%;
   margin: 0;
   padding: 0;

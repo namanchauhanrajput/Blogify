@@ -171,135 +171,146 @@ export const CreateBlog = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 py-10 
-      bg-gray-50 dark:bg-gradient-to-br dark:from-black dark:to-gray-900 transition-colors">
-      <div className="w-full max-w-2xl bg-white dark:bg-gray-950 rounded-2xl shadow-2xl 
-        border border-gray-200 dark:border-gray-800 p-8 transition-colors">
-        {/* Title */}
-        <h1 className="text-3xl font-bold text-center text-gray-900 dark:text-gray-100 mb-8 tracking-wide">
-          New Post
-        </h1>
-
-        {/* Error */}
-        {error && (
-          <p className="text-red-500 dark:text-red-400 mb-4 text-center text-sm">
-            {error}
-          </p>
-        )}
-
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Upload */}
-          <div className="border-2 border-dashed border-gray-300 dark:border-gray-700 
-            rounded-xl p-6 text-center hover:border-blue-500 transition">
-            <label className="cursor-pointer">
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleImageChange}
-                className="hidden"
-              />
-              {!imgSrc ? (
-                <div className="flex flex-col items-center justify-center text-gray-500 dark:text-gray-400">
-                  <svg
-                    className="w-12 h-12 mb-2 text-blue-500"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth={2}
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M3 15a4 4 0 014-4h.586a1 1 0 00.707-.293l2.414-2.414a2 2 0 012.828 0L16.586 11H17a4 4 0 014 4v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5z"
-                    />
-                  </svg>
-                  <span className="text-sm">Upload your photo</span>
-                  <span className="text-xs text-gray-400 dark:text-gray-500">
-                    Drag & drop or click to browse
-                  </span>
-                </div>
-              ) : (
-                <div className="flex flex-col items-center">
-                  <ReactCrop
-                    crop={crop}
-                    onChange={(_, percentCrop) => setCrop(percentCrop)}
-                    onComplete={onCropComplete}
-                    className="rounded-lg"
-                  >
-                    <img ref={imgRef} src={imgSrc} alt="Preview" />
-                  </ReactCrop>
-
-                  <canvas ref={previewCanvasRef} className="hidden" />
-
-                  <p className="mt-2 text-xs text-gray-500">{image?.name}</p>
-                </div>
-              )}
-            </label>
-          </div>
-
-          {/* ✅ Rich Text Editor */}
-          <div>
-            <ReactQuill
-              theme="snow"
-              value={form.content}
-              onChange={(value) => setForm({ ...form, content: value })}
-              modules={quillModules}
-              placeholder="What's on your mind?"
-              className="quill-editor bg-gray-100 dark:bg-gray-900 
-                text-gray-900 dark:text-gray-100 rounded-lg border 
-                border-gray-300 dark:border-gray-700 min-h-[150px]"
-            />
-          </div>
-
+    <>
+    <div className="md:pt-16"></div>
+      <div
+        className=" min-h-screen flex items-center justify-center px-4 py-10 
+      bg-gray-50 dark:bg-black transition-colors"
+      >
+        <div
+          className="w-full max-w-2xl bg-white dark:bg-black rounded-2xl shadow-2xl 
+        border border-gray-200 dark:border-gray-800 p-8 transition-colors"
+        >
           {/* Title */}
-          <div>
-            <input
-              type="text"
-              name="title"
-              value={form.title}
-              onChange={handleChange}
-              placeholder="Enter blog title"
-              className="w-full p-4 rounded-lg bg-gray-100 dark:bg-gray-900 
-              text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-700 
-              focus:ring-2 focus:ring-blue-500 focus:outline-none text-sm transition-colors"
-              required
-            />
-          </div>
+          <h1 className="text-3xl font-bold text-center text-gray-900 dark:text-white mb-8 tracking-wide">
+            New Post
+          </h1>
 
-          {/* Category */}
-          <div>
-            <select
-              name="category"
-              value={form.category}
-              onChange={handleChange}
-              className="w-full p-4 rounded-lg bg-gray-100 dark:bg-gray-900 
-              text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-700 
-              focus:ring-2 focus:ring-blue-500 focus:outline-none text-sm transition-colors"
-              required
+          {/* Error */}
+          {error && (
+            <p className="text-red-500 dark:text-red-400 mb-4 text-center text-sm">
+              {error}
+            </p>
+          )}
+
+          <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Upload */}
+            <div
+              className="border-2 border-dashed border-gray-300 dark:border-gray-600 
+            rounded-xl p-6 text-center hover:border-blue-500 transition"
             >
-              <option value="" disabled>
-                Select a category
-              </option>
-              {categories.map((cat) => (
-                <option key={cat} value={cat}>
-                  {cat}
-                </option>
-              ))}
-            </select>
-          </div>
+              <label className="cursor-pointer">
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  className="hidden"
+                />
+                {!imgSrc ? (
+                  <div className="flex flex-col items-center justify-center text-gray-500 dark:text-gray-300">
+                    <svg
+                      className="w-12 h-12 mb-2 text-blue-500"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth={2}
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M3 15a4 4 0 014-4h.586a1 1 0 00.707-.293l2.414-2.414a2 2 0 012.828 0L16.586 11H17a4 4 0 014 4v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5z"
+                      />
+                    </svg>
+                    <span className="text-sm">Upload your photo</span>
+                    <span className="text-xs text-gray-400 dark:text-gray-500">
+                      Drag & drop or click to browse
+                    </span>
+                  </div>
+                ) : (
+                  <div className="flex flex-col items-center">
+                    <ReactCrop
+                      crop={crop}
+                      onChange={(_, percentCrop) => setCrop(percentCrop)}
+                      onComplete={onCropComplete}
+                      className="rounded-lg"
+                    >
+                      <img ref={imgRef} src={imgSrc} alt="Preview" />
+                    </ReactCrop>
 
-          {/* Submit */}
-          <button
-            type="submit"
-            disabled={submitting}
-            className="w-full py-3 rounded-lg bg-gradient-to-r from-blue-600 to-blue-400 
+                    <canvas ref={previewCanvasRef} className="hidden" />
+
+                    <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
+                      {image?.name}
+                    </p>
+                  </div>
+                )}
+              </label>
+            </div>
+
+            {/* ✅ Rich Text Editor */}
+            <div>
+              <ReactQuill
+                theme="snow"
+                value={form.content}
+                onChange={(value) => setForm({ ...form, content: value })}
+                modules={quillModules}
+                placeholder="What's on your mind? "
+                className="quill-editor bg-gray-100 dark:bg-black 
+                text-gray-900 dark:text-white rounded-lg border 
+                border-gray-300 dark:border-gray-700 min-h-[150px]"
+              />
+            </div>
+
+            {/* Title */}
+            <div>
+              <input
+                type="text"
+                name="title"
+                value={form.title}
+                onChange={handleChange}
+                placeholder="Enter blog title"
+                className="w-full p-4 rounded-lg bg-gray-100 dark:bg-black 
+              text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 
+              focus:ring-2 focus:ring-blue-500 focus:outline-none text-sm transition-colors"
+                required
+              />
+            </div>
+
+            {/* Category */}
+            <div>
+              <select
+                name="category"
+                value={form.category}
+                onChange={handleChange}
+                className="w-full p-4 rounded-lg bg-gray-100 dark:bg-black 
+              text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 
+              focus:ring-2 focus:ring-blue-500 focus:outline-none text-sm transition-colors"
+                required
+              >
+                <option value="" disabled>
+                  Select a category
+                </option>
+                {categories.map((cat) => (
+                  <option key={cat} value={cat}>
+                    {cat}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Submit */}
+            <button
+              type="submit"
+              disabled={submitting}
+              className="w-full py-3 rounded-lg bg-gradient-to-r from-blue-600 to-blue-400 
             text-white font-semibold hover:opacity-90 transition disabled:opacity-50 
             text-sm shadow-lg"
-          >
-            {submitting ? "Submitting..." : "Share Post"}
-          </button>
-        </form>
+            >
+              {submitting ? "Submitting..." : "Share Post"}
+            </button>
+          </form>
+        </div>
       </div>
-    </div>
+    </>
   );
 };

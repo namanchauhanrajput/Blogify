@@ -44,7 +44,7 @@ const UserProfile = () => {
 
   if (loading)
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen dark:bg-gray-900">
+      <div className="flex flex-col items-center justify-center min-h-screen dark:bg-black">
         <svg
           className="animate-spin h-12 w-12 text-blue-600 mb-3"
           xmlns="http://www.w3.org/2000/svg"
@@ -73,7 +73,7 @@ const UserProfile = () => {
 
   if (error)
     return (
-      <div className="text-center py-10 text-red-500 dark:text-red-400 dark:bg-gray-900 min-h-screen">
+      <div className="text-center py-10 text-red-500 dark:text-red-400 dark:bg-black min-h-screen">
         {error}
       </div>
     );
@@ -94,9 +94,9 @@ const UserProfile = () => {
   };
 
   return (
-    <div className="w-full px-4 sm:px-6 md:px-10 py-6 dark:bg-gray-900 dark:text-white min-h-screen transition-all mt-16">
+    <div className="w-full px-4 sm:px-6 md:px-10 py-6 dark:bg-black dark:text-white min-h-screen transition-all mt-16">
       {/* Profile Card */}
-      <div className="bg-white dark:bg-gray-800 shadow-md rounded-2xl p-6 mb-6 flex flex-col lg:flex-row items-center lg:items-start gap-6">
+      <div className="bg-white dark:bg-gray-950 shadow-md rounded-2xl p-6 mb-6 flex flex-col lg:flex-row items-center lg:items-start gap-6">
         {/* Profile Photo */}
         <img
           src={profile?.profilePhoto}
@@ -149,7 +149,7 @@ const UserProfile = () => {
       </div>
 
       {/* Blogs */}
-      <div className="bg-white dark:bg-gray-800 shadow-md rounded-xl p-6">
+      <div className="bg-white dark:bg-gray-950 shadow-md rounded-xl p-6">
         <h3 className="text-xl font-semibold mb-4">
           Blogs by {profile?.username}{" "}
           <span className="text-gray-500 dark:text-gray-400 text-base">

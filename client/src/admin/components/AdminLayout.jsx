@@ -8,7 +8,7 @@ export default function AdminLayout() {
       {/* Sidebar */}
       <aside
         className="col-span-12 md:col-span-3 lg:col-span-2 
-        bg-white dark:bg-gray-800 border-r dark:border-gray-700 
+        bg-white dark:bg-black border-r dark:border-gray-700 
         sticky top-16 h-[calc(100vh-4rem)] overflow-y-auto"
       >
         {/* Header */}
@@ -50,7 +50,7 @@ export default function AdminLayout() {
       {/* Main Content */}
       <main
         className="col-span-12 md:col-span-9 lg:col-span-10 
-        p-4 bg-white dark:bg-gray-800 border-l dark:border-gray-700 
+        p-4 bg-white dark:bg-black/80 border-l dark:border-gray-700 
         h-[calc(100vh-4rem)] overflow-y-auto mt-16"
       >
         <Outlet />
