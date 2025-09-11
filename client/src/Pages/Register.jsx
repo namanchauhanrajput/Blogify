@@ -55,7 +55,7 @@ export const Register = () => {
 
   return (
     <div className="relative min-h-screen flex flex-col">
-      {/* ✅ Blurred Background */}
+      {/* Background Image */}
       <div
         className="absolute inset-0 bg-cover bg-center blur-sm"
         style={{
@@ -64,19 +64,19 @@ export const Register = () => {
         }}
       ></div>
 
-      {/* ✅ Dark Overlay */}
+      {/* Dark Overlay */}
       <div className="absolute inset-0 bg-black/40"></div>
 
-      {/* ✅ Main Content */}
-      <div className="relative flex flex-1 items-center justify-center px-6 py-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center w-full max-w-6xl">
-          {/* Left Side - Text */}
-          <div className="text-white text-left px-4">
-            <h1 className="text-5xl md:text-6xl font-extrabold mb-6 leading-tight">
+      {/* Main Content */}
+      <div className="relative flex flex-1 px-6 py-10 overflow-hidden">
+        <div className="w-full max-w-[1400px] mx-auto flex flex-col md:flex-row items-center justify-between gap-10">
+          {/* Left Side - Text Section */}
+          <div className="text-white text-left md:max-w-[55%] px-4">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-6 leading-tight md:leading-tight lg:leading-tight">
               Share Your Stories with the{" "}
               <span className="text-blue-300">World</span>
             </h1>
-            <p className="text-xl md:text-2xl text-gray-200 leading-relaxed">
+            <p className="text-base md:text-xl lg:text-2xl text-gray-200 leading-relaxed">
               Join thousands of writers and creators on Blogify. Create
               beautiful blog posts, connect with readers, and build your
               audience with our powerful blogging platform.
@@ -84,67 +84,60 @@ export const Register = () => {
           </div>
 
           {/* Right Side - Registration Card */}
-          <div className="w-full bg-white rounded-3xl shadow-2xl p-8 md:p-10">
-            <h2 className="text-3xl font-bold text-gray-800 mb-2">
+          <div className="w-full max-w-md bg-white rounded-3xl shadow-2xl p-6 md:p-8 lg:p-10 mt-10 md:mt-0">
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-2 text-center">
               Create an account
             </h2>
-            <p className="text-gray-500 mb-6">Sign up to start your journey</p>
+            <p className="text-gray-500 mb-6 text-center text-sm md:text-base">
+              Sign up to start your journey
+            </p>
 
-            {/* Error */}
+            {/* Error Message */}
             {error && (
               <div className="mb-4 text-sm text-red-600 bg-red-100 border border-red-300 p-2 rounded">
                 {error}
               </div>
             )}
 
-            <form onSubmit={handleSubmit} className="space-y-4">
-              {/* Username */}
+            <form onSubmit={handleSubmit} className="space-y-3 md:space-y-4">
               <input
                 type="text"
                 name="username"
                 placeholder="Username"
                 value={form.username}
                 onChange={handleChange}
-                className="w-full p-3 border rounded-lg bg-gray-50 text-black focus:ring-2 focus:ring-[#0C4A6E] focus:outline-none"
+                className="w-full p-2.5 md:p-3 border rounded-lg bg-gray-50 text-black focus:ring-2 focus:ring-[#0C4A6E] focus:outline-none text-sm md:text-base"
                 required
               />
-
-              {/* Full Name */}
               <input
                 type="text"
                 name="name"
                 placeholder="Full Name"
                 value={form.name}
                 onChange={handleChange}
-                className="w-full p-3 border rounded-lg bg-gray-50 text-black focus:ring-2 focus:ring-[#0C4A6E] focus:outline-none"
+                className="w-full p-2.5 md:p-3 border rounded-lg bg-gray-50 text-black focus:ring-2 focus:ring-[#0C4A6E] focus:outline-none text-sm md:text-base"
                 required
               />
-
-              {/* Email */}
               <input
                 type="email"
                 name="email"
                 placeholder="Email"
                 value={form.email}
                 onChange={handleChange}
-                className="w-full p-3 border rounded-lg bg-gray-50 text-black focus:ring-2 focus:ring-[#0C4A6E] focus:outline-none"
+                className="w-full p-2.5 md:p-3 border rounded-lg bg-gray-50 text-black focus:ring-2 focus:ring-[#0C4A6E] focus:outline-none text-sm md:text-base"
                 required
               />
-
-              {/* Phone */}
               <input
                 type="text"
                 name="phone"
                 placeholder="Phone"
                 value={form.phone}
                 onChange={handleChange}
-                className="w-full p-3 border rounded-lg bg-gray-50 text-black focus:ring-2 focus:ring-[#0C4A6E] focus:outline-none"
+                className="w-full p-2.5 md:p-3 border rounded-lg bg-gray-50 text-black focus:ring-2 focus:ring-[#0C4A6E] focus:outline-none text-sm md:text-base"
                 pattern="\d{10}"
                 title="Phone number must be exactly 10 digits"
                 required
               />
-
-              {/* Password */}
               <div className="relative">
                 <input
                   type={showPassword ? "text" : "password"}
@@ -152,21 +145,20 @@ export const Register = () => {
                   placeholder="Password"
                   value={form.password}
                   onChange={handleChange}
-                  className="w-full p-3 border rounded-lg bg-gray-50 text-black pr-10 focus:ring-2 focus:ring-[#0C4A6E] focus:outline-none"
+                  className="w-full p-2.5 md:p-3 pr-10 border rounded-lg bg-gray-50 text-black focus:ring-2 focus:ring-[#0C4A6E] focus:outline-none text-sm md:text-base"
                   required
                 />
                 <span
                   className="absolute right-4 top-3.5 cursor-pointer text-gray-500 hover:text-gray-700"
                   onClick={() => setShowPassword(!showPassword)}
                 >
-                  {showPassword ? <FaEyeSlash size={18} /> : <FaEye size={18} />}
+                  {showPassword ? <FaEyeSlash size={16} /> : <FaEye size={16} />}
                 </span>
               </div>
 
-              {/* Submit */}
               <button
                 type="submit"
-                className="w-full bg-[#0C4A6E] text-white p-3 rounded-lg font-semibold hover:bg-[#083247] transition-all duration-300 flex justify-center items-center"
+                className="w-full bg-[#0C4A6E] text-white p-2.5 md:p-3 rounded-lg font-semibold hover:bg-[#083247] transition-all duration-300 flex justify-center items-center text-sm md:text-base"
                 disabled={loading}
               >
                 {loading ? (
@@ -199,7 +191,6 @@ export const Register = () => {
               </button>
             </form>
 
-            {/* Footer */}
             <p className="text-center text-sm text-gray-600 mt-6">
               Already have an account?{" "}
               <Link
@@ -213,7 +204,7 @@ export const Register = () => {
         </div>
       </div>
 
-      {/* ✅ Sticky Footer (No Gap on Mobile) */}
+      {/* Footer */}
       <div className="relative text-center text-xs text-gray-100 py-4 bg-black/60 mt-auto">
         Developed by{" "}
         <a
