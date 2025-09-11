@@ -16,6 +16,8 @@ import Comment from "./Pages/Comment";
 import Notifications from "./Pages/Notifications";
 import "./index.css";
 
+import SearchUsers from "./Pages/SearchUsers";
+
 // --- Admin imports (integrated into main app)
 import AdminRoute from "./admin/components/AdminRoute";
 import AdminLayout from "./admin/components/AdminLayout";
@@ -56,6 +58,11 @@ const AppContent = () => {
           <Route path="/blog/:id" element={<ProtectedRoute element={<BlogDetail />} />} />
           <Route path="/comments/:id" element={<ProtectedRoute element={<Comment />} />} />
 
+           <Route
+          path="/search-users"
+          element={<ProtectedRoute element={<SearchUsers />} />}
+        />
+
           {/* Admin nested routes */}
           <Route
             path="/admin/*"
@@ -74,6 +81,7 @@ const AppContent = () => {
           {/* Catch-all */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
+
       </div>
     </>
   );

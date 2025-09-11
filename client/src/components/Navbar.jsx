@@ -2,17 +2,8 @@
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useTheme } from "../context/ThemeContext";
-import {
-  Home,
-  PlusSquare,
-  User,
-  LogIn,
-  UserPlus,
-  LogOut,
-  Moon,
-  Sun,
-  Shield,
-} from "lucide-react";
+import { Home, PlusSquare, User, LogIn, UserPlus, LogOut, Moon, Sun, Shield, Bell, Search as SearchIcon } from "lucide-react";
+
 import { useEffect, useState } from "react";
 
 export default function Navbar() {
@@ -47,13 +38,12 @@ export default function Navbar() {
 
   return (
     <>
-      {/* ✅ Top Navbar */}
+      {/* ✅ Top Navbar (Desktop) */}
       <nav
-        className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
-          isScrolled
-            ? "backdrop-blur-md bg-white/70 dark:bg-gray-900/70 shadow"
-            : "bg-white dark:bg-gray-900"
-        } border-b border-gray-200 dark:border-gray-800`}
+        className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${isScrolled
+          ? "backdrop-blur-md bg-white/70 dark:bg-gray-900/70 shadow "
+          : "bg-white dark:bg-gray-900"
+          } border-b border-gray-200 dark:border-gray-800`}
       >
         <div className="max-w-7xl mx-auto px-4 flex items-center justify-between h-16">
           {/* Logo */}
@@ -69,8 +59,7 @@ export default function Navbar() {
             <NavLink
               to="/"
               className={({ isActive }) =>
-                `${baseLinkClasses} ${
-                  isActive ? activeClasses : inactiveClasses
+                `${baseLinkClasses} ${isActive ? activeClasses : inactiveClasses
                 }`
               }
             >
@@ -81,8 +70,7 @@ export default function Navbar() {
               <NavLink
                 to="/create-blog"
                 className={({ isActive }) =>
-                  `${baseLinkClasses} ${
-                    isActive ? activeClasses : inactiveClasses
+                  `${baseLinkClasses} ${isActive ? activeClasses : inactiveClasses
                   }`
                 }
               >
@@ -94,8 +82,7 @@ export default function Navbar() {
               <NavLink
                 to="/my-profile"
                 className={({ isActive }) =>
-                  `${baseLinkClasses} ${
-                    isActive ? activeClasses : inactiveClasses
+                  `${baseLinkClasses} ${isActive ? activeClasses : inactiveClasses
                   }`
                 }
               >
@@ -108,8 +95,7 @@ export default function Navbar() {
               <NavLink
                 to="/admin"
                 className={({ isActive }) =>
-                  `${baseLinkClasses} ${
-                    isActive ? activeClasses : inactiveClasses
+                  `${baseLinkClasses} ${isActive ? activeClasses : inactiveClasses
                   }`
                 }
               >
@@ -122,8 +108,7 @@ export default function Navbar() {
                 <NavLink
                   to="/login"
                   className={({ isActive }) =>
-                    `${baseLinkClasses} ${
-                      isActive ? activeClasses : inactiveClasses
+                    `${baseLinkClasses} ${isActive ? activeClasses : inactiveClasses
                     }`
                   }
                 >
@@ -132,8 +117,7 @@ export default function Navbar() {
                 <NavLink
                   to="/register"
                   className={({ isActive }) =>
-                    `${baseLinkClasses} ${
-                      isActive ? activeClasses : inactiveClasses
+                    `${baseLinkClasses} ${isActive ? activeClasses : inactiveClasses
                     }`
                   }
                 >
@@ -150,13 +134,36 @@ export default function Navbar() {
             )}
           </div>
 
-          {/* Theme Toggle */}
-          <button
-            onClick={toggleTheme}
-            className="p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700"
-          >
-            {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
-          </button>
+          {isLoggedIn && (
+            <NavLink
+              to="/search-users"
+              className={({ isActive }) =>
+                `${baseLinkClasses} ${isActive ? activeClasses : inactiveClasses
+                }`
+              }
+            >
+              <SearchIcon size={18} /> Search
+            </NavLink>
+          )}
+
+
+          {/* Theme + Notifications (Desktop right side) */}
+          <div className="flex items-center gap-2">
+            <button
+              onClick={toggleTheme}
+              className="p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700"
+            >
+              {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
+            </button>
+            {isLoggedIn && (
+              <NavLink
+                to="/notifications"
+                className="p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700"
+              >
+                <Bell size={18} />
+              </NavLink>
+            )}
+          </div>
         </div>
       </nav>
 
@@ -165,10 +172,9 @@ export default function Navbar() {
         <NavLink
           to="/"
           className={({ isActive }) =>
-            `flex flex-col items-center text-xs transition-colors duration-200 ${
-              isActive
-                ? "font-bold text-black dark:text-white"
-                : "text-gray-600 dark:text-gray-300"
+            `flex flex-col items-center text-xs transition-colors duration-200 ${isActive
+              ? "font-bold text-black dark:text-white"
+              : "text-gray-600 dark:text-gray-300"
             }`
           }
         >
@@ -179,10 +185,9 @@ export default function Navbar() {
           <NavLink
             to="/create-blog"
             className={({ isActive }) =>
-              `flex flex-col items-center text-xs transition-colors duration-200 ${
-                isActive
-                  ? "font-bold text-black dark:text-white"
-                  : "text-gray-600 dark:text-gray-300"
+              `flex flex-col items-center text-xs transition-colors duration-200 ${isActive
+                ? "font-bold text-black dark:text-white"
+                : "text-gray-600 dark:text-gray-300"
               }`
             }
           >
@@ -194,10 +199,9 @@ export default function Navbar() {
           <NavLink
             to="/my-profile"
             className={({ isActive }) =>
-              `flex flex-col items-center text-xs transition-colors duration-200 ${
-                isActive
-                  ? "font-bold text-black dark:text-white"
-                  : "text-gray-600 dark:text-gray-300"
+              `flex flex-col items-center text-xs transition-colors duration-200 ${isActive
+                ? "font-bold text-black dark:text-white"
+                : "text-gray-600 dark:text-gray-300"
               }`
             }
           >
@@ -209,10 +213,9 @@ export default function Navbar() {
           <NavLink
             to="/admin"
             className={({ isActive }) =>
-              `flex flex-col items-center text-xs transition-colors duration-200 ${
-                isActive
-                  ? "font-bold text-black dark:text-white"
-                  : "text-gray-600 dark:text-gray-300"
+              `flex flex-col items-center text-xs transition-colors duration-200 ${isActive
+                ? "font-bold text-black dark:text-white"
+                : "text-gray-600 dark:text-gray-300"
               }`
             }
           >
@@ -225,22 +228,35 @@ export default function Navbar() {
             <NavLink
               to="/login"
               className={({ isActive }) =>
-                `flex flex-col items-center text-xs transition-colors duration-200 ${
-                  isActive
-                    ? "font-bold text-black dark:text-white"
-                    : "text-gray-600 dark:text-gray-300"
+                `flex flex-col items-center text-xs transition-colors duration-200 ${isActive
+                  ? "font-bold text-black dark:text-white"
+                  : "text-gray-600 dark:text-gray-300"
                 }`
               }
             >
               <LogIn size={18} /> Login
             </NavLink>
+
+            {isLoggedIn && (
+              <NavLink
+                to="/search-users"
+                className={({ isActive }) =>
+                  `flex flex-col items-center text-xs transition-colors duration-200 ${isActive
+                    ? "font-bold text-black dark:text-white"
+                    : "text-gray-600 dark:text-gray-300"
+                  }`
+                }
+              >
+                <SearchIcon size={18} /> Search
+              </NavLink>
+            )}
+
             <NavLink
               to="/register"
               className={({ isActive }) =>
-                `flex flex-col items-center text-xs transition-colors duration-200 ${
-                  isActive
-                    ? "font-bold text-black dark:text-white"
-                    : "text-gray-600 dark:text-gray-300"
+                `flex flex-col items-center text-xs transition-colors duration-200 ${isActive
+                  ? "font-bold text-black dark:text-white"
+                  : "text-gray-600 dark:text-gray-300"
                 }`
               }
             >

@@ -1,9 +1,5 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import BlogCard from "../components/BlogCard";
-import { FaListUl } from "react-icons/fa";
-import { Moon, Sun, Bell } from "lucide-react";
-import { useTheme } from "../context/ThemeContext";
-import { NavLink } from "react-router-dom";
 import { motion } from "framer-motion";
 
 export const Home = () => {
@@ -11,23 +7,6 @@ export const Home = () => {
   const [categories, setCategories] = useState(["All"]);
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [loading, setLoading] = useState(true);
-  const [open, setOpen] = useState(false);
-  const { theme, setTheme } = useTheme();
-  const containerRef = useRef(null);
-
-  const toggleTheme = () => {
-    setTheme(theme === "dark" ? "light" : "dark");
-  };
-
-  // Close menus when clicking outside
-  useEffect(() => {
-    const onClickOutside = (e) => {
-      if (!containerRef.current) return;
-      if (!containerRef.current.contains(e.target)) setOpen(false);
-    };
-    if (open) document.addEventListener("mousedown", onClickOutside);
-    return () => document.removeEventListener("mousedown", onClickOutside);
-  }, [open]);
 
   // Fetch categories
   const fetchCategories = async () => {
@@ -70,62 +49,6 @@ export const Home = () => {
 
   return (
     <div className="flex-1 min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 overflow-x-hidden">
-      {/* Home Screen Top Navbar */}
-      <div
-        className="fixed top-0 z-40 w-full bg-gray-50 dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center px-4 py-3"
-        ref={containerRef}
-      >
-        {/* Category Filter Button */}
-        <button
-          onClick={() => setOpen((v) => !v)}
-          aria-expanded={open}
-          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 shadow-sm hover:shadow-md transition"
-        >
-          <FaListUl /> {selectedCategory}
-        </button>
-
-        {/* Right Side Actions (only visible on mobile & tablet) */}
-        <div className="flex items-center gap-2 lg:hidden">
-          {/* Night Mode Toggle */}
-          <button
-            onClick={toggleTheme}
-            className="p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700"
-          >
-            {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
-          </button>
-
-          {/* Notifications Icon */}
-          <NavLink
-            to="/notifications"
-            className="p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700"
-          >
-            <Bell size={18} />
-          </NavLink>
-        </div>
-
-        {/* Dropdown */}
-        {open && (
-          <div className="absolute top-full mt-2 left-4 z-50 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg flex flex-col sm:flex-row sm:space-x-2 sm:space-y-0 space-y-1 p-2 animate-slide-down">
-            {categories.map((cat) => (
-              <button
-                key={cat}
-                onClick={() => {
-                  setSelectedCategory(cat);
-                  setOpen(false);
-                }}
-                className={`px-4 py-2 text-sm text-left sm:text-center hover:bg-gray-100 dark:hover:bg-gray-700 transition ${
-                  selectedCategory === cat
-                    ? "bg-gray-100 dark:bg-gray-700 font-medium"
-                    : ""
-                }`}
-              >
-                {cat}
-              </button>
-            ))}
-          </div>
-        )}
-      </div>
-
       {/* ✅ Hero Section */}
       <motion.section
         initial={{ opacity: 0, y: 24 }}
@@ -155,7 +78,7 @@ export const Home = () => {
         </motion.p>
       </motion.section>
 
-      {/* ✅ Categories Section (just below Hero, styled like screenshot) */}
+      {/* ✅ Categories Section */}
       <div className="w-full flex justify-center mt-6 sm:mt-8">
         <div className="flex flex-wrap gap-3 justify-center">
           {categories.map((cat) => (
@@ -174,7 +97,7 @@ export const Home = () => {
         </div>
       </div>
 
-      {/* Blog List */}
+      {/* ✅ Blog List */}
       <div className="px-2 sm:px-6 lg:px-8 pb-20 w-full mt-6 sm:mt-8">
         {loading ? (
           <div className="flex flex-col items-center justify-center min-h-screen">
