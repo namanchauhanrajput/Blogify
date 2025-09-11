@@ -5,7 +5,7 @@ import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { Search, Loader2 } from "lucide-react";
 
-const API_URL = "http://localhost:5000"; // 🔑 backend base URL
+const API_URL = "https://bloging-platform.onrender.com"; // 🔑 backend base URL
 
 export default function SearchUsers() {
   const { token } = useAuth();
