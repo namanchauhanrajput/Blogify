@@ -69,14 +69,14 @@ export const Register = () => {
 
       {/* ✅ Main Content */}
       <div className="relative flex flex-1 items-center justify-center px-6 py-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center w-full max-w-6xl">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center w-full max-w-6xl">
           {/* Left Side - Text */}
-          <div className="text-white text-center md:text-left">
-            <h1 className="text-4xl md:text-5xl font-extrabold mb-4 leading-tight">
+          <div className="text-white text-left px-4">
+            <h1 className="text-5xl md:text-6xl font-extrabold mb-6 leading-tight">
               Share Your Stories with the{" "}
               <span className="text-blue-300">World</span>
             </h1>
-            <p className="text-lg md:text-xl text-gray-200 leading-relaxed">
+            <p className="text-xl md:text-2xl text-gray-200 leading-relaxed">
               Join thousands of writers and creators on Blogify. Create
               beautiful blog posts, connect with readers, and build your
               audience with our powerful blogging platform.
