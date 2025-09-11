@@ -54,19 +54,25 @@ export const Register = () => {
   };
 
   return (
-    <div
-      className="h-screen flex flex-col bg-cover bg-center"
-      style={{
-        backgroundImage:
-          "url('https://images.unsplash.com/photo-1519389950473-47ba0277781c')", // ✅ Replace with your desired image
-      }}
-    >
-      {/* Overlay for readability */}
-      <div className="flex flex-1 items-center justify-center px-6 py-10 bg-black/40">
-        <div className="grid md:grid-cols-2 gap-8 items-center w-full max-w-6xl">
+    <div className="relative h-screen flex flex-col">
+      {/* ✅ Blurred Background */}
+      <div
+        className="absolute inset-0 bg-cover bg-center blur-sm"
+        style={{
+          backgroundImage:
+            "url('https://images.unsplash.com/photo-1519389950473-47ba0277781c')",
+        }}
+      ></div>
+
+      {/* ✅ Dark Overlay */}
+      <div className="absolute inset-0 bg-black/40"></div>
+
+      {/* ✅ Main Content */}
+      <div className="relative flex flex-1 items-center justify-center px-6 py-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center w-full max-w-6xl">
           {/* Left Side - Text */}
-          <div className="text-white">
-            <h1 className="text-4xl md:text-5xl font-extrabold mb-4">
+          <div className="text-white text-center md:text-left">
+            <h1 className="text-4xl md:text-5xl font-extrabold mb-4 leading-tight">
               Share Your Stories with the{" "}
               <span className="text-blue-300">World</span>
             </h1>
@@ -208,7 +214,7 @@ export const Register = () => {
       </div>
 
       {/* Developed By Section */}
-      <div className="text-center text-xs text-gray-100 py-4 bg-black/60">
+      <div className="relative text-center text-xs text-gray-100 py-4 bg-black/60">
         Developed by{" "}
         <a
           href="mailto:kajalkanwar0208@gmail.com"
