@@ -107,7 +107,7 @@ export const Login = () => {
 
               <button
                 type="submit"
-                className="w-full bg-[#0C4A6E] text-white p-3 rounded-lg font-semibold hover:bg-[#083247] transition-all duration-300 flex justify-center items-center"
+                className="w-full bg-[#000000] text-white p-3 rounded-lg font-semibold hover:bg-gray-900 transition-all duration-300 flex justify-center items-center"
                 disabled={loading}
               >
                 {loading ? (
@@ -144,7 +144,7 @@ export const Login = () => {
               Don’t have an account?{" "}
               <Link
                 to="/register"
-                className="text-[#0C4A6E] font-medium hover:underline"
+                className="text-black font-medium hover:underline"
               >
                 Sign Up
               </Link>
@@ -152,7 +152,7 @@ export const Login = () => {
             <p className="text-center text-sm mt-2">
               <Link
                 to="/forgot-password"
-                className="text-[#0C4A6E] hover:underline"
+                className="text-black hover:underline"
               >
                 Forgot Password?
               </Link>
