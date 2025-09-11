@@ -7,6 +7,7 @@ const adminRoute = require("./router/admin-router");
 const notificationRoute = require("./router/notification-router");
 const connectDB = require("./config/db.js");
 const errorMiddleware = require("./middlewares/error-middleware.js");
+const userRoutes = require("./router/userRoutes");
 require("dotenv").config();
 
 // CORS Options
@@ -28,6 +29,8 @@ app.use("/api/admin", adminRoute);
 app.use("/api/auth", authRoute);
 app.use("/api/blog", blogRoute);
 app.use("/api/notifications", notificationRoute);
+// Users route
+app.use("/api/users", userRoutes);
 
 // Connect DB
 connectDB();
