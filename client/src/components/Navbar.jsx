@@ -63,7 +63,7 @@ export default function Navbar() {
           {/* ✅ Logo */}
           <NavLink to="/" className="flex items-center">
             <img
-              src="https://res.cloudinary.com/ddnpve00s/image/upload/v1757584215/logo_pqogig.png"
+              src="https://res.cloudinary.com/ddnpve00s/image/upload/v1757609283/r_e0zkrj.png"
               alt="Blogify Logo"
               className="h-16 w-auto object-contain"
             />
