@@ -54,7 +54,7 @@ export const Register = () => {
   };
 
   return (
-    <div className="relative h-screen flex flex-col">
+    <div className="relative min-h-screen flex flex-col">
       {/* ✅ Blurred Background */}
       <div
         className="absolute inset-0 bg-cover bg-center blur-sm"
@@ -77,9 +77,9 @@ export const Register = () => {
               <span className="text-blue-300">World</span>
             </h1>
             <p className="text-lg md:text-xl text-gray-200 leading-relaxed">
-              Join thousands of writers and creators on Blogify. Create beautiful
-              blog posts, connect with readers, and build your audience with our
-              powerful blogging platform.
+              Join thousands of writers and creators on Blogify. Create
+              beautiful blog posts, connect with readers, and build your
+              audience with our powerful blogging platform.
             </p>
           </div>
 
@@ -213,8 +213,8 @@ export const Register = () => {
         </div>
       </div>
 
-      {/* Developed By Section */}
-      <div className="relative text-center text-xs text-gray-100 py-4 bg-black/60">
+      {/* ✅ Sticky Footer (No Gap on Mobile) */}
+      <div className="relative text-center text-xs text-gray-100 py-4 bg-black/60 mt-auto">
         Developed by{" "}
         <a
           href="mailto:kajalkanwar0208@gmail.com"
