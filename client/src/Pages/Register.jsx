@@ -59,8 +59,7 @@ export const Register = () => {
       <div
         className="absolute inset-0 bg-cover bg-center blur-sm"
         style={{
-          backgroundImage:
-            "url('https://images.unsplash.com/photo-1519389950473-47ba0277781c')",
+          backgroundImage: `url('/mnt/data/6701e31f-bdc8-4fc4-96d1-9c5b6fcb79d2.png')`,
         }}
       ></div>
 
