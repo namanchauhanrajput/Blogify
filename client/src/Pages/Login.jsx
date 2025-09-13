@@ -39,8 +39,8 @@ export const Login = () => {
       <div
         className="absolute inset-0 bg-cover bg-center blur-sm"
         style={{
-          backgroundImage:
-            "url('https://images.unsplash.com/photo-1519389950473-47ba0277781c')",
+         backgroundImage:
+            "url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e')",
         }}
       ></div>
 
