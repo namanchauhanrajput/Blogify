@@ -34,7 +34,7 @@ export const Register = () => {
     }
 
     // ✅ Username validation
-    const usernameRegex = /^[a-z0-9._]+$/; 
+    const usernameRegex = /^[a-z0-9._]+$/;
     if (!usernameRegex.test(form.username)) {
       setError(
         "Username must be lowercase letters, numbers, and can include only '.' or '_'. No spaces or capital letters allowed."
@@ -69,7 +69,8 @@ export const Register = () => {
       <div
         className="absolute inset-0 bg-cover bg-center blur-sm"
         style={{
-          backgroundImage: `url('/mnt/data/6701e31f-bdc8-4fc4-96d1-9c5b6fcb79d2.png')`,
+          backgroundImage:
+            "url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e')",
         }}
       ></div>
 
