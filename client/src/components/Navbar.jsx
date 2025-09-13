@@ -4,7 +4,7 @@ import { useAuth } from "../context/AuthContext";
 import { useTheme } from "../context/ThemeContext";
 import {
   Home,
-  PlusSquare,
+  PlusSquare, // ✅ Instagram-style Post icon
   User,
   LogIn,
   UserPlus,
@@ -51,7 +51,7 @@ export default function Navbar() {
 
   return (
     <>
-      {/* ✅ Top Navbar (Desktop) */}
+      {/* ✅ Top Navbar */}
       <nav
         className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
           isScrolled
@@ -65,12 +65,12 @@ export default function Navbar() {
             <img
               src="https://res.cloudinary.com/ddnpve00s/image/upload/v1757609283/r_e0zkrj.png"
               alt="Blogify Logo"
-              className="h-16 w-auto object-contain"
+              className="h-14 w-auto object-contain dark:brightness-0 dark:invert"
             />
           </NavLink>
 
-          {/* Links */}
-          <div className="hidden md:flex items-center gap-4">
+          {/* ✅ Desktop Links (Center Align) */}
+          <div className="hidden lg:flex items-center gap-4 absolute left-1/2 transform -translate-x-1/2">
             <NavLink
               to="/"
               className={({ isActive }) =>
@@ -81,6 +81,19 @@ export default function Navbar() {
             >
               <Home size={18} /> Home
             </NavLink>
+
+            {isLoggedIn && (
+              <NavLink
+                to="/search-users"
+                className={({ isActive }) =>
+                  `${baseLinkClasses} ${
+                    isActive ? activeClasses : inactiveClasses
+                  }`
+                }
+              >
+                <SearchIcon size={18} /> Search
+              </NavLink>
+            )}
 
             {isLoggedIn && (
               <NavLink
@@ -108,7 +121,6 @@ export default function Navbar() {
               </NavLink>
             )}
 
-            {/* ✅ Admin */}
             {isLoggedIn && user?.isAdmin && (
               <NavLink
                 to="/admin"
@@ -155,27 +167,24 @@ export default function Navbar() {
             )}
           </div>
 
-          {isLoggedIn && (
-            <NavLink
-              to="/search-users"
-              className={({ isActive }) =>
-                `${baseLinkClasses} ${
-                  isActive ? activeClasses : inactiveClasses
-                }`
-              }
-            >
-              <SearchIcon size={18} /> Search
-            </NavLink>
-          )}
+          {/* ✅ Right Controls */}
+          <div className="flex items-center gap-2 ml-auto">
+            {isLoggedIn && (
+              <NavLink
+                to="/create-blog"
+                className="block lg:hidden p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-black/90"
+              >
+                <PlusSquare size={18} />
+              </NavLink>
+            )}
 
-          {/* Theme + Notifications */}
-          <div className="flex items-center gap-2">
             <button
               onClick={toggleTheme}
               className="p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-black/90"
             >
               {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
             </button>
+
             {isLoggedIn && (
               <NavLink
                 to="/notifications"
@@ -188,7 +197,7 @@ export default function Navbar() {
         </div>
       </nav>
 
-      {/* ✅ Mobile/Tablet Bottom Navbar */}
+      {/* ✅ Mobile Bottom Navbar */}
       <nav className="lg:hidden fixed bottom-0 left-0 w-full bg-white dark:bg-black border-t border-gray-200 dark:border-black flex justify-around items-center h-16 z-50">
         <NavLink
           to="/"
@@ -205,7 +214,7 @@ export default function Navbar() {
 
         {isLoggedIn && (
           <NavLink
-            to="/create-blog"
+            to="/search-users"
             className={({ isActive }) =>
               `flex flex-col items-center text-xs transition-colors duration-200 ${
                 isActive
@@ -214,7 +223,7 @@ export default function Navbar() {
               }`
             }
           >
-            <PlusSquare size={18} /> Post
+            <SearchIcon size={18} /> Search
           </NavLink>
         )}
 
@@ -286,19 +295,19 @@ export default function Navbar() {
         )}
       </nav>
 
-      {/* ✅ Animated Logout Confirmation Modal */}
+      {/* ✅ Logout Confirmation Modal */}
       <AnimatePresence>
         {showLogoutConfirm && (
           <motion.div
             key="overlay"
-            className="fixed inset-0 flex items-center justify-center bg-black/50 z-[9999]"
+            className="fixed inset-0 flex items-center justify-center bg-black/30 z-[9999]"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
             <motion.div
               key="modal"
-              className="bg-white dark:bg-gray-900 p-6 rounded-xl shadow-lg max-w-sm w-full text-center"
+              className="backdrop-blur-md bg-white/50 dark:bg-black/60 p-6 rounded-xl shadow-lg max-w-sm w-full text-center"
               initial={{ scale: 0.8, opacity: 0, y: -50 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.8, opacity: 0, y: 50 }}
@@ -310,7 +319,7 @@ export default function Navbar() {
               <div className="mt-4 flex justify-center gap-4">
                 <button
                   onClick={handleLogout}
-                  className="px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
+                  className="px-7 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
                 >
                   Yes
                 </button>

@@ -49,7 +49,7 @@ export default function SearchUsers() {
       </h1>
 
       {/* Search Bar */}
-      <div className="flex items-center gap-3 mb-10 bg-gray-100 dark:bg-gray-800 rounded-full px-4 py-3 shadow-sm">
+      <div className="flex items-center gap-3 mb-10 bg-gray-100 dark:bg-gray-900 rounded-full px-4 py-3 shadow-sm">
         <Search className="text-gray-500" size={22} />
         <input
           type="text"
@@ -64,7 +64,7 @@ export default function SearchUsers() {
       {/* Results */}
       <div className="space-y-4">
         {query.trim().length < 2 ? (
-          <p className="text-center text-gray-500 italic">
+          <p className="text-center text-gray-500 ">
             Start typing to search users...
           </p>
         ) : loading ? (
@@ -93,7 +93,7 @@ export default function SearchUsers() {
             </div>
           ))
         ) : (
-          <p className="text-center text-gray-500 italic">No users found.</p>
+          <p className="text-center text-gray-500">No users found.</p>
         )}
       </div>
     </div>

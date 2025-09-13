@@ -11,7 +11,7 @@ export default function ConfirmDialog({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-      <div className="w-full max-w-md rounded-2xl bg-white dark:bg-gray-900 p-5 shadow-xl border border-gray-200 dark:border-gray-700">
+      <div className="w-full max-w-md rounded-2xl bg-white backdrop-blur-md bg-white/40 dark:bg-black/20 p-5 shadow-xl border border-gray-200 dark:border-gray-900">
         {/* Title */}
         <h3 className="text-lg font-semibold mb-1 text-gray-900 dark:text-gray-100">
           {title}

@@ -27,8 +27,18 @@ export const Register = () => {
     e.preventDefault();
     setError("");
 
+    // ✅ Phone validation
     if (!/^\d{10}$/.test(form.phone)) {
       setError("Phone number must be exactly 10 digits");
+      return;
+    }
+
+    // ✅ Username validation
+    const usernameRegex = /^[a-z0-9._]+$/; 
+    if (!usernameRegex.test(form.username)) {
+      setError(
+        "Username must be lowercase letters, numbers, and can include only '.' or '_'. No spaces or capital letters allowed."
+      );
       return;
     }
 

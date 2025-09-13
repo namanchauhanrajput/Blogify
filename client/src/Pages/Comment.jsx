@@ -13,7 +13,6 @@ const Comment = () => {
   const [loading, setLoading] = useState(true);
   const [posting, setPosting] = useState(false);
 
-  // Fetch comments
   useEffect(() => {
     const fetchComments = async () => {
       try {
@@ -29,7 +28,6 @@ const Comment = () => {
     fetchComments();
   }, [id]);
 
-  // Add new comment
   const handleAddComment = async (e) => {
     e.preventDefault();
     if (!newComment.trim()) return;
@@ -53,6 +51,7 @@ const Comment = () => {
           user: {
             _id: user._id,
             username: user.username || user.name || "Anonymous",
+            profilePhoto: user.profilePhoto || null,
           },
           createdAt: new Date().toISOString(),
         };
@@ -90,7 +89,7 @@ const Comment = () => {
             disabled={posting}
             className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded flex items-center justify-center disabled:opacity-50 transition"
           >
-            {posting && (
+            {posting ? (
               <svg
                 className="animate-spin h-5 w-5 text-white mr-2"
                 xmlns="http://www.w3.org/2000/svg"
@@ -111,7 +110,7 @@ const Comment = () => {
                   d="M4 12a8 8 0 018-8v4l3-3-3-3v4a12 12 0 00-12 12h4z"
                 />
               </svg>
-            )}
+            ) : null}
             {posting ? "Posting..." : "Post"}
           </button>
         </form>
@@ -144,9 +143,7 @@ const Comment = () => {
               d="M4 12a8 8 0 018-8v4l3-3-3-3v4a12 12 0 00-12 12h4z"
             />
           </svg>
-          <p className="text-gray-600 dark:text-gray-400">
-            Loading comments...
-          </p>
+          <p className="text-gray-600 dark:text-gray-400">Loading comments...</p>
         </div>
       ) : comments.length === 0 ? (
         <p className="text-gray-600 dark:text-gray-400">No comments yet.</p>
@@ -157,6 +154,13 @@ const Comment = () => {
           const createdAt = c.createdAt
             ? new Date(c.createdAt).toLocaleString()
             : "";
+          const profilePhoto = c.user?.profilePhoto;
+
+          const profileImageUrl = profilePhoto
+            ? profilePhoto.startsWith("https")
+              ? profilePhoto
+              : `${API_URL}${profilePhoto}`
+            : null;
 
           return (
             <div
@@ -164,23 +168,38 @@ const Comment = () => {
               className="p-4 border-b border-gray-200 dark:border-gray-700"
             >
               <div className="flex justify-between items-center">
-                <p className="font-semibold">
+                <div className="flex items-center gap-2">
+                  {profileImageUrl ? (
+                    <img
+                      src={profileImageUrl}
+                      alt={username}
+                      className="w-8 h-8 rounded-full object-cover border"
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = "https://via.placeholder.com/32";
+                      }}
+                    />
+                  ) : (
+                    <div className="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-800 flex items-center justify-center text-gray-600 dark:text-white font-semibold">
+                      {username?.charAt(0)?.toUpperCase()}
+                    </div>
+                  )}
                   {userId ? (
                     <Link
                       to={`/profile/${userId}`}
-                      className="text-blue-600 dark:text-blue-400"
+                      className="text-blue-600 dark:text-blue-400 font-semibold"
                     >
                       {username}
                     </Link>
                   ) : (
-                    <span>{username}</span>
+                    <span className="font-semibold">{username}</span>
                   )}
-                </p>
+                </div>
                 {createdAt && (
                   <span className="text-gray-400 text-sm">{createdAt}</span>
                 )}
               </div>
-              <p className="text-gray-800 dark:text-gray-200 mt-1">{c.text}</p>
+              <p className="text-gray-800 dark:text-gray-200 mt-2">{c.text}</p>
             </div>
           );
         })
