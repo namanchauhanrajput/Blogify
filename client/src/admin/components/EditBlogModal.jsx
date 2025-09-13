@@ -16,14 +16,14 @@ export default function EditBlogModal({ open, onClose, onSubmit, initial, loadin
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-      <div className="w-full max-w-2xl rounded-2xl bg-white dark:bg-gray-900 p-5 shadow-xl border border-gray-200 dark:border-gray-700">
+      <div className="w-full max-w-2xl rounded-2xl bg-white backdrop-blur-md bg-white/50 dark:bg-black/20  p-5 shadow-xl border border-gray-200 dark:border-gray-900">
         <h3 className="text-lg font-semibold mb-4 text-gray-900 dark:text-gray-100">Edit Blog</h3>
 
         <div className="grid gap-3">
           <div>
             <label className="text-sm text-gray-700 dark:text-gray-300">Title</label>
             <input
-              className="w-full border rounded-lg px-3 py-2 bg-white dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100"
+              className="w-full border rounded-lg px-3 py-2 bg-white dark:bg-gray-900 dark:border-gray-700 dark:text-gray-100"
               value={form.title}
               onChange={(e) => setForm({ ...form, title: e.target.value })}
             />
@@ -32,7 +32,7 @@ export default function EditBlogModal({ open, onClose, onSubmit, initial, loadin
             <label className="text-sm text-gray-700 dark:text-gray-300">Content</label>
             <textarea
               rows={8}
-              className="w-full border rounded-lg px-3 py-2 bg-white dark:bg-gray-800 dark:border-gray-700 dark:text-gray-100"
+              className="w-full border rounded-lg px-3 py-2 bg-white dark:bg-gray-900 dark:border-gray-700 dark:text-gray-100"
               value={form.content}
               onChange={(e) => setForm({ ...form, content: e.target.value })}
             />

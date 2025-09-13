@@ -344,7 +344,7 @@ const BlogDetail = () => {
                     return (
                       <div
                         key={c._id}
-                        className="border rounded-lg p-4 bg-gray-100 dark:bg-black dark:border-gray-700 text-sm sm:text-base"
+                        className="border rounded-lg p-4 bg-gray-100 dark:bg-black dark:border-gray-700 text-sm sm:text-base pb-12"
                       >
                         <div className="flex items-center gap-3 mb-2">
                           <img

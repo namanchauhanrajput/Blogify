@@ -1,8 +1,8 @@
 // src/Pages/UserProfile.jsx
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import axios from "axios";
-import BlogCard from "../components/BlogCard";
+import { Heart, MessageSquare } from "lucide-react";
 
 const API_URL = "https://bloging-platform.onrender.com/api";
 
@@ -29,12 +29,9 @@ const UserProfile = () => {
         setBlogs(res.data.blogs || []);
       } catch (err) {
         console.error("Error fetching user profile:", err);
-
-        if (err.response?.data?.message) {
-          setError(err.response.data.message);
-        } else {
-          setError("Something went wrong. Please try again.");
-        }
+        setError(
+          err.response?.data?.message || "Something went wrong. Please try again."
+        );
       } finally {
         setLoading(false);
       }
@@ -95,8 +92,8 @@ const UserProfile = () => {
 
   return (
     <div className="w-full px-4 sm:px-6 md:px-10 py-6 dark:bg-black dark:text-white min-h-screen transition-all mt-16">
-      {/* Profile Card */}
-      <div className="bg-white dark:bg-gray-950 shadow-md rounded-2xl p-6 mb-6 flex flex-col lg:flex-row items-center lg:items-start gap-6">
+      {/* Profile Header */}
+      <div className="bg-white dark:bg-gray-950 shadow-md rounded-2xl p-6 mb-6 flex items-center gap-6">
         {/* Profile Photo */}
         <img
           src={profile?.profilePhoto}
@@ -105,9 +102,9 @@ const UserProfile = () => {
         />
 
         {/* Info */}
-        <div className="flex-1 text-center lg:text-left">
+        <div className="flex-1 text-left">
           <h2 className="text-2xl font-bold">{profile?.name}</h2>
-          <div className="flex flex-wrap justify-center lg:justify-start items-center gap-3 mt-2">
+          <div className="flex flex-wrap items-center gap-3 mt-2">
             <p className="text-gray-600 dark:text-gray-400">
               @{profile?.username}
             </p>
@@ -121,7 +118,7 @@ const UserProfile = () => {
 
           {/* Social Links */}
           {validLinks.length > 0 && (
-            <div className="flex flex-wrap gap-3 mt-4 justify-center lg:justify-start">
+            <div className="flex flex-wrap gap-3 mt-4">
               {validLinks.map(([key, link]) => (
                 <a
                   key={key}
@@ -148,20 +145,43 @@ const UserProfile = () => {
         </div>
       </div>
 
-      {/* Blogs */}
-      <div className="bg-white dark:bg-gray-950 shadow-md rounded-xl p-6">
+      {/* Blogs Section */}
+      <div className="bg-white dark:bg-gray-950 shadow-md rounded-xl p-6 pb-12">
         <h3 className="text-xl font-semibold mb-4">
           Blogs by {profile?.username}{" "}
           <span className="text-gray-500 dark:text-gray-400 text-base">
             ({blogs.length})
           </span>
         </h3>
+
         {blogs.length > 0 ? (
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {blogs.map((blog) => (
-              <div key={blog._id} className="w-full">
-                <BlogCard blog={blog} />
-              </div>
+              <Link
+                to={`/blog/${blog._id}`}
+                key={blog._id}
+                className="relative group rounded-lg overflow-hidden shadow hover:shadow-lg transition-all"
+              >
+                {/* Blog Image with Zoom Effect */}
+                <div className="overflow-hidden">
+                  <img
+                    src={blog.image}
+                    alt={blog.title}
+                    className="w-full h-56 object-cover transform transition-transform duration-500 group-hover:scale-110"
+                  />
+                </div>
+
+                {/* Overlay on hover */}
+                <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center gap-6 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <div className="flex items-center gap-2 text-white text-lg font-medium">
+                    <Heart className="w-5 h-5" /> {blog.likes?.length || 0}
+                  </div>
+                  <div className="flex items-center gap-2 text-white text-lg font-medium">
+                    <MessageSquare className="w-5 h-5" />{" "}
+                    {blog.comments?.length || 0}
+                  </div>
+                </div>
+              </Link>
             ))}
           </div>
         ) : (

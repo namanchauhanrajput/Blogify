@@ -17,11 +17,7 @@ export const EditBlog = () => {
     title: "",
     content: "",
     category: "",
-    tags: ""
   });
-  const [image, setImage] = useState(null);
-  const [existingImage, setExistingImage] = useState("");
-  const [preview, setPreview] = useState("");
   const [saving, setSaving] = useState(false);
 
   // ✅ Quill toolbar config
@@ -46,9 +42,7 @@ export const EditBlog = () => {
       title: b.title || "",
       content: b.content || "",
       category: b.category || "",
-      tags: b.tags ? b.tags.join(", ") : "",
     });
-    setExistingImage(b.image || "");
   };
 
   useEffect(() => {
@@ -58,12 +52,6 @@ export const EditBlog = () => {
 
   const onChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
-  const onImage = (e) => {
-    const f = e.target.files?.[0];
-    setImage(f || null);
-    setPreview(f ? URL.createObjectURL(f) : "");
-  };
-
   const submit = async (e) => {
     e.preventDefault();
     setSaving(true);
@@ -72,8 +60,6 @@ export const EditBlog = () => {
       fd.append("title", form.title);
       fd.append("content", form.content); // ✅ Quill HTML content
       fd.append("category", form.category || "");
-      fd.append("tags", form.tags);
-      if (image) fd.append("image", image);
 
       const res = await fetch(endpoints.updateBlog(id), {
         method: "PUT",
@@ -93,7 +79,7 @@ export const EditBlog = () => {
 
   return (
     <>
-    <div className="pt-16 sm:pt15"></div>
+      <div className="pt-16 sm:pt15"></div>
       <div className="min-h-screen bg-gray-50 dark:bg-black py-12 px-4 transition-colors">
         <div className="max-w-3xl mx-auto bg-white dark:bg-black border border-gray-200 dark:border-gray-800 rounded-2xl shadow-lg p-8 space-y-8">
           {/* Page Title */}
@@ -156,41 +142,6 @@ export const EditBlog = () => {
                 <option value="Travel">Travel</option>
                 <option value="Others">Others</option>
               </select>
-            </div>
-
-            {/* Tags */}
-            <div>
-              <label className="block mb-2 font-medium text-gray-700 dark:text-gray-200">
-                Tags (comma separated)
-              </label>
-              <input
-                type="text"
-                name="tags"
-                placeholder="e.g., React, JavaScript"
-                value={form.tags}
-                onChange={onChange}
-                className="w-full border rounded-lg px-4 py-3 bg-gray-100 dark:bg-black text-gray-900 dark:text-white border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-blue-500 outline-none transition-colors"
-              />
-            </div>
-
-            {/* Image */}
-            <div>
-              <label className="block mb-2 font-medium text-gray-700 dark:text-gray-200">
-                Cover Image
-              </label>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={onImage}
-                className="dark:text-gray-100"
-              />
-              {(preview || existingImage) && (
-                <img
-                  src={preview || existingImage}
-                  alt="preview"
-                  className="mt-3 w-full h-64 object-cover rounded-xl border border-gray-300 dark:border-gray-700"
-                />
-              )}
             </div>
 
             {/* Submit */}
