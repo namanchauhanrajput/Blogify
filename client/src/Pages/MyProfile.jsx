@@ -180,10 +180,10 @@ export default function MyProfile() {
   }
 
   return (
-    <div className="w-full min-h-screen bg-white dark:bg-black text-black dark:text-white px-4 sm:px-6 md:px-10 py-6 transition-all mt-16">
-      <div className="max-w-5xl mx-auto">
+    <div className="w-full min-h-screen bg-white dark:bg-black text-black dark:text-white px-4 sm:px-6 md:px-10 py-6 transition-all mt-16 flex flex-col">
+      <div className="max-w-6xl mx-auto w-full flex-1 flex flex-col">
         {/* Profile Header */}
-        <div className="bg-transparent rounded-2xl p-6 mb-6 flex flex-row items-center gap-6 border border-gray-200 dark:border-gray-700">
+        <div className="bg-transparent rounded-2xl p-6 mb-6 flex flex-col md:flex-row items-center md:items-start gap-6 border border-gray-200 dark:border-gray-700">
           {/* Profile Photo */}
           <div className="flex-shrink-0">
             <img
@@ -198,8 +198,8 @@ export default function MyProfile() {
           </div>
 
           {/* Info */}
-          <div className="flex-1 text-left">
-            <h2 className="text-2xl font-semibold tracking-tight flex items-center">
+          <div className="flex-1 text-center md:text-left">
+            <h2 className="text-2xl font-semibold tracking-tight flex items-center justify-center md:justify-start">
               {profile.username || profile.name}
               {profile.isVerified && (
                 <span className="ml-2 inline-flex items-center justify-center w-6 h-6 rounded-full bg-blue-600 text-white text-xs">
@@ -209,9 +209,13 @@ export default function MyProfile() {
             </h2>
 
             {/* Posts count */}
-            <div className="mt-1 flex flex-col items-start">
-              <p className="text-xl font-bold">{blogs.length}</p>
-              <p className="text-sm text-gray-500 dark:text-gray-400">Posts</p>
+            <div className="mt-2 flex flex-col md:flex-row md:items-center md:gap-4 items-center">
+              <div className="flex flex-col items-center md:items-start">
+                <p className="text-xl font-bold">{blogs.length}</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  Posts
+                </p>
+              </div>
             </div>
 
             {profile.name && (
@@ -221,13 +225,13 @@ export default function MyProfile() {
             )}
 
             {profile.bio && (
-              <p className="mt-2 text-gray-600 dark:text-gray-400 max-w-xl">
+              <p className="mt-2 text-gray-600 dark:text-gray-400 max-w-xl mx-auto md:mx-0">
                 {profile.bio}
               </p>
             )}
 
             {/* Social Links */}
-            <div className="flex flex-wrap gap-3 mt-3">
+            <div className="flex flex-wrap justify-center md:justify-start gap-3 mt-3">
               {profile.socialLinks?.twitter && (
                 <a
                   href={profile.socialLinks.twitter}
@@ -282,10 +286,10 @@ export default function MyProfile() {
           </div>
 
           {/* Edit Button */}
-          <div className="flex-shrink-0">
+          <div className="mt-4 md:mt-0 flex-shrink-0">
             <button
               onClick={() => setIsEditing(!isEditing)}
-              className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition"
+              className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition w-full md:w-auto"
             >
               {isEditing ? "Cancel" : "Edit Profile"}
             </button>
@@ -357,7 +361,7 @@ export default function MyProfile() {
             <button
               type="submit"
               disabled={loading}
-              className="mt-6 bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50 flex items-center justify-center"
+              className="mt-6 bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50 flex items-center justify-center w-full md:w-auto"
             >
               {loading && (
                 <svg
@@ -387,7 +391,7 @@ export default function MyProfile() {
         )}
 
         {/* Blogs Grid */}
-        <div className="bg-transparent rounded-xl p-2">
+        <div className="bg-transparent rounded-xl p-2 flex-1">
           <h3 className="text-lg font-medium mb-4">My Posts</h3>
           {blogs.length === 0 ? (
             <p className="text-gray-500 dark:text-gray-400">No blogs yet.</p>
