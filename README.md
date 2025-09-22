@@ -10,8 +10,8 @@
   <a href="https://github.com/namanchauhanrajput/Blogify/network/members">
     <img src="https://img.shields.io/github/forks/namanchauhanrajput/Blogify?style=for-the-badge&logo=github" alt="GitHub forks"/>
   </a>
-  <a href="https://github.com/namanchauhanrajput/Blogify/blob/main/LICENSE">
-    <img src="https://img.shields.io/github/license/namanchauhanrajput/Blogify?style=for-the-badge" alt="License"/>
+  <a href="https://github.com/namanchauhanrajput/Blogify/graphs/contributors">
+    <img src="https://img.shields.io/github/contributors/namanchauhanrajput/Blogify?style=for-the-badge" alt="Contributors"/>
   </a>
 </p>
 
