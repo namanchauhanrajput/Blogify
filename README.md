@@ -4,14 +4,14 @@
 *(👉 Replace this with your custom banner image)*
 
 <p align="center">
-  <a href="https://github.com/your-username/blogging-platform/stargazers">
-    <img src="https://img.shields.io/github/stars/your-username/blogging-platform?style=for-the-badge&logo=github" alt="GitHub stars"/>
+  <a href="https://github.com/namanchauhanrajput/Blogify/stargazers">
+    <img src="https://img.shields.io/github/stars/namanchauhanrajput/Blogify?style=for-the-badge&logo=github" alt="GitHub stars"/>
   </a>
-  <a href="https://github.com/your-username/blogging-platform/network/members">
-    <img src="https://img.shields.io/github/forks/your-username/blogging-platform?style=for-the-badge&logo=github" alt="GitHub forks"/>
+  <a href="https://github.com/namanchauhanrajput/Blogify/network/members">
+    <img src="https://img.shields.io/github/forks/namanchauhanrajput/Blogify?style=for-the-badge&logo=github" alt="GitHub forks"/>
   </a>
-  <a href="https://github.com/your-username/blogging-platform/blob/main/LICENSE">
-    <img src="https://img.shields.io/github/license/your-username/blogging-platform?style=for-the-badge" alt="License"/>
+  <a href="https://github.com/namanchauhanrajput/Blogify/blob/main/LICENSE">
+    <img src="https://img.shields.io/github/license/namanchauhanrajput/Blogify?style=for-the-badge" alt="License"/>
   </a>
 </p>
 
@@ -83,3 +83,13 @@ Includes **Admin Dashboard** for managing users and blogs.
 ---
 
 ## 📂 Folder Structure
+
+```bash
+Blogify/
+├── client/         # React frontend
+├── server/         # Express backend
+├── models/         # Mongoose models
+├── controllers/    # Business logic
+├── routes/         # Express routes
+├── middlewares/    # Custom middlewares
+└── README.md
