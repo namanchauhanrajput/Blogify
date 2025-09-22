@@ -1,8 +1,5 @@
 # 📝 Blogging Platform (MERN Stack)
 
-![Banner](https://via.placeholder.com/1200x300.png?text=Blogging+Platform)  
-*(👉 Replace this with your custom banner image)*
-
 <p align="center">
   <a href="https://github.com/namanchauhanrajput/Blogify/stargazers">
     <img src="https://img.shields.io/github/stars/namanchauhanrajput/Blogify?style=for-the-badge&logo=github" alt="GitHub stars"/>
