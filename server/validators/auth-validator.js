@@ -1,6 +1,6 @@
 const { z } = require("zod");
 
-// ✅ Login Schema (username-based)
+// Login Schema (username-based)
 const loginSchema = z.object({
   username: z
     .string({ required_error: "Username is required" })
@@ -15,7 +15,7 @@ const loginSchema = z.object({
     .max(255, { message: "Password must not be more than 255 characters" }),
 });
 
-// ✅ Signup Schema (extends loginSchema)
+// Signup Schema (extends loginSchema)
 const signupSchema = loginSchema.extend({
   name: z
     .string({ required_error: "Name is required" })
