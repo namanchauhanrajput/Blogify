@@ -1,4 +1,3 @@
-// src/components/BlogCard.jsx
 import { Link, useNavigate } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
 import { Heart, MessageSquare, Edit, Trash2, MoreVertical } from "lucide-react";
@@ -6,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { endpoints, authHeaders } from "../api";
 import { useAuth } from "../context/AuthContext";
 
-// ✅ Animated ConfirmDialog Component
+// Animated ConfirmDialog Component
 function ConfirmDialog({ open, title, description, onCancel, onConfirm, loading }) {
   return (
     <AnimatePresence>
@@ -84,7 +83,7 @@ export default function BlogCard({ blog, onDelete }) {
       : `${API_URL}${blog.image}`
     : null;
 
-  // ✅ Format time ago
+  // Format time ago
   const formatTimeAgo = (date) => {
     const now = new Date();
     const diff = Math.floor((now - date) / 1000);
@@ -202,7 +201,7 @@ export default function BlogCard({ blog, onDelete }) {
 
           {/* Footer */}
           <div className="flex items-center justify-between mt-auto">
-            {/* ✅ Author (Profile Photo + Name clickable link) */}
+            {/* Author (Profile Photo + Name clickable link) */}
             <Link
               to={`/profile/${authorId}`}
               onClick={(e) => e.stopPropagation()}
@@ -296,7 +295,7 @@ export default function BlogCard({ blog, onDelete }) {
         </div>
       </article>
 
-      {/* ✅ Confirmation Dialog */}
+      {/* Confirmation Dialog */}
       <ConfirmDialog
         open={confirmOpen}
         title="Delete Blog"
