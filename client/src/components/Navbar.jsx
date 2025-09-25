@@ -1,10 +1,9 @@
-// src/components/Navbar.jsx
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useTheme } from "../context/ThemeContext";
 import {
   Home,
-  PlusSquare, // ✅ Instagram-style Post icon
+  PlusSquare, // Instagram-style Post icon
   User,
   LogIn,
   UserPlus,
@@ -16,7 +15,7 @@ import {
   Search as SearchIcon,
 } from "lucide-react";
 import { useEffect, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion"; // ✅ Animation
+import { AnimatePresence, motion } from "framer-motion"; // Animation
 
 export default function Navbar() {
   const { isLoggedIn, logoutUser, user } = useAuth();
@@ -51,7 +50,7 @@ export default function Navbar() {
 
   return (
     <>
-      {/* ✅ Top Navbar */}
+      {/* Top Navbar */}
       <nav
         className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
           isScrolled
@@ -60,7 +59,7 @@ export default function Navbar() {
         } border-b border-gray-200 dark:border-black`}
       >
         <div className="max-w-7xl mx-auto px-4 flex items-center justify-between h-16">
-          {/* ✅ Logo */}
+          {/* Logo */}
           <NavLink to="/" className="flex items-center">
             <img
               src="https://res.cloudinary.com/ddnpve00s/image/upload/v1757609283/r_e0zkrj.png"
@@ -69,7 +68,7 @@ export default function Navbar() {
             />
           </NavLink>
 
-          {/* ✅ Desktop Links (Center Align) */}
+          {/* Desktop Links (Center Align) */}
           <div className="hidden lg:flex items-center gap-4 absolute left-1/2 transform -translate-x-1/2">
             <NavLink
               to="/"
@@ -167,7 +166,7 @@ export default function Navbar() {
             )}
           </div>
 
-          {/* ✅ Right Controls */}
+          {/* Right Controls */}
           <div className="flex items-center gap-2 ml-auto">
             {isLoggedIn && (
               <NavLink
@@ -197,7 +196,7 @@ export default function Navbar() {
         </div>
       </nav>
 
-      {/* ✅ Mobile Bottom Navbar */}
+      {/* Mobile Bottom Navbar */}
       <nav className="lg:hidden fixed bottom-0 left-0 w-full bg-white dark:bg-black border-t border-gray-200 dark:border-black flex justify-around items-center h-16 z-50">
         <NavLink
           to="/"
@@ -295,7 +294,7 @@ export default function Navbar() {
         )}
       </nav>
 
-      {/* ✅ Logout Confirmation Modal */}
+      {/* Logout Confirmation Modal */}
       <AnimatePresence>
         {showLogoutConfirm && (
           <motion.div
