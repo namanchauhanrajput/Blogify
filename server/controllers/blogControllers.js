@@ -1,6 +1,6 @@
 const Blog = require("../models/blog-model");
 const cloudinary = require("../config/cloudinary");
-const Notification = require("../models/notification-model"); // 🟢 Notification model import
+const Notification = require("../models/notification-model"); // Notification model import
 
 // CREATE BLOG
 exports.createBlog = async (req, res) => {
@@ -69,9 +69,9 @@ exports.getAllBlogs = async (req, res) => {
 exports.getBlogById = async (req, res) => {
   try {
     const blog = await Blog.findById(req.params.id)
-      .populate("author", "name username profilePhoto") // 🟢 include author
-      .populate("comments.user", "name username profilePhoto") // 🟢 include comments user
-      .populate("likes", "name username profilePhoto"); // 🟢 include liked users
+      .populate("author", "name username profilePhoto") //  include author
+      .populate("comments.user", "name username profilePhoto") //  include comments user
+      .populate("likes", "name username profilePhoto"); //  include liked users
 
     if (!blog) return res.status(404).json({ error: "Blog not found" });
 
@@ -84,7 +84,7 @@ exports.getBlogById = async (req, res) => {
       blog,
       likesCount: blog.likes.length,
       isLikedByCurrentUser,
-      likedUsers: blog.likes, // 🟢 send list of users who liked
+      likedUsers: blog.likes, //  send list of users who liked
       createdAt: blog.createdAt,
     });
   } catch (err) {
@@ -185,7 +185,7 @@ exports.toggleLikeBlog = async (req, res) => {
       message: alreadyLiked ? "Unliked the blog" : "Liked the blog",
       liked: !alreadyLiked,
       likesCount: blog.likes.length,
-      likedUsers: populatedBlog.likes, // 🟢 return liked users list
+      likedUsers: populatedBlog.likes, // return liked users list
       createdAt: blog.createdAt,
     });
   } catch (error) {
@@ -208,7 +208,7 @@ exports.addComment = async (req, res) => {
     blog.comments.push(comment);
     await blog.save();
 
-    // 🟢 Create notification for comment
+    // Create notification for comment
     if (blog.author.toString() !== req.user._id.toString()) {
       await Notification.create({
         recipient: blog.author,
