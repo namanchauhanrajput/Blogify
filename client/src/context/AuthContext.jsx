@@ -1,4 +1,3 @@
-// src/context/AuthContext.jsx
 import { createContext, useContext, useState, useEffect } from "react";
 import axios from "axios";
 
@@ -11,7 +10,7 @@ export const AuthProvider = ({ children }) => {
 
   const isLoggedIn = !!token;
 
-  // ✅ Store token in localStorage & state
+  //  Store token in localStorage & state
   const storeTokenInLS = (serverToken) => {
     if (serverToken) {
       localStorage.setItem("token", serverToken);
@@ -19,14 +18,14 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // ✅ Logout
+  // Logout
   const logoutUser = () => {
     localStorage.removeItem("token");
     setToken(null);
     setUser(null);
   };
 
-  // ✅ useEffect me fetchUser define karenge (warning gone)
+  //useEffect me fetchUser define karenge (warning gone)
   useEffect(() => {
     const fetchUser = async (currentToken) => {
       if (!currentToken) {
@@ -51,7 +50,7 @@ export const AuthProvider = ({ children }) => {
 
     if (token) fetchUser(token);
     else setIsLoading(false);
-  }, [token]); // ✅ dependency me sirf token hai, warning gone
+  }, [token]); //dependency me sirf token hai, warning gone
 
   return (
     <AuthContext.Provider
