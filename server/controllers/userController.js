@@ -1,6 +1,6 @@
 const User = require("../models/user-model");
 
-// 🔍 Search Users by username (case-insensitive)
+//  Search Users by username (case-insensitive)
 exports.searchUsers = async (req, res) => {
   try {
     const query = req.query.username; 
