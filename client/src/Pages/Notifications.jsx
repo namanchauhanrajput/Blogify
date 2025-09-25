@@ -1,4 +1,3 @@
-// src/Pages/Notifications.jsx
 import { useEffect, useState, useMemo } from "react";
 import axios from "axios";
 import { useAuth } from "../context/AuthContext";
@@ -12,7 +11,7 @@ export default function Notifications() {
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // 🔹 Memoized Auth headers
+  // Memoized Auth headers
   const authHeaders = useMemo(
     () => ({
       headers: { Authorization: `Bearer ${token}` },
@@ -21,7 +20,7 @@ export default function Notifications() {
     [token]
   );
 
-  // 🔹 Mark single as read
+  // Mark single as read
   const markAsRead = async (id) => {
     try {
       await axios.put(`${API_URL}/${id}/read`, {}, authHeaders);
@@ -33,7 +32,7 @@ export default function Notifications() {
     }
   };
 
-  // 🔹 Mark all as read
+  //Mark all as read
   const markAllAsRead = async () => {
     try {
       await axios.put(`${API_URL}/read-all`, {}, authHeaders);
@@ -43,7 +42,7 @@ export default function Notifications() {
     }
   };
 
-  // 🔹 Fetch notifications
+  // Fetch notifications
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
@@ -116,7 +115,7 @@ export default function Notifications() {
           No notifications found.
         </p>
       ) : (
-        // 🔹 Scrollable container
+        // Scrollable container
         <div className="space-y-3 max-h-[70vh] overflow-y-auto pr-2 custom-scrollbar pb-4">
           {notifications.map((n) => (
             <div
