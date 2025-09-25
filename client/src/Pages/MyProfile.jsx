@@ -1,4 +1,3 @@
-// src/pages/MyProfile.jsx
 import { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { useAuth } from "../context/AuthContext";
@@ -40,7 +39,7 @@ export default function MyProfile() {
 
   const navigate = useNavigate();
 
-  // ✅ Fetch profile + blogs
+  // Fetch profile + blogs
   useEffect(() => {
     if (!user?._id) return;
     const fetchData = async () => {
@@ -67,14 +66,14 @@ export default function MyProfile() {
     fetchData();
   }, [user]);
 
-  // ✅ Handle file select
+  // Handle file select
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     setProfilePhoto(file);
     setPreview(URL.createObjectURL(file));
   };
 
-  // ✅ Update profile
+  // Update profile
   const handleUpdate = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -108,7 +107,7 @@ export default function MyProfile() {
 
       setProfile(res.data.user);
       setIsEditing(false);
-      alert("✅ Profile updated successfully!");
+      alert(" Profile updated successfully!");
     } catch (error) {
       console.error(error);
       alert(error.response?.data?.message || "Update failed");
@@ -117,7 +116,7 @@ export default function MyProfile() {
     }
   };
 
-  // ✅ Delete blog
+  //  Delete blog
   const handleDelete = async (id) => {
     setDeleteLoading(true);
     try {
