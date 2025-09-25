@@ -1,10 +1,9 @@
-// src/Pages/EditBlog.jsx
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { endpoints, authHeaders } from "../api";
 import { useAuth } from "../context/AuthContext";
 
-// ✅ Import React Quill
+// Import React Quill
 import ReactQuill from "react-quill-new";
 import "react-quill-new/dist/quill.snow.css";
 
@@ -20,7 +19,7 @@ export const EditBlog = () => {
   });
   const [saving, setSaving] = useState(false);
 
-  // ✅ Quill toolbar config
+  // Quill toolbar config
   const quillModules = {
     toolbar: [
       [{ header: [1, 2, 3, false] }],
@@ -58,7 +57,7 @@ export const EditBlog = () => {
     try {
       const fd = new FormData();
       fd.append("title", form.title);
-      fd.append("content", form.content); // ✅ Quill HTML content
+      fd.append("content", form.content); 
       fd.append("category", form.category || "");
 
       const res = await fetch(endpoints.updateBlog(id), {
@@ -104,7 +103,7 @@ export const EditBlog = () => {
               />
             </div>
 
-            {/* ✅ Rich Text Editor */}
+            {/* Rich Text Editor */}
             <div>
               <label className="block mb-2 font-medium text-gray-700 dark:text-gray-200">
                 Content
