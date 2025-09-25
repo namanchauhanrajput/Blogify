@@ -49,7 +49,7 @@ export const Home = () => {
 
   return (
     <div className="flex-1 min-h-screen bg-gray-50 dark:bg-black text-gray-900 dark:text-white overflow-x-hidden">
-      {/* ✅ Hero Section */}
+      {/* Hero Section */}
       <motion.section
         initial={{ opacity: 0, y: 24 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -78,7 +78,7 @@ export const Home = () => {
         </motion.p>
       </motion.section>
 
-      {/* ✅ Categories Section */}
+      {/* Categories Section */}
       <div className="w-full flex justify-center mt-6 sm:mt-8">
         <div className="flex flex-wrap gap-3 justify-center">
           {categories.map((cat) => (
@@ -97,7 +97,7 @@ export const Home = () => {
         </div>
       </div>
 
-      {/* ✅ Blog List */}
+      {/* Blog List */}
       <div className="px-2 sm:px-6 lg:px-8 pb-20 w-full mt-6 sm:mt-8">
         {loading ? (
           <div className="flex flex-col items-center justify-center min-h-screen">
