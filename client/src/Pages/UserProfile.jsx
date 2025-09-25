@@ -74,13 +74,13 @@ const UserProfile = () => {
       </div>
     );
 
-  // ✅ सिर्फ non-empty links रखो
+  // only non-empty links
   const socialLinks = profile?.socialLinks || {};
   const validLinks = Object.entries(socialLinks).filter(
     ([, link]) => link && link.trim() !== ""
   );
 
-  // ✅ Key को readable नाम से map करो
+  // Map the key to the readable name
   const linkLabels = {
     twitter: "Twitter",
     linkedin: "LinkedIn",
