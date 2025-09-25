@@ -2,14 +2,14 @@ const Blog = require("../models/blog-model");
 const User = require("../models/user-model");
 const cloudinary = require("cloudinary").v2;
 
-// ✅ Cloudinary config (make sure .env me keys set ho)
+// Cloudinary config (make sure .env me keys set ho)
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-// ✅ Get user profile + blogs
+// Get user profile + blogs
 exports.getUserBlogs = async (req, res) => {
   try {
     const { userId } = req.params;
@@ -35,7 +35,7 @@ exports.getUserBlogs = async (req, res) => {
   }
 };
 
-// ✅ Helper function for Cloudinary upload (stream wrapper)
+//  Helper function for Cloudinary upload (stream wrapper)
 const uploadToCloudinary = (fileBuffer) => {
   return new Promise((resolve, reject) => {
     const stream = cloudinary.uploader.upload_stream(
@@ -49,13 +49,13 @@ const uploadToCloudinary = (fileBuffer) => {
   });
 };
 
-// ✅ Update user profile
+// Update user profile
 exports.updateUserProfile = async (req, res) => {
   try {
     const userId = req.userID; // middleware se aa rha hai
     const { bio, socialLinks, name, username } = req.body;
 
-    // 🟢 Check if username already taken (other than this user)
+    // Check if username already taken (other than this user)
     if (username) {
       const existingUser = await User.findOne({
         username,
@@ -66,20 +66,20 @@ exports.updateUserProfile = async (req, res) => {
       }
     }
 
-    // 🟢 Upload profile photo (if file provided)
+    //  Upload profile photo (if file provided)
     let profilePhoto;
     if (req.file) {
       profilePhoto = await uploadToCloudinary(req.file.buffer);
     }
 
-    // 🟢 Prepare update fields
+    //  Prepare update fields
     const updateFields = {};
     if (bio) updateFields.bio = bio;
     if (name) updateFields.name = name;
     if (username) updateFields.username = username;
     if (profilePhoto) updateFields.profilePhoto = profilePhoto;
     
-    // 🟢 Handle social links - Ensure the format is correct (object)
+    //  Handle social links - Ensure the format is correct (object)
     if (socialLinks) {
       if (typeof socialLinks === 'string') {
         try {
@@ -96,7 +96,7 @@ exports.updateUserProfile = async (req, res) => {
       }
     }
 
-    // 🟢 Update user
+    //  Update user
     const updatedUser = await User.findByIdAndUpdate(
       userId,
       { $set: updateFields },
