@@ -1,4 +1,3 @@
-// src/pages/CreateBlog.jsx
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
@@ -8,7 +7,7 @@ import "react-quill-new/dist/quill.snow.css";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown, ChevronUp } from "lucide-react";
 
-// ✅ Utility function to clean Quill HTML
+// Utility function to clean Quill HTML
 const cleanHtml = (dirty) => {
   if (!dirty) return "";
   const parser = new DOMParser();
@@ -63,7 +62,7 @@ export const CreateBlog = () => {
     }
   };
 
-  // ✅ Quill toolbar config
+  // Quill toolbar config
   const quillModules = {
     toolbar: [
       [{ header: [1, 2, 3, false] }],
@@ -175,7 +174,7 @@ export const CreateBlog = () => {
               </label>
             </div>
 
-            {/* ✅ Rich Text Editor */}
+            {/* Rich Text Editor */}
             <div>
               <ReactQuill
                 theme="snow"
@@ -200,7 +199,7 @@ export const CreateBlog = () => {
               />
             </div>
 
-            {/* ✅ Animated Category Dropdown (UPWARDS) */}
+            {/* Animated Category Dropdown (UPWARDS) */}
             <div className="relative">
               <button
                 type="button"
@@ -260,7 +259,7 @@ export const CreateBlog = () => {
         </div>
       </div>
 
-      {/* ✅ Dark mode placeholder fix */}
+      {/* Dark mode placeholder fix */}
       <style>{`
         .quill-editor .ql-editor.ql-blank::before {
           color: #9ca3af !important;
