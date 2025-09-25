@@ -1,4 +1,3 @@
-// src/admin/components/ConfirmDialog.jsx
 export default function ConfirmDialog({
   open,
   title,
