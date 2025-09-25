@@ -15,8 +15,8 @@ const corsOptions = {
       origin: [
     "http://localhost:3000", // local dev
     // "https://bloging-platform-nine.vercel.app", 
-    "https://blogifyi.vercel.app",  // ✅ vercel frontend
-     // ✅ vercel frontend
+    "https://blogifyi.vercel.app",  //  vercel frontend
+     //  vercel frontend
   ],
   methods: "GET, POST, DELETE, PUT, PATCH, HEAD",
   credentials: true,
