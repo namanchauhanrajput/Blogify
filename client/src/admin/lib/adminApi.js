@@ -1,11 +1,10 @@
-// src/admin/lib/adminApi.js
 import axios from "axios";
 import { authHeaders } from "../../api"; // existing helper
 
-// 🔗 Backend API base URL
+// Backend API base URL
 const BASE_URL = "https://bloging-platform.onrender.com";
 
-// 🔧 Axios instance with auth header support
+//  Axios instance with auth header support
 export function adminAxios(token) {
   const instance = axios.create({ baseURL: BASE_URL });
   instance.interceptors.request.use((config) => {
@@ -20,7 +19,7 @@ export function adminAxios(token) {
   return instance;
 }
 
-// 🛠️ Admin endpoints
+// Admin endpoints
 export const endpoints = {
   // Users
   users: "/api/admin/users",
