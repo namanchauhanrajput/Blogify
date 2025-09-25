@@ -29,10 +29,10 @@ router.get("/comments/:id", blogController.getComments);
 router.get("/categories/list", blogController.getCategories);
 
 // ==================== USER PROFILE ====================
-// 🟢 Public profile (no auth required)
+//  Public profile (no auth required)
 router.get("/user/:userId", userProfileController.getUserBlogs);
 
-// 🟢 Update profile (protected)
+//  Update profile (protected)
 router.put(
   "/user/update/profile",
   auth,
