@@ -1,11 +1,10 @@
-// src/Pages/SearchUsers.jsx
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { Search, Loader2 } from "lucide-react";
 
-const API_URL = "https://bloging-platform.onrender.com"; // 🔑 backend base URL
+const API_URL = "https://bloging-platform.onrender.com"; //backend base URL
 
 export default function SearchUsers() {
   const { token } = useAuth();
@@ -14,7 +13,7 @@ export default function SearchUsers() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  // ✅ Live search with debounce
+  // Live search with debounce
   useEffect(() => {
     if (query.trim().length < 2) {
       setResults([]);
