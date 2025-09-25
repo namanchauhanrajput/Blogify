@@ -18,7 +18,7 @@ const userSchema = new mongoose.Schema(
     socialLinks: {
       twitter: { type: String, default: "" },
       linkedin: { type: String, default: "" },
-      instagram: { type: String, default: "" }, // ✅ Instagram added
+      instagram: { type: String, default: "" }, // Instagram added
       github: { type: String, default: "" },
       website: { type: String, default: "" },
     },
