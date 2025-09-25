@@ -179,7 +179,7 @@ export default function UsersPage() {
         }}
         onSubmit={handleUpdate}
         initial={selected}
-        loading={modalLoading} // ✅ Pass loader state
+        loading={modalLoading} // Pass loader state
       />
 
       <ConfirmDialog
