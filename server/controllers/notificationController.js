@@ -1,6 +1,6 @@
 const Notification = require("../models/notification-model");
 
-// ✅ Get all notifications of logged in user
+// Get all notifications of logged in user
 exports.getNotifications = async (req, res) => {
   try {
     const notifications = await Notification.find({ recipient: req.user._id })
@@ -14,7 +14,7 @@ exports.getNotifications = async (req, res) => {
   }
 };
 
-// ✅ Mark single notification as read
+//  Mark single notification as read
 exports.markAsRead = async (req, res) => {
   try {
     await Notification.findByIdAndUpdate(req.params.id, { isRead: true });
@@ -24,7 +24,7 @@ exports.markAsRead = async (req, res) => {
   }
 };
 
-// ✅ Mark all notifications as read
+//  Mark all notifications as read
 exports.markAllAsRead = async (req, res) => {
   try {
     await Notification.updateMany({ recipient: req.user._id }, { isRead: true });
