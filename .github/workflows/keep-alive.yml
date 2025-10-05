@@ -1,0 +1,13 @@
+name: Keep Server Alive
+
+on:
+  schedule:
+    # Har 10 minute mein chalega
+    - cron: '*/10 * * * *'
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping server URL
+        run: curl -s "https://bloging-platform.onrender.com/ping"
